@@ -15,10 +15,11 @@
     <div class="row">
       <nav class="nav" role="navigation">
         <ul class="nav__items">
-          <li class="nav__item"><a href="#work"     class="nav__link">Work</a></li>
-          <li class="nav__item"><a href="#projects" class="nav__link">Projects</a></li>
-          <li class="nav__item"><a href="#about"    class="nav__link">About</a></li>
-          <li class="nav__item"><a href="#contact"  class="nav__link">Contact</a></li>
+          <li class="nav__item"><a href="#education"  class="nav__link">Education</a></li>
+          <li class="nav__item"><a href="#projects"   class="nav__link">Projects</a></li>
+          <li class="nav__item"><a href="#experience" class="nav__link">Experience</a></li>
+          <li class="nav__item"><a href="#about"      class="nav__link">About</a></li>
+          <li class="nav__item"><a href="#contact"    class="nav__link">Contact</a></li>
         </ul>
       </nav>
     </div>
@@ -33,10 +34,31 @@
   </header>
 
   <main role="main">
-    <!-- ***** Work ***** -->
-    <section class="work" id="work">
+    <!-- ***** Education ***** -->
+    <section class="work" id="education">
       <div class="row">
-        <h2>Highlighted Work</h2>
+        <h2>Education</h2>
+        <div class="work__boxes">
+          <div class="work__box">
+            <div class="work__text">
+              <h3>B.S. Computer Science</h3>
+              <p>Southeastern Louisiana University, Hammond, LA<br/>
+                 Expected Graduation: May 2026 · GPA 3.7/4.0</p>
+              <ul class="work__list">
+                <li>Concentration: Software Engineering</li>
+                <li>Dean’s List (4 semesters)</li>
+                <li>ACM Club Treasurer</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ***** Projects ***** -->
+    <section class="work" id="projects">
+      <div class="row">
+        <h2>Projects</h2>
         <div class="work__boxes">
 
           <!-- Nova Project -->
@@ -44,67 +66,64 @@
             <div class="work__text">
               <h3>Nova – Voice‑Activated Raspberry Pi Assistant</h3>
               <p>Custom wake‑word AI that authenticates by voice and snaps a photo if it doesn’t recognize the speaker.</p>
-              <ul class="work__list">
-                <li>Python</li><li>TensorFlow Lite</li><li>Snowboy</li><li>Raspberry Pi</li>
-              </ul>
-              <div class="work__links">
-                <a href="https://github.com/yourusername/nova" target="_blank" class="link__text">Source Code <span>&rarr;</span></a>
-              </div>
+              <ul class="work__list"><li>Python</li><li>TensorFlow Lite</li><li>Snowboy</li><li>Raspberry Pi</li></ul>
+              <div class="work__links"><a href="https://github.com/yourusername/nova" target="_blank" class="link__text">Source Code <span>&rarr;</span></a></div>
             </div>
-            <div class="work__image-box">
-              <img src="./images/project-nova.png" class="work__image" alt="Screenshot of Nova assistant" loading="lazy" />
-            </div>
+            <div class="work__image-box"><img src="./images/project-nova.png" class="work__image" alt="Screenshot of Nova assistant" loading="lazy" /></div>
           </div>
 
           <!-- Traffic Simulation Project -->
           <div class="work__box">
             <div class="work__text">
-              <h3>Unity Traffic Simulation AI</h3>
+              <h3>Unity Traffic Simulation AI</h3>
               <p>Real‑time lane‑aware traffic system with adjustable density and A*‑driven vehicle AI.</p>
-              <ul class="work__list">
-                <li>C#</li><li>Unity</li><li>A*</li><li>Mirror</li>
-              </ul>
-              <div class="work__links">
-                <a href="https://github.com/yourusername/traffic-ai" target="_blank" class="link__text">Source Code <span>&rarr;</span></a>
-              </div>
+              <ul class="work__list"><li>C#</li><li>Unity</li><li>A*</li><li>Mirror</li></ul>
+              <div class="work__links"><a href="https://github.com/yourusername/traffic-ai" target="_blank" class="link__text">Source Code <span>&rarr;</span></a></div>
             </div>
-            <div class="work__image-box">
-              <img src="./images/project-traffic.png" class="work__image" alt="Unity traffic simulation" loading="lazy" />
-            </div>
+            <div class="work__image-box"><img src="./images/project-traffic.png" class="work__image" alt="Unity traffic simulation" loading="lazy" /></div>
           </div>
 
           <!-- Police Fitness Database Project -->
           <div class="work__box">
             <div class="work__text">
               <h3>Police Fitness Analytics Dashboard</h3>
-              <p>Data pipeline & dashboard visualizing officer performance benchmarks across departments.</p>
-              <ul class="work__list">
-                <li>Python</li><li>NumPy</li><li>Pandas</li><li>Plotly</li>
-              </ul>
-              <div class="work__links">
-                <a href="https://github.com/yourusername/police-fitness" target="_blank" class="link__text">Source Code <span>&rarr;</span></a>
-              </div>
+              <p>Data pipeline & interactive dashboard visualizing officer performance benchmarks.</p>
+              <ul class="work__list"><li>Python</li><li>Pandas</li><li>Plotly</li></ul>
+              <div class="work__links"><a href="https://github.com/yourusername/police-fitness" target="_blank" class="link__text">Source Code <span>&rarr;</span></a></div>
             </div>
-            <div class="work__image-box">
-              <img src="./images/project-fitness.png" class="work__image" alt="Police fitness dashboard" loading="lazy" />
-            </div>
+            <div class="work__image-box"><img src="./images/project-fitness.png" class="work__image" alt="Police fitness dashboard" loading="lazy" /></div>
           </div>
 
         </div>
       </div>
     </section>
 
-    <!-- ***** Projects / Clients ***** -->
-    <section class="projects" id="projects">
+    <!-- ***** Work Experience ***** -->
+    <section class="work" id="experience">
       <div class="row">
-        <h2>Selected Clients & Collabs</h2>
-        <div class="client__logos">
-          <img src="./images/ronjones.png"       class="client__logo" alt="Ron Jones"        loading="lazy" />
-          <img src="./images/goldengrid.png"     class="client__logo" alt="Golden Grid"      loading="lazy" />
-          <img src="./images/bullseye.png"       class="client__logo" alt="Bullseye Games"   loading="lazy" />
-          <img src="./images/mighty-furnitures.png" class="client__logo" alt="Mighty Furnitures" loading="lazy" />
-          <img src="./images/fastlane.png"       class="client__logo" alt="Fastlane"         loading="lazy" />
-          <img src="./images/chippy.png"         class="client__logo" alt="Chippy"           loading="lazy" />
+        <h2>Work Experience</h2>
+        <div class="work__boxes">
+          <!-- Job 1 -->
+          <div class="work__box">
+            <div class="work__text">
+              <h3>Freelance Unity Developer</h3>
+              <p>Remote · Jan 2024 – Present</p>
+              <ul class="work__list">
+                <li>Built low‑poly asset pipeline and AI pathfinding for an indie co‑op horror title.</li>
+                <li>Optimized network traffic with Mirror, cutting latency 35%.</li>
+              </ul>
+            </div>
+          </div>
+          <!-- Job 2 -->
+          <div class="work__box">
+            <div class="work__text">
+              <h3>Computer Science Tutor</h3>
+              <p>Southeastern Louisiana University • Aug 2023 – Dec 2024</p>
+              <ul class="work__list">
+                <li>Coached 50+ peers in Java & Python fundamentals, boosting pass rates 20%.</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -115,13 +134,10 @@
         <h2>About Me</h2>
         <div class="about__content">
           <div class="about__text">
-            <p>Hey – I’m Nick, a computer‑science student who loves turning scattered ideas into polished tech. Whether it’s scripting AI behaviors in Unity or wiring Raspberry Pi sensors, I thrive on building things that feel <em>alive</em>. Off‑screen you’ll find me playing indie games, collecting synthwave vinyl, or debating whether tabs beat spaces (they do).</p>
-            <a href="./Nicholas_Burgo_Resume.pdf" class="btn" target="_blank">Download&nbsp;Resume</a>
+            <p>Hey – I’m Nick, a computer‑science student who loves turning scattered ideas into polished tech. Whether it’s scripting AI behaviors in Unity or wiring Raspberry Pi sensors, I thrive on building things that feel <em>alive</em>. Off‑screen you’ll find me playing indie games, collecting synthwave vinyl, or debating whether tabs beat spaces (they do).</p>
+            <a href="./Nicholas_Burgo_Resume.pdf" class="btn" target="_blank">Download Resume</a>
           </div>
-
-          <div class="about__photo-container">
-            <img class="about__photo" src="./images/nicholas-burgo.jpg" alt="Photo of Nicholas Burgo" loading="lazy" />
-          </div>
+          <div class="about__photo-container"><img class="about__photo" src="./images/nicholas-burgo.jpg" alt="Photo of Nicholas Burgo" loading="lazy" /></div>
         </div>
       </div>
     </section>
@@ -142,24 +158,16 @@
   <footer role="contentinfo" class="footer">
     <div class="row">
       <ul class="footer__social-links">
-        <li class="footer__social-link-item">
-          <a href="https://twitter.com/yourhandle" title="Twitter Profile"><img src="./images/twitter.svg" class="footer__social-image" alt="Twitter" /></a>
-        </li>
-        <li class="footer__social-link-item">
-          <a href="https://github.com/yourusername" title="GitHub Profile"><img src="./images/github.svg" class="footer__social-image" alt="GitHub" /></a>
-        </li>
-        <li class="footer__social-link-item">
-          <a href="https://codepen.io/yourusername" title="Codepen Profile"><img src="./images/codepen.svg" class="footer__social-image" alt="Codepen" /></a>
-        </li>
-        <li class="footer__social-link-item">
-          <a href="https://www.linkedin.com/in/yourlinkedin/" title="LinkedIn Profile"><img src="./images/linkedin.svg" class="footer__social-image" alt="LinkedIn" /></a>
-        </li>
+        <li class="footer__social-link-item"><a href="https://twitter.com/yourhandle" title="Twitter"><img src="./images/twitter.svg" class="footer__social-image" alt="Twitter"></a></li>
+        <li class="footer__social-link-item"><a href="https://github.com/yourusername" title="GitHub"><img src="./images/github.svg" class="footer__social-image" alt="GitHub"></a></li>
+        <li class="footer__social-link-item"><a href="https://codepen.io/yourusername" title="Codepen"><img src="./images/codepen.svg" class="footer__social-image" alt="Codepen"></a></li>
+        <li class="footer__social-link-item"><a href="https://www.linkedin.com/in/yourlinkedin/" title="LinkedIn"><img src="./images/linkedin.svg" class="footer__social-image" alt="LinkedIn"></a></li>
       </ul>
-      <p>&copy; 2025  Designed with ❤ by Nick.</p>
+      <p>&copy; 2025 · Designed with ❤ by Nick.</p>
     </div>
   </footer>
 
-  <a href="#top" class="back-to-top" title="Back to Top"><img src="./images/arrow-up.svg" alt="Back to Top" class="back-to-top__image" /></a>
+  <a href="#top" class="back-to-top" title="Back to Top"><img src="./images/arrow-up.svg" alt="Back to Top" class="back-to-top__image"></a>
   <script src="./index.js"></script>
 </body>
 </html>
