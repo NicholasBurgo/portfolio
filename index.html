@@ -8,6 +8,15 @@
   <meta name="description" content="Portfolio of Nicholas Burgo – software & game developer based in Ponchatoula, LA." />
   <meta name="keywords" content="Nicholas Burgo, Software Developer, Unity, Python, Web Development, AI" />
   <link rel="stylesheet" href="index.css" />
+
+  <!-- quick component‑specific styles (move to index.css when final) -->
+  <style>
+    .header{position:relative;}
+    .profile-circle{position:absolute;bottom:40px;right:40px;width:120px;height:120px;border-radius:50%;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,.4);transition:transform .3s ease,box-shadow .3s ease;cursor:pointer;}
+    .profile-circle:hover{transform:translateY(-8px) scale(1.05);box-shadow:0 12px 28px rgba(0,0,0,.45);}
+    .profile-circle img{width:100%;height:100%;object-fit:cover;display:block;}
+    @media(max-width:600px){.profile-circle{width:80px;height:80px;bottom:20px;right:20px;}}
+  </style>
 </head>
 <body>
   <!-- ***** Header ***** -->
@@ -31,6 +40,11 @@
         <a href="#contact" class="btn btn--pink">Get in touch</a>
       </div>
     </div>
+
+    <!-- floating portrait that links to About -->
+    <a href="#about" class="profile-circle" aria-label="About Nicholas">
+      <img src="./images/nicholas-burgo.jpg" alt="Portrait of Nicholas Burgo" />
+    </a>
   </header>
 
   <main role="main">
@@ -60,7 +74,6 @@
       <div class="row">
         <h2>Projects</h2>
         <div class="work__boxes">
-
           <!-- Nova Project -->
           <div class="work__box">
             <div class="work__text">
@@ -71,7 +84,6 @@
             </div>
             <div class="work__image-box"><img src="./images/project-nova.png" class="work__image" alt="Screenshot of Nova assistant" loading="lazy" /></div>
           </div>
-
           <!-- Traffic Simulation Project -->
           <div class="work__box">
             <div class="work__text">
@@ -82,7 +94,6 @@
             </div>
             <div class="work__image-box"><img src="./images/project-traffic.png" class="work__image" alt="Unity traffic simulation" loading="lazy" /></div>
           </div>
-
           <!-- Police Fitness Database Project -->
           <div class="work__box">
             <div class="work__text">
@@ -93,7 +104,6 @@
             </div>
             <div class="work__image-box"><img src="./images/project-fitness.png" class="work__image" alt="Police fitness dashboard" loading="lazy" /></div>
           </div>
-
         </div>
       </div>
     </section>
@@ -103,25 +113,18 @@
       <div class="row">
         <h2>Work Experience</h2>
         <div class="work__boxes">
-          <!-- Job 1 -->
           <div class="work__box">
             <div class="work__text">
               <h3>Freelance Unity Developer</h3>
               <p>Remote · Jan 2024 – Present</p>
-              <ul class="work__list">
-                <li>Built low‑poly asset pipeline and AI pathfinding for an indie co‑op horror title.</li>
-                <li>Optimized network traffic with Mirror, cutting latency 35%.</li>
-              </ul>
+              <ul class="work__list"><li>Built low‑poly asset pipeline and AI pathfinding for an indie co‑op horror title.</li><li>Optimized network traffic with Mirror, cutting latency 35%.</li></ul>
             </div>
           </div>
-          <!-- Job 2 -->
           <div class="work__box">
             <div class="work__text">
               <h3>Computer Science Tutor</h3>
               <p>Southeastern Louisiana University • Aug 2023 – Dec 2024</p>
-              <ul class="work__list">
-                <li>Coached 50+ peers in Java & Python fundamentals, boosting pass rates 20%.</li>
-              </ul>
+              <ul class="work__list"><li>Coached 50+ peers in Java & Python fundamentals, boosting pass rates 20%.</li></ul>
             </div>
           </div>
         </div>
@@ -135,7 +138,7 @@
         <div class="about__content">
           <div class="about__text">
             <p>Hey – I’m Nick, a computer‑science student who loves turning scattered ideas into polished tech. Whether it’s scripting AI behaviors in Unity or wiring Raspberry Pi sensors, I thrive on building things that feel <em>alive</em>. Off‑screen you’ll find me playing indie games, collecting synthwave vinyl, or debating whether tabs beat spaces (they do).</p>
-            <a href="./Nicholas_Burgo_Resume.pdf" class="btn" target="_blank">Download Resume</a>
+            <a href="./Nicholas_Burgo_Resume.pdf" class="btn" target="_blank">Download Resume</a>
           </div>
           <div class="about__photo-container"><img class="about__photo" src="./images/nicholas-burgo.jpg" alt="Photo of Nicholas Burgo" loading="lazy" /></div>
         </div>
@@ -158,16 +161,16 @@
   <footer role="contentinfo" class="footer">
     <div class="row">
       <ul class="footer__social-links">
-        <li class="footer__social-link-item"><a href="https://twitter.com/yourhandle" title="Twitter"><img src="./images/twitter.svg" class="footer__social-image" alt="Twitter"></a></li>
-        <li class="footer__social-link-item"><a href="https://github.com/yourusername" title="GitHub"><img src="./images/github.svg" class="footer__social-image" alt="GitHub"></a></li>
-        <li class="footer__social-link-item"><a href="https://codepen.io/yourusername" title="Codepen"><img src="./images/codepen.svg" class="footer__social-image" alt="Codepen"></a></li>
-        <li class="footer__social-link-item"><a href="https://www.linkedin.com/in/yourlinkedin/" title="LinkedIn"><img src="./images/linkedin.svg" class="footer__social-image" alt="LinkedIn"></a></li>
+        <li class="footer__social-link-item"><a href="https://twitter.com/yourhandle" title="Twitter"><img src="./images/twitter.svg" class="footer__social-image" alt="Twitter" /></a></li>
+        <li class="footer__social-link-item"><a href="https://github.com/yourusername" title="GitHub"><img src="./images/github.svg" class="footer__social-image" alt="GitHub" /></a></li>
+        <li class="footer__social-link-item"><a href="https://codepen.io/yourusername" title="Codepen"><img src="./images/codepen.svg" class="footer__social-image" alt="Codepen" /></a></li>
+        <li class="footer__social-link-item"><a href="https://www.linkedin.com/in/yourlinkedin/" title="LinkedIn"><img src="./images/linkedin.svg" class="footer__social-image" alt="LinkedIn" /></a></li>
       </ul>
-      <p>&copy; 2025 · Designed with ❤ by Nick.</p>
+      <p>&copy; 2025 · Designed with ❤ by Nick.</p>
     </div>
   </footer>
 
-  <a href="#top" class="back-to-top" title="Back to Top"><img src="./images/arrow-up.svg" alt="Back to Top" class="back-to-top__image"></a>
+  <a href="#top" class="back-to-top" title="Back to Top"><img src="./images/arrow-up.svg" alt="Back to Top" class="back-to-top__image" /></a>
   <script src="./index.js"></script>
 </body>
 </html>
