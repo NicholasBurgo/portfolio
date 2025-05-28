@@ -3,804 +3,272 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nicholas Burgo | Computer Science Student & AI Enthusiast</title>
-    <link
-      rel="icon"
-      type="image/x-icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💻</text></svg>"
-    />
-
+    <title>Nicholas Burgo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;500;700;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
       rel="stylesheet"
     />
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <!-- EmailJS -->
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"
-    ></script>
-
     <style>
       body {
-        font-family: "Inter", sans-serif;
-        background: #0e1627;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(to bottom, #0a0f1a, #12161d);
+        color: #f3f4f6;
       }
-
-      /* Custom scrollbar */
-      ::-webkit-scrollbar {
-        width: 8px;
-      }
-
-      ::-webkit-scrollbar-track {
-        background: #1a2a46;
-        border-radius: 4px;
-      }
-
-      ::-webkit-scrollbar-thumb {
-        background: #4fc3f7;
-        border-radius: 4px;
-        border: 1px solid #223050;
-      }
-
-      ::-webkit-scrollbar-thumb:hover {
-        background: #90caf9;
-      }
-
-      /* Firefox scrollbar */
-      * {
-        scrollbar-width: thin;
-        scrollbar-color: #4fc3f7 #1a2a46;
-      }
-
-      .particle-bg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-        pointer-events: none;
-        overflow: hidden;
-      }
-
-      .glow-portrait {
-        box-shadow: 0 0 64px 12px #4fc3f7, 0 2px 12px #021021;
-        animation: softGlow 2.5s alternate infinite;
-        border-radius: 2.5rem;
-      }
-
-      @keyframes softGlow {
-        0% {
-          box-shadow: 0 0 48px 8px #4fc3f7, 0 2px 12px #021021;
+      @keyframes bounce-slow {
+        0%, 100% {
+          transform: translateY(0);
         }
-        100% {
-          box-shadow: 0 0 72px 16px #4fc3f7, 0 2px 20px #021021;
+        50% {
+          transform: translateY(12px);
         }
       }
-
-      .glow-line {
-        background: linear-gradient(90deg, #4fc3f7 0%, #90caf9 100%);
-        height: 2px;
-        border-radius: 2px;
-        margin: 1.5rem 0;
-        opacity: 0.7;
+      .animate-bounce-slow {
+        animation: bounce-slow 2s infinite;
       }
-
-      .glow-line-vert {
-        background: linear-gradient(180deg, #4fc3f7 0%, #90caf9 100%);
-        width: 2px;
-        border-radius: 2px;
-        opacity: 0.7;
-      }
-
-      .card-glass {
-        background: rgba(30, 41, 59, 0.93);
-        backdrop-filter: blur(8px);
-      }
-
-      .card-neon-glow {
-        transition: box-shadow 0.3s, border-color 0.3s;
-        box-shadow: 0 2px 16px rgba(79, 195, 247, 0.1);
-        border: 2px solid transparent;
-      }
-
-      .card-neon-glow:hover,
-      .card-neon-glow:focus-within {
-        box-shadow: 0 0 32px 8px rgba(79, 195, 247, 0.4),
-          0 2px 36px rgba(144, 202, 249, 0.3);
-        border-color: #4fc3f7;
-      }
-
-      .tag-chip {
-        background: rgba(79, 195, 247, 0.11);
-        color: #4fc3f7;
-        font-size: 0.85rem;
-        padding: 0.12rem 0.8rem;
-        border-radius: 1.1rem;
-        margin-right: 0.5rem;
-        line-height: 1.6;
-        font-weight: 500;
-        display: inline-block;
-      }
-
-      .status-badge {
-        font-size: 0.75rem;
-        padding: 0.25rem 1rem;
-        border-radius: 1rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        white-space: nowrap;
-        min-width: fit-content;
-      }
-
-      .status-completed {
-        background: rgba(34, 197, 94, 0.15);
-        color: #22c55e;
-        border: 1px solid rgba(34, 197, 94, 0.3);
-      }
-
-      .status-progress {
-        background: rgba(251, 191, 36, 0.15);
-        color: #fbbf24;
-        border: 1px solid rgba(251, 191, 36, 0.3);
-      }
-
-      .course-badge {
-        background: rgba(168, 85, 247, 0.15);
-        color: #a855f7;
-        font-size: 0.75rem;
-        padding: 0.25rem 1rem;
-        border-radius: 1rem;
-        font-weight: 500;
-        border: 1px solid rgba(168, 85, 247, 0.3);
-        white-space: nowrap;
-        min-width: fit-content;
-      }
-
-      .fadeInUp {
-        opacity: 0;
-        transform: translateY(30px);
-        animation: fadeInUpAnim 0.7s forwards
-          cubic-bezier(0.48, 1.54, 0.49, 0.97);
-      }
-
-      @keyframes fadeInUpAnim {
-        to {
-          opacity: 1;
-          transform: none;
-        }
-      }
-
-      .zoom-img {
-        transition: transform 0.5s, filter 0.4s;
-      }
-
-      .card-neon-glow:hover .zoom-img,
-      .card-neon-glow:focus-within .zoom-img {
-        transform: scale(1.05);
-        filter: blur(1.2px) brightness(1.1);
-      }
-
-      .project-actions-fade {
-        opacity: 0;
-        transform: translateY(16px);
-        pointer-events: none;
-        transition: all 0.28s cubic-bezier(0.23, 1.01, 0.72, 0.96);
-      }
-
-      .card-neon-glow:hover .project-actions-fade,
-      .card-neon-glow:focus-within .project-actions-fade {
+      .fade-bg img {
+        will-change: opacity;
+        transition: opacity 0.5s ease;
         opacity: 1;
-        transform: none;
-        pointer-events: auto;
-      }
-
-      .project-modal-bg {
-        background: rgba(10, 18, 32, 0.82);
-        backdrop-filter: blur(6px);
-      }
-
-      .project-modal {
-        animation: modalPopIn 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55) both;
-      }
-
-      @keyframes modalPopIn {
-        0% {
-          opacity: 0;
-          transform: scale(0.89) translateY(40px);
-        }
-        100% {
-          opacity: 1;
-          transform: none;
-        }
-      }
-
-      .glow-input:focus {
-        box-shadow: 0 0 0 3px #4fc3f766, 0 2px 12px #223050;
-        border-color: #4fc3f7;
-      }
-
-      .input-shadow {
-        box-shadow: 0 2px 18px #10254233 inset, 0 1px 1.5px #4fc3f740;
-      }
-
-      .glow-button {
-        transition: box-shadow 0.23s, transform 0.18s, background 0.2s;
-        box-shadow: 0 2px 14px #4fc3f7a6;
-      }
-
-      .glow-button:hover {
-        background: #90caf9;
-        color: #0e1627;
-        box-shadow: 0 4px 24px #4fc3f7cc, 0 1px 4px #021021;
-        transform: translateY(-2px) scale(1.04);
-      }
-
-      .slide-in {
-        animation: slideInAnim 0.7s cubic-bezier(0.55, 0.01, 0.45, 1.2);
-      }
-
-      @keyframes slideInAnim {
-        0% {
-          opacity: 0;
-          transform: translateY(32px);
-        }
-        100% {
-          opacity: 1;
-          transform: none;
-        }
-      }
-
-      .shake {
-        animation: shakeAnim 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-      }
-
-      @keyframes shakeAnim {
-        10%,
-        90% {
-          transform: translateX(-2px);
-        }
-        20%,
-        80% {
-          transform: translateX(4px);
-        }
-        30%,
-        50%,
-        70% {
-          transform: translateX(-10px);
-        }
-        40%,
-        60% {
-          transform: translateX(10px);
-        }
-      }
-
-      .signature {
-        font-family: "Pacifico", cursive;
-        color: #4fc3f7;
-        font-size: 1.35rem;
-        letter-spacing: 1px;
-        font-weight: 400;
-      }
-
-      /* Mobile modal fixes */
-      @media (max-width: 640px) {
-        .project-modal {
-          max-height: 90vh;
-          overflow-y: auto;
-          margin: 1rem;
-        }
-
-        .project-modal-content {
-          max-height: calc(90vh - 4rem);
-          overflow-y: auto;
-        }
       }
     </style>
   </head>
-  <body class="relative bg-[#0e1627] text-white font-[Inter] overflow-x-hidden">
-    <!-- Fixed Social Icons -->
-    <div class="fixed top-7 right-8 z-30 flex gap-4">
-      <a
-        href="https://github.com/NicholasBurgo"
-        target="_blank"
-        class="text-[#b1c9e7] hover:text-[#4fc3f7] transition"
-        ><i class="fa-brands fa-github text-2xl"></i
-      ></a>
-      <a
-        href="https://www.linkedin.com/in/nicholas-burgo/"
-        target="_blank"
-        class="text-[#b1c9e7] hover:text-[#4fc3f7] transition"
-        ><i class="fa-brands fa-linkedin text-2xl"></i
-      ></a>
-      <a
-        href="mailto:nicholas.burgo@selu.edu"
-        class="text-[#b1c9e7] hover:text-[#4fc3f7] transition"
-        ><i class="fa-regular fa-envelope text-2xl"></i
-      ></a>
-    </div>
-
-    <!-- Particle Background -->
-    <div class="particle-bg" id="particle-background"></div>
-
-    <!-- Main Content -->
-    <main
-      class="relative z-10 flex flex-col items-center w-full min-h-screen pb-24 px-4"
-    >
-      <!-- HERO + ABOUT -->
-      <section id="hero-about-wrapper" class="w-full">
-        <section
-          id="hero-section"
-          class="w-full max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between md:pt-28 pt-16 pb-20 md:pb-32"
-        >
-          <div class="flex-1 flex flex-col items-start justify-center md:pr-8">
-            <h1
-              class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
-            >
-              Hi, I'm Nicholas —<br /><span class="text-[#4fc3f7]">Student</span>
-              &amp; <span class="text-[#90caf9]">AI Enthusiast</span>
-            </h1>
-            <div class="flex gap-5 mb-7">
-              <a
-                href="#projects-wrapper"
-                class="rounded-full px-7 py-3 text-base font-semibold bg-[#4fc3f7] text-[#0e1627] hover:bg-[#90caf9] shadow-xl transition cursor-pointer"
-                >View Portfolio</a
-              >
-              <a
-                href="#contact-wrapper"
-                class="rounded-full px-7 py-3 text-base font-semibold border border-[#4fc3f7] text-[#4fc3f7] bg-transparent hover:bg-[#192848] shadow-lg transition cursor-pointer"
-                >Contact Me</a
-              >
-            </div>
-          </div>
-          <div class="hidden md:flex glow-line-vert h-[330px] mx-12"></div>
-          <div
-            class="flex-1 flex items-center justify-center w-full md:w-auto mt-12 md:mt-0"
-          >
-            <div class="relative">
-              <img
-                class="glow-portrait w-[270px] h-[270px] object-cover object-center bg-[#192848] border-[6px] border-[#032144] shadow-2xl"
-                src="images/headshot-main.png"
-                alt="Nicholas Burgo Portrait"
-              />
-            </div>
-          </div>
-        </section>
-
-        <div class="glow-line w-full max-w-4xl mx-auto"></div>
-
-        <section
-          id="about-section"
-          class="w-full max-w-4xl mx-auto mt-10 mb-8 md:mt-24 md:mb-16 flex flex-col md:flex-row bg-[#13203a] rounded-3xl shadow-lg overflow-hidden border border-[#223050]"
-        >
-          <div
-            class="hidden md:flex items-center justify-center flex-1 bg-gradient-to-b from-[#1a2a46] to-[#13203a] p-0"
-          >
-            <div
-              class="relative flex items-center justify-center w-full h-full py-16"
-            >
-              <img
-                class="glow-portrait w-[210px] h-[210px] object-cover object-center bg-[#223050] border-[3px] border-[#25375d] shadow-2xl"
-                src="images/headshot-about.jpg"
-                alt="Nicholas Burgo"
-              />
-            </div>
-          </div>
-          <div
-            class="flex-1 flex flex-col justify-center px-7 py-10 md:py-14 md:pl-0 text-left bg-[#192848]"
-          >
-            <h2 class="text-2xl sm:text-3xl font-bold mb-4 text-white">
-              About Me
-            </h2>
-            <p
-              class="text-white/90 text-base sm:text-lg md:pr-6 mb-7 leading-relaxed"
-            >
-              I'm a <span class="text-[#4fc3f7] font-medium">Computer Science student with a concentration in Data Science</span> at
-              Southeastern Louisiana University. I love applying myself in all of my project courses, particularly as a 
-              <span class="text-[#4fc3f7] font-medium">Backend Developer</span>. I am developing my own game, which has been a fun journey for me!
-            </p>
-            <div class="glow-line w-full"></div>
-            <div class="grid grid-cols-2 gap-x-6 gap-y-5 mb-7 pl-4">
-              <div class="flex items-center gap-3">
-                <i
-                  class="fa-solid fa-graduation-cap text-[#4fc3f7] text-xl"
-                ></i>
-                <div>
-                  <span class="block text-white font-medium">Education</span>
-                  <span class="text-[#b1c9e7] text-sm"
-                    >B.S. in CS (Fall 2026)</span
-                  >
-                </div>
-              </div>
-              <div class="flex items-center gap-3">
-                <i class="fa-solid fa-language text-[#4fc3f7] text-xl"></i>
-                <div>
-                  <span class="block text-white font-medium">Languages</span>
-                  <span class="text-[#b1c9e7] text-sm">English</span>
-                </div>
-              </div>
-              <div class="flex items-center gap-3">
-                <i class="fa-solid fa-code text-[#4fc3f7] text-xl"></i>
-                <div>
-                  <span class="block text-white font-medium">Tech Stack</span>
-                  <span class="text-[#b1c9e7] text-sm">React, SQL, Java</span>
-                </div>
-              </div>
-              <div class="flex items-center gap-3">
-                <i class="fa-solid fa-lightbulb text-[#4fc3f7] text-xl"></i>
-                <div>
-                  <span class="block text-white font-medium">Interests</span>
-                  <span class="text-[#b1c9e7] text-sm">Game & Software Development</span>
-                </div>
-              </div>
-            </div>
-            <div class="glow-line w-full mb-5"></div>
-            <div class="text-center">
-              <a
-                href="documents/nicholas-burgo-resume.pdf"
-                download="Nicholas_Burgo_Resume.pdf"
-                class="inline-flex items-center gap-2 rounded-full bg-[#4fc3f7] text-[#0e1627] font-semibold px-7 py-3 shadow-lg transition hover:bg-[#90caf9] cursor-pointer"
-              >
-                <i class="fa-solid fa-file-arrow-down"></i>
-                Download Resume
-              </a>
-            </div>
-          </div>
-        </section>
-      </section>
-
-      <!-- PROJECTS -->
-      <section
-        id="projects-wrapper"
-        class="w-full max-w-6xl mx-auto mt-20 px-2"
-      >
-        <section class="text-center max-w-3xl mx-auto mb-12">
-          <h2 class="text-4xl sm:text-5xl font-bold mb-4">Projects</h2>
-          <p class="text-lg text-[#b1c9e7]">Some things I've built recently.</p>
-          <div class="text-xs text-[#6ea2d8] tracking-wide mt-1">
-            Click on any project for details
-          </div>
-          <div class="glow-line w-1/2 mx-auto mt-6"></div>
-        </section>
-
-        <div
-          id="projects-card-masonry"
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-8"
-        >
-          <!-- PROJECT CARD 1 - Fable Market -->
-          <div
-            onclick="openProjectModal(0)"
-            class="card-glass card-neon-glow rounded-2xl overflow-hidden flex flex-col cursor-pointer fadeInUp relative"
-          >
-            <img
-              class="zoom-img w-full h-[220px] object-cover object-top bg-[#263d5c]"
-              src="images/fable-market.jpg"
-              alt="Fable Market - Book marketplace platform"
-            />
-            <div class="flex-1 flex flex-col px-6 py-5">
-              <h3 class="text-xl font-bold mb-1">Fable Market</h3>
-              <div class="mb-2 flex flex-wrap gap-2">
-                <span class="status-badge status-completed">Completed</span>
-                <span class="course-badge">Software Engineering</span>
-              </div>
-              <p class="text-[#b1c9e7] text-sm leading-relaxed mb-2">
-                A comprehensive book marketplace platform with features for purchasing books, leaving reviews, and creating personalized book lists with advanced search functionality.
-              </p>
-              <div class="flex gap-3 mt-auto pt-2">
-                <button
-                  onclick="event.stopPropagation();openProjectModal(0)"
-                  class="rounded-full px-4 py-2 text-xs font-semibold border border-[#4fc3f7] text-[#4fc3f7] bg-transparent hover:bg-[#1a2a46] shadow-sm transition"
-                >
-                  Read More
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- PROJECT CARD 2 - Car Dealership Database -->
-          <div
-            onclick="openProjectModal(1)"
-            class="card-glass card-neon-glow rounded-2xl overflow-hidden flex flex-col cursor-pointer fadeInUp relative"
-          >
-            <img
-              class="zoom-img w-full h-[220px] object-cover object-center bg-[#263d5c]"
-              src="images/car-dealership.jpg"
-              alt="Car Dealership Database - Relational database system"
-            />
-            <div class="flex-1 flex flex-col px-6 py-5">
-              <h3 class="text-xl font-bold mb-1">Car Dealership Database</h3>
-              <div class="mb-2 flex gap-2">
-                <span class="status-badge status-completed">Completed</span>
-                <span class="course-badge">Database Systems</span>
-              </div>
-              <p class="text-[#b1c9e7] text-sm leading-relaxed mb-2">
-                Architected a comprehensive 5-table relational database system for car-rental operations with full ER-diagram modeling and SQL implementation.
-              </p>
-              <div class="flex gap-3 mt-auto pt-2">
-                <button
-                  onclick="event.stopPropagation();openProjectModal(1)"
-                  class="rounded-full px-4 py-2 text-xs font-semibold border border-[#4fc3f7] text-[#4fc3f7] bg-transparent hover:bg-[#1a2a46] shadow-sm transition"
-                >
-                  Read More
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- PROJECT CARD 3 - VR Shooter -->
-          <div
-            onclick="openProjectModal(2)"
-            class="card-glass card-neon-glow rounded-2xl overflow-hidden flex flex-col cursor-pointer fadeInUp relative"
-          >
-            <img
-              class="zoom-img w-full h-[220px] object-cover object-center bg-[#263d5c]"
-              src="images/vr-shooter.jpg"
-              alt="VR Shooter - Unity VR game development"
-            />
-            <div class="flex-1 flex flex-col px-6 py-5">
-              <h3 class="text-xl font-bold mb-1">VR Shooter</h3>
-              <div class="mb-2 flex gap-2">
-                <span class="status-badge status-progress">In Progress</span>
-                <span class="course-badge">Innovation Hub</span>
-              </div>
-              <p class="text-[#b1c9e7] text-sm leading-relaxed mb-2">
-                End-to-end virtual reality sandbox built in Unity combining first-person weapon mechanics with AI-driven open world environments.
-              </p>
-              <div class="flex gap-3 mt-auto pt-2">
-                <button
-                  onclick="event.stopPropagation();openProjectModal(2)"
-                  class="rounded-full px-4 py-2 text-xs font-semibold border border-[#4fc3f7] text-[#4fc3f7] bg-transparent hover:bg-[#1a2a46] shadow-sm transition"
-                >
-                  Read More
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- PROJECT CARD 4 - Lua Multiplayer Networking -->
-          <div
-            onclick="openProjectModal(3)"
-            class="card-glass card-neon-glow rounded-2xl overflow-hidden flex flex-col cursor-pointer fadeInUp relative"
-          >
-            <img
-              class="zoom-img w-full h-[220px] object-cover object-center bg-[#263d5c]"
-              src="images/lua-multiplayer.jpg"
-              alt="Lua Multiplayer Networking - Game networking project"
-            />
-            <div class="flex-1 flex flex-col px-6 py-5">
-              <h3 class="text-xl font-bold mb-1">Lua Multiplayer Networking</h3>
-              <div class="mb-2 flex gap-2">
-                <span class="status-badge status-completed">Completed</span>
-                <span class="course-badge">Survey Programming</span>
-              </div>
-              <p class="text-[#b1c9e7] text-sm leading-relaxed mb-2">
-                Engaging local multiplayer mini-games built with Lua using host-client architecture for seamless real-time player interactions.
-              </p>
-              <div class="flex gap-3 mt-auto pt-2">
-                <button
-                  onclick="event.stopPropagation();openProjectModal(3)"
-                  class="rounded-full px-4 py-2 text-xs font-semibold border border-[#4fc3f7] text-[#4fc3f7] bg-transparent hover:bg-[#1a2a46] shadow-sm transition"
-                >
-                  Read More
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- CONTACT -->
-      <section
-        id="contact-wrapper"
-        class="w-full max-w-2xl mx-auto bg-[#162649]/[0.98] rounded-2xl shadow-2xl border border-[#223050] px-6 py-10 mt-20 slide-in"
-      >
-        <div class="flex flex-col items-center mb-6">
-          <span class="text-3xl md:text-4xl font-bold mb-3 text-center"
-            ><i class="fa-solid fa-rocket text-[#4fc3f7] mr-2"></i>Let's
-            Connect</span
-          >
-          <span
-            class="text-base sm:text-lg text-[#b1c9e7] font-medium text-center max-w-md"
-            >I'm always open to interesting conversations about AI, programming,
-            or collaborative projects!</span
-          >
-        </div>
-
-        <form
-          id="contact-form"
-          class="w-full max-w-lg mx-auto flex flex-col gap-5 mb-6"
-          autocomplete="off"
-        >
-          <div>
-            <label
-              for="name"
-              class="block text-[#b1c9e7] text-sm font-medium mb-2"
-              >Name</label
-            >
-            <input
-              id="name"
-              name="name"
-              type="text"
-              required
-              class="w-full rounded-xl input-shadow bg-[#101c36] border border-[#25375d] text-white placeholder-[#b1c9e7] px-4 py-2.5 glow-input focus:outline-none text-sm"
-              placeholder="Your name"
-            />
-          </div>
-          <div>
-            <label
-              for="email"
-              class="block text-[#b1c9e7] text-sm font-medium mb-2"
-              >Email</label
-            >
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              class="w-full rounded-xl input-shadow bg-[#101c36] border border-[#25375d] text-white placeholder-[#b1c9e7] px-4 py-2.5 glow-input focus:outline-none text-sm"
-              placeholder="you@email.com"
-            />
-          </div>
-          <div>
-            <label
-              for="message"
-              class="block text-[#b1c9e7] text-sm font-medium mb-2"
-              >Message</label
-            >
-            <textarea
-              id="message"
-              name="message"
-              rows="4"
-              required
-              class="w-full rounded-xl input-shadow bg-[#101c36] border border-[#25375d] text-white placeholder-[#b1c9e7] px-4 py-2.5 glow-input resize-none focus:outline-none text-sm"
-              placeholder="Tell me about your project or just say hi!"
-            ></textarea>
-          </div>
-          <button
-            id="contact-submit"
-            type="submit"
-            class="glow-button mt-2 rounded-full bg-[#4fc3f7] text-[#0e1627] font-bold text-base px-6 py-2.5 hover:bg-[#90caf9] focus:outline-none transition flex items-center justify-center gap-2 mx-auto"
-          >
-            <span>Send Message</span>
-            <i class="fa-solid fa-paper-plane"></i>
-            <span id="contact-spinner" class="hidden ml-2 animate-spin">
-              <svg
-                class="h-4 w-4 text-[#0e1627]"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="3"
-                />
-                <path
-                  class="opacity-75"
-                  fill="#0e1627"
-                  d="M4 12a8 8 0 018-8v8z"
-                />
-              </svg>
-            </span>
-          </button>
-          <div
-            id="contact-toast"
-            class="hidden rounded-xl px-5 py-2.5 mt-3 mx-auto bg-[#25375d] text-[#4fc3f7] font-semibold text-sm shadow-2xl text-center"
-          ></div>
-        </form>
-
-        <!-- Contact Info Alternative -->
-        <div class="text-center border-t border-[#25375d] pt-5">
-          <p class="text-[#b1c9e7] mb-3 text-sm">Or reach out directly:</p>
-          <div class="flex flex-wrap gap-3 justify-center text-sm">
-            <a
-              href="mailto:nicholas.burgo@selu.edu"
-              class="flex items-center gap-2 text-[#4fc3f7] hover:text-[#90caf9] transition"
-            >
-              <i class="fa-regular fa-envelope"></i>
-              <span>nicholas.burgo@selu.edu</span>
-            </a>
-            <a
-              href="https://www.linkedin.com/in/nicholas-burgo/"
-              target="_blank"
-              class="flex items-center gap-2 text-[#4fc3f7] hover:text-[#90caf9] transition"
-            >
-              <i class="fa-brands fa-linkedin"></i>
-              <span>LinkedIn</span>
-            </a>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- Modal -->
-    <div
-      id="project-modal-overlay"
-      class="fixed inset-0 z-50 flex items-center justify-center project-modal-bg hidden p-4"
-      onclick="closeProjectModal()"
-    >
-      <div
-        id="project-modal"
-        class="project-modal bg-[#17243b] rounded-3xl shadow-xl border-2 border-[#4fc3f7] max-w-2xl w-full mx-4 p-7 pt-5 relative max-h-[90vh] overflow-y-auto"
-        onclick="event.stopPropagation();"
-      >
-        <button
-          onclick="closeProjectModal()"
-          class="absolute top-4 right-5 text-[#b1c9e7] hover:text-[#4fc3f7] p-2 text-xl z-10"
-        >
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-        <div id="project-modal-content" class="flex flex-col gap-5 pr-8"></div>
+  <body class="relative overflow-x-hidden">
+    <!-- Navbar -->
+    <header class="fixed top-0 left-0 w-full z-50 backdrop-blur bg-white/5 px-6 py-4 flex items-center justify-between border-b border-white/10">
+      <div class="flex items-center gap-4">
+        <h1 class="text-lg sm:text-xl font-extrabold text-white">
+          Nicholas<span class="text-blue-500">Burgo</span>
+        </h1>
       </div>
+      <div class="flex-1 flex justify-center">
+        <nav class="hidden md:flex gap-8 text-md font-bold text-white/80">
+          <a href="#home" class="hover:text-white">00 // Home</a>
+          <a href="#projects" class="hover:text-white">01 // Projects</a>
+          <a href="#experience" class="hover:text-white">02 // About me</a>
+          <a href="#contact" class="hover:text-white">03 // Contact</a>
+        </nav>
+      </div>
+      <div class="flex gap-4 text-white text-lg">
+        <a href="https://github.com/NicholasBurgo" target="_blank" class="hover:text-blue-400"><i class="fab fa-github"></i></a>
+        <a href="https://www.linkedin.com/in/nicholas-burgo/" target="_blank" class="hover:text-blue-400"><i class="fab fa-linkedin"></i></a>
+        <a href="mailto:nicholas.burgo@selu.edu" class="hover:text-blue-400"><i class="fas fa-envelope"></i></a>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex flex-col items-center justify-center px-4 text-center pt-26 relative">
+      <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none fade-bg">
+        <img src="images/Galaxy.jpg" alt="Galaxy Background" class="w-full h-full object-cover opacity-40" />
+      </div>
+      <div class="relative z-10">
+        <h2 class="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight">
+          <span class="block text-white">NICHOLAS BURGO</span>
+        </h2>
+        <p class="mt-6 text-sm sm:text-base text-white/80 tracking-widest uppercase">
+          Computer Science Student | Data-Driven Developer
+        </p>
+      </div>
+      <div class="absolute bottom-8 flex justify-center w-full">
+        <button onclick="document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });">
+          <i class="fas fa-chevron-down text-white text-3xl animate-bounce-slow hover:text-blue-500 transition"></i>
+        </button>
+      </div>
+    </section>
+    <!-- Projects Section -->
+    <section id="projects" class="min-h-screen px-6 pt-20 pb-32 relative">
+      <h3 class="text-2xl font-semibold mb-8">See My latest Work (click to see more)</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- project 1-->
+        <div onclick="openProjectModal(0)"
+        class="bg-[#101820] p-5 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 cursor-pointer">
+          <img src="images/fableMarket.png" alt="Fable Market" class="w-full h-48 object-cover rounded-lg mb-4" />
+          <h3 class="text-xl font-bold text-white mb-2">Fable Market</h3>
+          <div class="flex flex-wrap gap-2 mb-2">
+            <span class="bg-green-700 text-white text-xs px-3 py-1 rounded-full">Completed</span>
+            <span class="bg-blue-700 text-white text-xs px-3 py-1 rounded-full">Software Engineering</span>
+          </div>
+          <p class="text-[#b1c9e7] text-sm leading-relaxed mb-4">
+            A comprehensive book marketplace with features for buying books, reviews, and search filtering.
+          </p>
+        </div>
+        <!-- project 2-->
+        <div onclick="openProjectModal(1)"
+        class="bg-[#101820] p-5 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 cursor-pointer">
+          <img src="images/car-dealership.jpg" alt="Car Dealership Database" class="w-full h-48 object-cover rounded-lg mb-4" />
+          <h3 class="text-xl font-bold text-white mb-2">Car Dealership Database</h3>
+          <div class="flex flex-wrap gap-2 mb-2">
+            <span class="bg-green-700 text-white text-xs px-3 py-1 rounded-full">Completed</span>
+            <span class="bg-blue-700 text-white text-xs px-3 py-1 rounded-full">Database Systems</span>
+          </div>
+          <p class="text-[#b1c9e7] text-sm leading-relaxed mb-4">
+            Architected a 5-table relational database system for car-rental operations with ER modeling and SQL implementation.
+          </p>
+        </div>
+        <!-- project 3-->
+        <div onclick="openProjectModal(2)"
+        class="bg-[#101820] p-5 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 cursor-pointer">
+          <img src="images/vr-shooter.jpg" alt="VR Shooter" class="w-full h-48 object-cover rounded-lg mb-4" />
+          <h3 class="text-xl font-bold text-white mb-2">VR Shooter</h3>
+          <div class="flex flex-wrap gap-2 mb-2">
+            <span class="bg-yellow-600 text-white text-xs px-3 py-1 rounded-full">In Progress</span>
+            <span class="bg-purple-700 text-white text-xs px-3 py-1 rounded-full">Innovation Hub</span>
+          </div>
+          <p class="text-[#b1c9e7] text-sm leading-relaxed mb-4">
+            VR sandbox in Unity with first-person mechanics, AI-driven world, and immersive simulation.
+          </p>
+        </div>
+        <!-- project 4-->
+        <div onclick="openProjectModal(3)"
+        class="bg-[#101820] p-5 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 cursor-pointer">
+          <img src="images/lua-multiplayer.jpg" alt="Lua Multiplayer Networking" class="w-full h-48 object-cover rounded-lg mb-4" />
+          <h3 class="text-xl font-bold text-white mb-2">Lua Multiplayer Networking</h3>
+          <div class="flex flex-wrap gap-2 mb-2">
+            <span class="bg-green-700 text-white text-xs px-3 py-1 rounded-full">Completed</span>
+            <span class="bg-indigo-600 text-white text-xs px-3 py-1 rounded-full">Survey Programming</span>
+          </div>
+          <p class="text-[#b1c9e7] text-sm leading-relaxed mb-4">
+            Local multiplayer mini-games using Lua with host-client architecture and real-time interactions.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  <section id="experience" class="min-h-[40vh] px-6 lg:px-12 pt-0 pb-0 relative">
+    <h3 class="text-2xl font-semibold mb-10">03 // About&nbsp;Me</h3>
+
+    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12">
+
+  <!-- ░░ LEFT: Portrait + About + Skills ░░ -->
+      <div class="flex-1 min-w-0 flex flex-col md:flex-row gap-8">
+
+        <!-- portrait -->
+        <div class="md:w-48 flex-shrink-0 flex justify-center">
+          <img src="images/headshot-main.png"
+              alt="Nicholas Burgo portrait"
+              class="w-40 h-40 object-cover rounded-2xl shadow-lg ring-2 ring-blue-500/40"/>
+        </div>
+
+        <!-- text & skills -->
+        <div class="flex-1">
+          <!-- About text -->
+          <h4 class="text-xl font-extrabold mb-3 text-white tracking-tight">Who&nbsp;I&nbsp;Am</h4>
+          <p class="text-white/80 leading-relaxed mb-8">
+            I’m a <span class="text-blue-400 font-semibold">Computer Science</span> student focused on
+            data-driven software and AI-powered experiences. I blend clean UI with solid backend architecture
+            and turn complex data into features people love.
+          </p>
+
+          <!-- Skills pills -->
+          <h4 class="text-xl font-extrabold mb-3 text-white tracking-tight">Core&nbsp;Skills</h4>
+          <div class="flex flex-wrap gap-2">
+            <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">React</span>
+            <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">TypeScript</span>
+            <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">Tailwind CSS</span>
+            <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">Python</span>
+            <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">SQL</span>
+            <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">Unity / C#</span>
+          </div>
+
+          <!-- Résumé button -->
+          <a href="documents/Nicholas_Burgo_Resume.pdf" download
+            class="inline-flex items-center gap-2 mt-10 px-6 py-3 rounded-full
+                    border border-blue-400 text-blue-300 hover:bg-blue-600 hover:text-white
+                    transition font-semibold shadow-sm">
+            <i class="fa-solid fa-file-arrow-down"></i> Download Résumé
+          </a>
+        </div>
+      </div>
+
+      <!-- ░░ RIGHT: Education card (unchanged) ░░ -->
+      <div class="lg:w-80 w-full">
+        <div class="bg-[#101820]/90 backdrop-blur-md border border-white/10
+                    rounded-xl p-6 shadow-xl">
+          <h4 class="text-xl font-bold text-white mb-4">Education</h4>
+          <p class="text-white/80 leading-relaxed">
+            <span class="block font-semibold">B.S. Computer Science</span>
+            Southeastern Louisiana University<br>
+            <span class="text-sm text-white/60">Concentration: Data Science</span><br>
+            <span class="text-sm text-white/60">Expected Graduation: Fall 2026</span>
+          </p>
+        </div>
+      </div>
+
+
+      </div>
+
     </div>
+        <section id="contact" class="min-h-[60vh] px-6 lg:px-12 pt-20 pb-32 relative">
+
+          <div class="max-w-4xl mx-auto bg-[#101820]/90 backdrop-blur-md border border-white/10
+                      rounded-2xl p-8 shadow-xl flex flex-col gap-10">
+
+            <!-- Intro -->
+            <p class="text-white/80 leading-relaxed">
+              I’m <span class="text-blue-400 font-medium">open to freelance projects</span> and part-time collaborations  
+              involving web apps, data pipelines, or AI-powered features.
+              Let’s discuss how I can help you turn ideas into reliable, data-driven products.
+            </p>
+
+            <!-- Direct contact links -->
+            <div class="grid sm:grid-cols-3 gap-6">
+
+              <!-- Email card -->
+              <a href="mailto:nicholas.burgo@selu.edu"
+                class="bg-[#0f1320] rounded-xl p-6 border border-white/10 hover:border-blue-400
+                        flex flex-col items-center text-center transition">
+                <i class="fas fa-envelope text-2xl text-blue-400 mb-3"></i>
+                <span class="text-white font-semibold">Email</span>
+                <span class="text-white/60 text-sm mt-1">nicholas.burgo@selu.edu</span>
+              </a>
+
+              <!-- LinkedIn card -->
+              <a href="https://www.linkedin.com/in/nicholas-burgo" target="_blank"
+                class="bg-[#0f1320] rounded-xl p-6 border border-white/10 hover:border-blue-400
+                        flex flex-col items-center text-center transition">
+                <i class="fab fa-linkedin text-2xl text-blue-400 mb-3"></i>
+                <span class="text-white font-semibold">LinkedIn</span>
+                <span class="text-white/60 text-sm mt-1">@nicholas-burgo</span>
+              </a>
+
+              <!-- GitHub card -->
+              <a href="https://github.com/NicholasBurgo" target="_blank"
+                class="bg-[#0f1320] rounded-xl p-6 border border-white/10 hover:border-blue-400
+                        flex flex-col items-center text-center transition">
+                <i class="fab fa-github text-2xl text-blue-400 mb-3"></i>
+                <span class="text-white font-semibold">GitHub</span>
+                <span class="text-white/60 text-sm mt-1">github.com/NicholasBurgo</span>
+              </a>
+
+            </div>
+          </div>
+
+          <button
+            class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white text-3xl
+                  animate-bounce-slow hover:text-blue-500 transition"
+            onclick="document.getElementById('home').scrollIntoView({behavior:'smooth'})">
+            <i class="fas fa-chevron-up"></i>
+          </button>
+        </section>
+
+    </section>
+
+    <!-- Project Modal Structure -->
+    </div>
+      <div id="project-modal-overlay" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden">
+        <div id="project-modal" class="bg-[#17243b] rounded-3xl shadow-xl border-2 border-[#4fc3f7] max-w-2xl w-full mx-4 p-7 pt-5 relative max-h-[90vh] overflow-y-auto"
+            onclick="event.stopPropagation();">
+          <button onclick="closeProjectModal()"
+                  class="absolute top-4 right-5 text-[#b1c9e7] hover:text-[#4fc3f7] p-2 text-xl z-10">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+          <div id="project-modal-body" class="flex flex-col gap-5 pr-8"></div>
+        </div>
+      </div>
 
     <script>
-      // TODO: EmailJS Setup Instructions
-      // 1. Create account at https://www.emailjs.com/
-      // 2. Create an email service (Gmail, Outlook, etc.)
-      // 3. Create an email template with variables: {{from_name}}, {{from_email}}, {{message}}
-      // 4. Replace the values below with your actual EmailJS credentials:
-      
-      // Initialize EmailJS - REPLACE WITH YOUR PUBLIC KEY
-      (function () {
-        emailjs.init("YOUR_PUBLIC_KEY_HERE"); // Replace with your EmailJS Public Key
-      })();
-
-      // Particle effect
-      function createParticles(id, count, animationPrefix = "floatDot") {
-        const container = document.getElementById(id);
-        if (!container) return;
-
-        for (let i = 0; i < count; i++) {
-          const dot = document.createElement("div");
-          dot.style.position = "absolute";
-          dot.style.left = `${Math.random() * 100}%`;
-          dot.style.top = `${Math.random() * 100}%`;
-          const size = 4 + Math.random() * 6;
-          dot.style.width = `${size}px`;
-          dot.style.height = `${size}px`;
-          dot.style.borderRadius = "50%";
-          dot.style.background = "rgba(79,195,247,0.13)";
-          dot.style.filter = "blur(1.5px)";
-          const animName = `${animationPrefix}${i}`;
-          dot.style.animation = `${animName} ${
-            5 + Math.random() * 6
-          }s ease-in-out ${Math.random() * 6}s infinite alternate`;
-          container.appendChild(dot);
-
-          const styleSheet =
-            document.styleSheets[document.styleSheets.length - 1];
-          const moveY = -25 + Math.random() * 50;
-          styleSheet.insertRule(
-            `@keyframes ${animName} {
-              0% { transform: translateY(0px); }
-              100% { transform: translateY(${moveY}px); }
-            }`,
-            styleSheet.cssRules.length
-          );
-        }
-      }
-
-      // Run particles on load
-      window.addEventListener("DOMContentLoaded", () => {
-        createParticles("particle-background", 32);
-      });
-
-      // Project modal logic with Nicholas's projects
-      const projectData = [
+ const projectData = [
         {
           title: "Fable Market",
           tech: ["React", "TypeScript", "C#"],
@@ -857,116 +325,57 @@
         },
       ];
 
-      function openProjectModal(idx) {
-        const modal = document.getElementById("project-modal-overlay");
-        const content = document.getElementById("project-modal-content");
-        const data = projectData[idx];
-        if (!content) return;
-
-        const techHTML = data.tech
-          .map((t) => `<span class="tag-chip mb-1">${t}</span>`)
-          .join("");
-        const linksHTML = data.links
-          .map((link) => {
-            if (link.type === "github") {
-              return `<a href="${link.url}" target="_blank" class="rounded-full bg-[#223050e6] border border-[#4fc3f7] px-4 py-2 text-[#4fc3f7] font-semibold shadow hover:bg-[#263d5c] transition flex items-center gap-2 text-sm">
-                      <i class="fa-brands fa-github"></i><span>GitHub</span>
-                    </a>`;
-            }
-            return "";
-          })
-          .join("");
-
-        content.innerHTML = `
-          <h3 class="text-2xl font-bold mb-1 text-white tracking-tight">${data.title}</h3>
-          <div class="mb-2 flex flex-wrap gap-y-1">${techHTML}</div>
-          <div class="mb-3 text-[#b1c9e7] text-base">${data.desc}</div>
-          <div class="text-sm text-[#aadcf2] leading-relaxed mb-2">${data.longDesc}</div>
-          <div class="flex flex-wrap gap-4 mt-5">${linksHTML}</div>
-        `;
-
-        modal.classList.remove("hidden");
-        document.body.style.overflow = "hidden";
-      }
-
       function closeProjectModal() {
         document
           .getElementById("project-modal-overlay")
           .classList.add("hidden");
         document.body.style.overflow = "";
       }
+      
+      function openProjectModal(idx) {
+        const overlay = document.getElementById('project-modal-overlay');
+        const body    = document.getElementById('project-modal-body');
+        const data    = projectData[idx];
+        if (!body) return;
 
-      window.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") closeProjectModal();
-      });
+        const techHTML = data.tech
+              .map(t => `<span class="inline-block px-3 py-1 bg-blue-800 rounded-full text-xs mr-2 mb-1">${t}</span>`)
+              .join('');
 
-      // EmailJS Contact Form Handler
-      const contactForm = document.getElementById("contact-form");
-      if (contactForm) {
-        contactForm.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const spinner = document.getElementById("contact-spinner");
-          const toast = document.getElementById("contact-toast");
-          const submitBtn = document.getElementById("contact-submit");
+        const linksHTML = data.links
+              .map(link =>
+                link.type === 'github'
+                  ? `<a href="${link.url}" target="_blank"
+                        class="inline-flex items-center px-4 py-2 border border-blue-400 text-blue-400 rounded-full hover:bg-blue-600 hover:text-white transition">
+                      <i class="fa-brands fa-github mr-2"></i> GitHub
+                    </a>`
+                  : '')
+              .join('');
 
-          spinner.classList.remove("hidden");
-          submitBtn.disabled = true;
-          toast.classList.add("hidden");
+        body.innerHTML = `
+            <h3 class="text-2xl font-bold mb-3">${data.title}</h3>
+            <div class="mb-3">${techHTML}</div>
+            <p class="mb-3 text-sm text-white/80">${data.desc}</p>
+            <p class="mb-4 text-white/60">${data.longDesc}</p>
+            <div class="flex gap-3">${linksHTML}</div>
+        `;
 
-          // Prepare template parameters
-          const templateParams = {
-            from_name: contactForm.name.value,
-            from_email: contactForm.email.value,
-            message: contactForm.message.value,
-          };
-
-          try {
-            // REPLACE WITH YOUR ACTUAL SERVICE ID AND TEMPLATE ID
-            const response = await emailjs.send(
-              "YOUR_SERVICE_ID", // Replace with your EmailJS Service ID
-              "YOUR_TEMPLATE_ID", // Replace with your EmailJS Template ID
-              templateParams
-            );
-
-            console.log("SUCCESS!", response.status, response.text);
-
-            spinner.classList.add("hidden");
-            submitBtn.disabled = false;
-
-            toast.textContent = "Message sent! I'll be in touch 👋";
-            toast.classList.remove("hidden");
-            toast.classList.remove("text-red-400");
-            toast.classList.add("text-[#4fc3f7]");
-            contactForm.reset();
-          } catch (error) {
-            console.log("FAILED...", error);
-
-            spinner.classList.add("hidden");
-            submitBtn.disabled = false;
-
-            toast.textContent = "Something went wrong. Please try again!";
-            toast.classList.remove("hidden");
-            toast.classList.remove("text-[#4fc3f7]");
-            toast.classList.add("text-red-400");
-          }
-
-          setTimeout(() => toast.classList.add("hidden"), 4000);
-        });
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
       }
 
-      // Smooth scrolling for navigation links
-      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-        anchor.addEventListener("click", function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute("href"));
-          if (target) {
-            target.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-            });
-          }
-        });
+
+      window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        const fadeImage = document.querySelector('.fade-bg img');
+        if (!fadeImage) return;
+        const maxScroll = 400;
+        const opacity = Math.max(0, 1 - scrollY / maxScroll);
+        fadeImage.style.opacity = opacity;
       });
+      
     </script>
   </body>
 </html>
+
+
