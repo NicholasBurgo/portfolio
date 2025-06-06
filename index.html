@@ -102,6 +102,24 @@
         backdrop-filter: blur(5px);
         box-shadow: 0 0 8px rgba(79,195,247, 0.4);
       }
+      #name {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: 'Inter', sans-serif;
+        font-size: 3rem;
+        font-weight: bold;
+        color: #ffffff;
+        cursor: default;
+      }
+
+      #name span {
+        display: inline-block;
+        transition: transform 0.2s ease-out;
+        pointer-events: none;
+      }
+
       .image-gallery {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -174,10 +192,15 @@
 
     <section id="home" class="section-bg home-bg min-h-screen flex flex-col items-center justify-center px-4 text-center pt-26">
       <div class="relative z-10">
-        <h2 class="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight">
-          <span class="block text-white">NICHOLAS BURGO</span>
+        <h2 class="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-extrabold tracking-tight text-white mb-14 whitespace-nowrap">
+          <div id="name" class="flex justify-center gap-0">
+            <span class="text-[5rem]"><span>N</span><span>I</span><span>C</span><span>H</span><span>O</span><span>L</span><span>A</span><span>S</span></span>
+            <span class="mx-4">&nbsp;</span>
+            <span class="text-[5rem]"><span> B</span><span>U</span><span>R</span><span>G</span><span>O</span></span>
+          </div>
         </h2>
-        <p class="mt-6 text-sm sm:text-base text-white/80 tracking-widest uppercase">
+        <span class="mx-4"></span>
+        <p class="mt-8 text-base sm:text-lg text-white/80 tracking-widest uppercase ">
           Computer Science Student | Data-Driven Developer
         </p>
       </div>
@@ -187,6 +210,7 @@
         </button>
       </div>
     </section>
+
 
     <section id="projects" class="section-bg projects-bg min-h-screen px-6 pt-20 pb-32">
       <h3 class="text-2xl font-semibold mb-8">See My latest Work (click to see more)</h3>
@@ -541,6 +565,29 @@
           closeImageViewer();
         }
       });
+    const name = document.getElementById('name');
+    const letters = name.querySelectorAll('span');
+
+    document.addEventListener('mousemove', (e) => {
+      letters.forEach(letter => {
+        const rect = letter.getBoundingClientRect();
+        const letterX = rect.left + rect.width / 2;
+        const letterY = rect.top + rect.height / 2;
+
+        const distX = e.clientX - letterX;
+        const distY = e.clientY - letterY;
+        const distance = Math.sqrt(distX ** 2 + distY ** 2);
+        
+        if (distance < 80) {
+          const angle = Math.atan2(distY, distX);
+          const offset = (80 - distance) / 3;
+          letter.style.transform = `translate(${-Math.cos(angle) * offset}px, ${-Math.sin(angle) * offset}px)`;
+        } else {
+          letter.style.transform = 'translate(0, 0)';
+        }
+      });
+    });
+
     </script>
     <div id="follower"></div>
   </body>
