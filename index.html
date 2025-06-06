@@ -16,6 +16,11 @@
         background: linear-gradient(to bottom, #0a0f1a, #12161d);
         color: #f3f4f6;
       }
+      
+      html {
+        scroll-behavior: smooth;
+      }
+      
       @keyframes bounce-slow {
         0%, 100% {
           transform: translateY(0);
@@ -27,15 +32,126 @@
       .animate-bounce-slow {
         animation: bounce-slow 2s infinite;
       }
-      .fade-bg img {
-        will-change: opacity;
-        transition: opacity 0.5s ease;
+      
+      .section-bg {
+        position: relative;
+        overflow: hidden;
+      }
+      .section-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0;
+        z-index: 0;
+        transition: opacity 0.8s ease;
+      }
+      .section-bg > * {
+        position: relative;
+        z-index: 1;
+      }
+      
+      .home-bg::before {
+        background-image: url('images/Galaxy.jpg');
+      }
+      .projects-bg::before {
+        background-image: url('images/coding-bg.jpg');
+      }
+      .about-bg::before {
+        background-image: url('images/tech-bg.jpg');
+      }
+      
+      .section-bg.active::before {
+        opacity: 0.45;
+      }
+      .projects-bg.active::before {
+        opacity: 0.25;
+      }
+      .about-bg.active::before {
+        opacity: 0.18;
+      }
+      
+      .project-card {
+        transition: all 0.3s ease;
+        overflow: hidden;
+      }
+      .project-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+      .project-card img {
+        transition: transform 0.3s ease;
+      }
+      .project-card:hover img {
+        transform: scale(1.1);
+      }
+      #follower {
+        position: fixed;
+        width: 15px;
+        height: 15px;
+        background-color: rgba(79,195,247, 0.5); 
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translate(-50%, -50%) scale(1);
+        transition: transform 0.15s ease-out, background-color 0.2s ease-out;
+        backdrop-filter: blur(5px);
+        box-shadow: 0 0 8px rgba(79,195,247, 0.4);
+      }
+      .image-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+        margin: 16px 0;
+      }
+      .gallery-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+      }
+      .gallery-image:hover {
+        transform: scale(1.05);
+      }
+      
+      .image-viewer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 60;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+      .image-viewer.active {
         opacity: 1;
+        visibility: visible;
+      }
+      .image-viewer img {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+        border-radius: 8px;
+      }
+      
+      .smooth-scroll {
+        transition: color 0.3s ease;
       }
     </style>
   </head>
   <body class="relative overflow-x-hidden">
-    <!-- Navbar -->
     <header class="fixed top-0 left-0 w-full z-50 backdrop-blur bg-white/5 px-6 py-4 flex items-center justify-between border-b border-white/10">
       <div class="flex items-center gap-4">
         <h1 class="text-lg sm:text-xl font-extrabold text-white">
@@ -44,10 +160,9 @@
       </div>
       <div class="flex-1 flex justify-center">
         <nav class="hidden md:flex gap-8 text-md font-bold text-white/80">
-          <a href="#home" class="hover:text-white">00 // Home</a>
-          <a href="#projects" class="hover:text-white">01 // Projects</a>
-          <a href="#experience" class="hover:text-white">02 // About me</a>
-          <a href="#contact" class="hover:text-white">03 // Contact</a>
+          <a href="#home" class="hover:text-white smooth-scroll" onclick="smoothScrollTo('home')">Home</a>
+          <a href="#projects" class="hover:text-white smooth-scroll" onclick="smoothScrollTo('projects')">Projects</a>
+          <a href="#about" class="hover:text-white smooth-scroll" onclick="smoothScrollTo('about')">About me & Contact</a>
         </nav>
       </div>
       <div class="flex gap-4 text-white text-lg">
@@ -57,11 +172,7 @@
       </div>
     </header>
 
-    <!-- Hero Section -->
-    <section id="home" class="min-h-screen flex flex-col items-center justify-center px-4 text-center pt-26 relative">
-      <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none fade-bg">
-        <img src="images/Galaxy.jpg" alt="Galaxy Background" class="w-full h-full object-cover opacity-40" />
-      </div>
+    <section id="home" class="section-bg home-bg min-h-screen flex flex-col items-center justify-center px-4 text-center pt-26">
       <div class="relative z-10">
         <h2 class="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight">
           <span class="block text-white">NICHOLAS BURGO</span>
@@ -71,18 +182,17 @@
         </p>
       </div>
       <div class="absolute bottom-8 flex justify-center w-full">
-        <button onclick="document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });">
+        <button onclick="smoothScrollTo('projects')">
           <i class="fas fa-chevron-down text-white text-3xl animate-bounce-slow hover:text-blue-500 transition"></i>
         </button>
       </div>
     </section>
-    <!-- Projects Section -->
-    <section id="projects" class="min-h-screen px-6 pt-20 pb-32 relative">
+
+    <section id="projects" class="section-bg projects-bg min-h-screen px-6 pt-20 pb-32">
       <h3 class="text-2xl font-semibold mb-8">See My latest Work (click to see more)</h3>
       <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-        <!-- project 1-->
         <div onclick="openProjectModal(0)"
-        class="bg-[#101820] p-5 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 cursor-pointer">
+        class="project-card bg-[#101820] p-5 rounded-xl shadow-lg cursor-pointer">
           <img src="images/fableMarket.png" alt="Fable Market" class="w-full h-48 object-cover rounded-lg mb-4" />
           <h3 class="text-xl font-bold text-white mb-2">Fable Market</h3>
           <div class="flex flex-wrap gap-2 mb-2">
@@ -93,9 +203,8 @@
             A comprehensive book marketplace with features for buying books, reviews, and search filtering.
           </p>
         </div>
-        <!-- project 2-->
         <div onclick="openProjectModal(1)"
-        class="bg-[#101820] p-5 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 cursor-pointer">
+        class="project-card bg-[#101820] p-5 rounded-xl shadow-lg cursor-pointer">
           <img src="images/car-dealership.jpg" alt="Car Dealership Database" class="w-full h-48 object-cover rounded-lg mb-4" />
           <h3 class="text-xl font-bold text-white mb-2">Car Dealership Database</h3>
           <div class="flex flex-wrap gap-2 mb-2">
@@ -106,11 +215,10 @@
             Architected a 5-table relational database system for car-rental operations with ER modeling and SQL implementation.
           </p>
         </div>
-        <!-- project 3-->
         <div onclick="openProjectModal(2)"
-        class="bg-[#101820] p-5 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 cursor-pointer">
+        class="project-card bg-[#101820] p-5 rounded-xl shadow-lg cursor-pointer">
           <img src="images/vr-shooter.jpg" alt="VR Shooter" class="w-full h-48 object-cover rounded-lg mb-4" />
-          <h3 class="text-xl font-bold text-white mb-2">VR Shooter</h3>
+          <h3 class="text-xl font-bold text-white mb-2">CityRift Vr</h3>
           <div class="flex flex-wrap gap-2 mb-2">
             <span class="bg-yellow-600 text-white text-xs px-3 py-1 rounded-full">In Progress</span>
             <span class="bg-purple-700 text-white text-xs px-3 py-1 rounded-full">Innovation Hub</span>
@@ -119,9 +227,8 @@
             VR sandbox in Unity with first-person mechanics, AI-driven world, and immersive simulation.
           </p>
         </div>
-        <!-- project 4-->
         <div onclick="openProjectModal(3)"
-        class="bg-[#101820] p-5 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1 cursor-pointer">
+        class="project-card bg-[#101820] p-5 rounded-xl shadow-lg cursor-pointer">
           <img src="images/lua-multiplayer.jpg" alt="Lua Multiplayer Networking" class="w-full h-48 object-cover rounded-lg mb-4" />
           <h3 class="text-xl font-bold text-white mb-2">Lua Multiplayer Networking</h3>
           <div class="flex flex-wrap gap-2 mb-2">
@@ -135,140 +242,128 @@
       </div>
     </section>
 
-  <section id="experience" class="min-h-[40vh] px-6 lg:px-12 pt-0 pb-0 relative">
-    <h3 class="text-2xl font-semibold mb-10">03 // About&nbsp;Me</h3>
+    <section id="about" class="section-bg about-bg min-h-screen px-6 lg:px-12 pt-20 pb-0 relative">
+      <h3 class="text-2xl font-semibold mb-10">About&nbsp;Me</h3>
 
-    <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12">
-
-  <!-- ░░ LEFT: Portrait + About + Skills ░░ -->
-      <div class="flex-1 min-w-0 flex flex-col md:flex-row gap-8">
-
-        <!-- portrait -->
-        <div class="md:w-48 flex-shrink-0 flex justify-center">
-          <img src="images/headshot-main.png"
-              alt="Nicholas Burgo portrait"
-              class="w-40 h-40 object-cover rounded-2xl shadow-lg ring-2 ring-blue-500/40"/>
-        </div>
-
-        <!-- text & skills -->
-        <div class="flex-1">
-          <!-- About text -->
-          <h4 class="text-xl font-extrabold mb-3 text-white tracking-tight">Who&nbsp;I&nbsp;Am</h4>
-          <p class="text-white/80 leading-relaxed mb-8">
-            I’m a <span class="text-blue-400 font-semibold">Computer Science</span> student focused on
-            data-driven software and AI-powered experiences. I blend clean UI with solid backend architecture
-            and turn complex data into features people love.
-          </p>
-
-          <!-- Skills pills -->
-          <h4 class="text-xl font-extrabold mb-3 text-white tracking-tight">Core&nbsp;Skills</h4>
-          <div class="flex flex-wrap gap-2">
-            <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">React</span>
-            <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">TypeScript</span>
-            <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">Tailwind CSS</span>
-            <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">Python</span>
-            <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">SQL</span>
-            <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">Unity / C#</span>
+      <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12 mb-20">
+        <div class="flex-1 min-w-0 flex flex-col md:flex-row gap-8">
+          <div class="md:w-48 flex-shrink-0 flex justify-center">
+            <img src="images/headshot-main.png"
+                alt="Nicholas Burgo portrait"
+                class="w-40 h-40 object-cover rounded-2xl shadow-lg ring-2 ring-blue-500/40"/>
           </div>
 
-          <!-- Résumé button -->
-          <a href="documents/Nicholas_Burgo_Resume.pdf" download
-            class="inline-flex items-center gap-2 mt-10 px-6 py-3 rounded-full
-                    border border-blue-400 text-blue-300 hover:bg-blue-600 hover:text-white
-                    transition font-semibold shadow-sm">
-            <i class="fa-solid fa-file-arrow-down"></i> Download Résumé
+          <div class="flex-1">
+            <h4 class="text-xl font-extrabold mb-3 text-white tracking-tight">Who&nbsp;I&nbsp;Am</h4>
+            <p class="text-white/80 leading-relaxed mb-8">
+                I'm a Computer Science student at Southeastern Louisiana University, passionate about building data-driven apps and 
+                immersive digital experiences. I work in the Innovation Hub, where I deepen my skills 
+                in coding and game development while collaborating with like-minded peers. My projects 
+                range from full-stack apps like Fable Market to relational systems like the Car Dealership Database, 
+                as well as creative tech demos like CityRift VR and Lua Multiplayer Networking. I enjoy blending clean
+                 UI with solid backend logic to turn ideas into real, usable experiences.
+            </p>
+
+            <h4 class="text-xl font-extrabold mb-3 text-white tracking-tight">Core&nbsp;Skills</h4>
+            <div class="flex flex-wrap gap-2">
+              <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">React</span>
+              <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">TypeScript</span>
+              <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">Java</span>
+              <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">Python</span>
+              <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">SQL</span>
+              <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">Unity / C#</span>
+            </div>
+
+            <a href="documents/Nicholas_Burgo_Resume.pdf" download
+              class="inline-flex items-center gap-2 mt-10 px-6 py-3 rounded-full
+                      border border-blue-400 text-blue-300 hover:bg-blue-600 hover:text-white
+                      transition font-semibold shadow-sm">
+              <i class="fa-solid fa-file-arrow-down"></i> Download Résumé
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:w-80 w-full">
+          <div class="bg-[#101820]/90 backdrop-blur-md border border-white/10
+                      rounded-xl p-6 shadow-xl">
+            <h4 class="text-xl font-bold text-white mb-4">Education</h4>
+            <p class="text-white/80 leading-relaxed">
+              <span class="block font-semibold">B.S. Computer Science</span>
+              Southeastern Louisiana University<br>
+              <span class="text-sm text-white/60">Concentration: Data Science</span><br>
+              <span class="text-sm text-white/60">Expected Graduation: Fall 2026</span>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div id="contact" class="max-w-4xl mx-auto bg-[#101820]/90 backdrop-blur-md border border-white/10
+                   rounded-2xl p-8 shadow-xl flex flex-col gap-10 mb-20">
+
+        <div>
+          <h4 class="text-xl font-extrabold mb-4 text-white tracking-tight">Let's Work Together</h4>
+          <p class="text-white/80 leading-relaxed">
+            I'm <span class="text-blue-400 font-medium">open to freelance projects</span> and part-time collaborations  
+            involving web apps, data pipelines, or AI-powered features.
+            Let's discuss how I can help you turn ideas into reliable, data-driven products.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-3 gap-6">
+          <a href="mailto:nicholas.burgo@selu.edu"
+            class="bg-[#0f1320] rounded-xl p-6 border border-white/10 hover:border-blue-400
+                    flex flex-col items-center text-center transition">
+            <i class="fas fa-envelope text-2xl text-blue-400 mb-3"></i>
+            <span class="text-white font-semibold">Email</span>
+            <span class="text-white/60 text-sm mt-1">nicholas.burgo@selu.edu</span>
+          </a>
+
+          <a href="https://www.linkedin.com/in/nicholas-burgo" target="_blank"
+            class="bg-[#0f1320] rounded-xl p-6 border border-white/10 hover:border-blue-400
+                    flex flex-col items-center text-center transition">
+            <i class="fab fa-linkedin text-2xl text-blue-400 mb-3"></i>
+            <span class="text-white font-semibold">LinkedIn</span>
+            <span class="text-white/60 text-sm mt-1">@nicholas-burgo</span>
+          </a>
+
+          <a href="https://github.com/NicholasBurgo" target="_blank"
+            class="bg-[#0f1320] rounded-xl p-6 border border-white/10 hover:border-blue-400
+                    flex flex-col items-center text-center transition">
+            <i class="fab fa-github text-2xl text-blue-400 mb-3"></i>
+            <span class="text-white font-semibold">GitHub</span>
+            <span class="text-white/60 text-sm mt-1">github.com/NicholasBurgo</span>
           </a>
         </div>
       </div>
 
-      <!-- ░░ RIGHT: Education card (unchanged) ░░ -->
-      <div class="lg:w-80 w-full">
-        <div class="bg-[#101820]/90 backdrop-blur-md border border-white/10
-                    rounded-xl p-6 shadow-xl">
-          <h4 class="text-xl font-bold text-white mb-4">Education</h4>
-          <p class="text-white/80 leading-relaxed">
-            <span class="block font-semibold">B.S. Computer Science</span>
-            Southeastern Louisiana University<br>
-            <span class="text-sm text-white/60">Concentration: Data Science</span><br>
-            <span class="text-sm text-white/60">Expected Graduation: Fall 2026</span>
-          </p>
-        </div>
-      </div>
-
-
-      </div>
-
-    </div>
-        <section id="contact" class="min-h-[60vh] px-6 lg:px-12 pt-20 pb-32 relative">
-
-          <div class="max-w-4xl mx-auto bg-[#101820]/90 backdrop-blur-md border border-white/10
-                      rounded-2xl p-8 shadow-xl flex flex-col gap-10">
-
-            <!-- Intro -->
-            <p class="text-white/80 leading-relaxed">
-              I’m <span class="text-blue-400 font-medium">open to freelance projects</span> and part-time collaborations  
-              involving web apps, data pipelines, or AI-powered features.
-              Let’s discuss how I can help you turn ideas into reliable, data-driven products.
-            </p>
-
-            <!-- Direct contact links -->
-            <div class="grid sm:grid-cols-3 gap-6">
-
-              <!-- Email card -->
-              <a href="mailto:nicholas.burgo@selu.edu"
-                class="bg-[#0f1320] rounded-xl p-6 border border-white/10 hover:border-blue-400
-                        flex flex-col items-center text-center transition">
-                <i class="fas fa-envelope text-2xl text-blue-400 mb-3"></i>
-                <span class="text-white font-semibold">Email</span>
-                <span class="text-white/60 text-sm mt-1">nicholas.burgo@selu.edu</span>
-              </a>
-
-              <!-- LinkedIn card -->
-              <a href="https://www.linkedin.com/in/nicholas-burgo" target="_blank"
-                class="bg-[#0f1320] rounded-xl p-6 border border-white/10 hover:border-blue-400
-                        flex flex-col items-center text-center transition">
-                <i class="fab fa-linkedin text-2xl text-blue-400 mb-3"></i>
-                <span class="text-white font-semibold">LinkedIn</span>
-                <span class="text-white/60 text-sm mt-1">@nicholas-burgo</span>
-              </a>
-
-              <!-- GitHub card -->
-              <a href="https://github.com/NicholasBurgo" target="_blank"
-                class="bg-[#0f1320] rounded-xl p-6 border border-white/10 hover:border-blue-400
-                        flex flex-col items-center text-center transition">
-                <i class="fab fa-github text-2xl text-blue-400 mb-3"></i>
-                <span class="text-white font-semibold">GitHub</span>
-                <span class="text-white/60 text-sm mt-1">github.com/NicholasBurgo</span>
-              </a>
-
-            </div>
-          </div>
-
-          <button
-            class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white text-3xl
-                  animate-bounce-slow hover:text-blue-500 transition"
-            onclick="document.getElementById('home').scrollIntoView({behavior:'smooth'})">
-            <i class="fas fa-chevron-up"></i>
-          </button>
-        </section>
-
+      <button
+        class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white text-3xl
+               animate-bounce-slow hover:text-blue-500 transition"
+        onclick="smoothScrollTo('home')">
+        <i class="fas fa-chevron-up"></i>
+      </button>
     </section>
 
-    <!-- Project Modal Structure -->
-    </div>
-      <div id="project-modal-overlay" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden">
-        <div id="project-modal" class="bg-[#17243b] rounded-3xl shadow-xl border-2 border-[#4fc3f7] max-w-2xl w-full mx-4 p-7 pt-5 relative max-h-[90vh] overflow-y-auto"
-            onclick="event.stopPropagation();">
-          <button onclick="closeProjectModal()"
-                  class="absolute top-4 right-5 text-[#b1c9e7] hover:text-[#4fc3f7] p-2 text-xl z-10">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-          <div id="project-modal-body" class="flex flex-col gap-5 pr-8"></div>
-        </div>
+    <div id="project-modal-overlay" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden">
+      <div id="project-modal" class="bg-[#17243b] rounded-3xl shadow-xl border-2 border-[#4fc3f7] max-w-4xl w-full mx-4 p-7 pt-5 relative max-h-[90vh] overflow-y-auto"
+          onclick="event.stopPropagation();">
+        <button onclick="closeProjectModal()"
+                class="absolute top-4 right-5 text-[#b1c9e7] hover:text-[#4fc3f7] p-2 text-xl z-10">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div id="project-modal-body" class="flex flex-col gap-5 pr-8"></div>
       </div>
+    </div>
+
+    <div id="image-viewer" class="image-viewer" onclick="closeImageViewer()">
+      <button onclick="closeImageViewer()" class="absolute top-4 right-4 text-white text-2xl z-10">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <img id="viewer-image" src="" alt="Full size image" />
+    </div>
 
     <script>
- const projectData = [
+      const projectData = [
         {
           title: "Fable Market",
           tech: ["React", "TypeScript", "C#"],
@@ -277,9 +372,12 @@
             <b>Problem:</b> Need for a comprehensive platform where users can discover, purchase, and review books with personalized features.<br>
             <b>Solution:</b> Developed a full-featured book marketplace with advanced search capabilities, user reviews, and personalized book lists to enhance the book discovery experience.<br>
             <b>Key Features:</b> Advanced search functionality by title, author, and genre using optimized string comparison queries, integrated database management for efficient data operations, user review system, and personalized book list creation with data integrity enforcement.`,
-          links: [
-            // GitHub link will be provided later
+          images: [
+            "images/fableMarket2.png",
+            "images/fable-search.jpg",
+            "images/fable-search2.jpg",
           ],
+          links: [],
         },
         {
           title: "Car Dealership Database",
@@ -289,6 +387,8 @@
             <b>Problem:</b> Need for a robust relational database system to manage complex car-rental operations with proper data integrity.<br>
             <b>Solution:</b> Designed and implemented a normalized 5-table database schema following 3NF principles with comprehensive ER-diagram modeling and SQL DDL implementation.<br>
             <b>Key Features:</b> Fully annotated ER-diagram with min/max participation constraints, SQL DDL with primary/foreign-key enforcement and cascading rules, seeded database with 100+ realistic records using bulk-load scripts, traceable BO&R documentation linking business requirements to database structure, and FK-mapping matrix for team collaboration.`,
+          images: [
+          ],
           links: [
             {
               type: "github",
@@ -297,13 +397,16 @@
           ],
         },
         {
-          title: "VR Shooter",
+          title: "CityRift VR",
           tech: ["C#", "Unity", "Blender"],
           desc: "End-to-end virtual reality sandbox built in Unity combining first-person weapon mechanics with AI-driven open world environments.",
           longDesc: `<b>Role:</b> Game Developer, VR Specialist<br>
             <b>Problem:</b> Creating an immersive VR experience that combines realistic weapon mechanics with intelligent AI behavior in an open world.<br>
             <b>Solution:</b> Built a comprehensive VR sandbox using Unity with C# comprising 90% of the codebase, featuring advanced VR-rig locomotion, ray-cast gun mechanics, and autonomous AI systems.<br>
             <b>Key Features:</b> VR-rig locomotion system with comfortable movement, ray-cast gun logic with realistic weapon mechanics, enemy/pedestrian state machines with reactive AI behavior, autonomous traffic system with lane-following rules, explorable streetscape environment, multiplatform builds with IL2CPP + Burst optimization, and comprehensive version control with clean collaboration setup.`,
+          images: [
+            "images/vr-shooter2.jpg",
+          ],
           links: [
             {
               type: "github",
@@ -319,23 +422,35 @@
             <b>Problem:</b> Creating engaging multiplayer experiences with real-time communication and seamless player interactions.<br>
             <b>Solution:</b> Developed local multiplayer mini-games using Lua and Love Engine with robust host-client networking architecture for dynamic player interactions.<br>
             <b>Key Features:</b> Host-client architecture for reliable multiplayer connections, real-time communication system enabling dynamic player interactions, multiple mini-game modes with engaging gameplay mechanics, and optimized networking code for smooth multiplayer experience.`,
-          links: [
-            // GitHub link will be provided later
+          images: [
+            "images/lua-multiplayer2.jpg",
+            "images/lua-networking.jpg",
+            "images/lua-games.jpg",
+            "images/lua-games2.jpg"
           ],
+          links: [],
         },
       ];
 
+      function smoothScrollTo(elementId) {
+        const element = document.getElementById(elementId);
+        if (element) {
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }
+
       function closeProjectModal() {
-        document
-          .getElementById("project-modal-overlay")
-          .classList.add("hidden");
+        document.getElementById("project-modal-overlay").classList.add("hidden");
         document.body.style.overflow = "";
       }
       
       function openProjectModal(idx) {
         const overlay = document.getElementById('project-modal-overlay');
-        const body    = document.getElementById('project-modal-body');
-        const data    = projectData[idx];
+        const body = document.getElementById('project-modal-body');
+        const data = projectData[idx];
         if (!body) return;
 
         const techHTML = data.tech
@@ -352,10 +467,19 @@
                   : '')
               .join('');
 
+        const imagesHTML = data.images && data.images.length > 0
+          ? `<div class="image-gallery">
+               ${data.images.map(img => 
+                 `<img src="${img}" alt="${data.title} screenshot" class="gallery-image" onclick="openImageViewer('${img}')" />`
+               ).join('')}
+             </div>`
+          : '';
+
         body.innerHTML = `
             <h3 class="text-2xl font-bold mb-3">${data.title}</h3>
             <div class="mb-3">${techHTML}</div>
             <p class="mb-3 text-sm text-white/80">${data.desc}</p>
+            ${imagesHTML}
             <p class="mb-4 text-white/60">${data.longDesc}</p>
             <div class="flex gap-3">${linksHTML}</div>
         `;
@@ -363,19 +487,61 @@
         overlay.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
       }
-
-
-      window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY;
-        const fadeImage = document.querySelector('.fade-bg img');
-        if (!fadeImage) return;
-        const maxScroll = 400;
-        const opacity = Math.max(0, 1 - scrollY / maxScroll);
-        fadeImage.style.opacity = opacity;
+      document.addEventListener('mousemove', function(e) {
+        const follower = document.getElementById('follower');
+        follower.style.left = `${e.clientX}px`;
+        follower.style.top = `${e.clientY}px`;
       });
+
+      function openImageViewer(imageSrc) {
+        const viewer = document.getElementById('image-viewer');
+        const image = document.getElementById('viewer-image');
+        image.src = imageSrc;
+        viewer.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeImageViewer() {
+        const viewer = document.getElementById('image-viewer');
+        viewer.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      document.getElementById('project-modal-overlay').addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeProjectModal();
+        }
+      });
+
+      function updateActiveBackground() {
+        const sections = document.querySelectorAll('.section-bg');
+        const windowHeight = window.innerHeight;
+        const scrollY = window.scrollY;
+        
+        sections.forEach(section => {
+          const rect = section.getBoundingClientRect();
+          const sectionTop = scrollY + rect.top;
+          const sectionBottom = sectionTop + rect.height;
+          const viewportCenter = scrollY + windowHeight / 2;
+          
+          if (viewportCenter >= sectionTop && viewportCenter < sectionBottom) {
+            section.classList.add('active');
+          } else {
+            section.classList.remove('active');
+          }
+        });
+      }
+
+      window.addEventListener('scroll', updateActiveBackground);
+      window.addEventListener('load', updateActiveBackground);
       
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeProjectModal();
+          closeImageViewer();
+        }
+      });
     </script>
+    <div id="follower"></div>
   </body>
 </html>
-
-
