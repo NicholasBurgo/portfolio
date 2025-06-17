@@ -29,8 +29,93 @@
           transform: translateY(12px);
         }
       }
+      
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes scaleIn {
+        from {
+          transform: scale(0.9);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      @keyframes spiralIn {
+        0% {
+          opacity: 0;
+          transform: scale(0.5) rotate(-540deg) translateY(120px);
+        }
+        60% {
+          opacity: 1;
+          transform: scale(1.08) rotate(20deg) translateY(-10px);
+        }
+        80% {
+          transform: scale(0.98) rotate(-5deg) translateY(5px);
+        }
+        100% {
+          opacity: 1;
+          transform: scale(1) rotate(0deg) translateY(0);
+        }
+      }
+      .spiral-hidden {
+        opacity: 0;
+        transform: scale(0.5) rotate(-540deg) translateY(120px);
+        transition: none;
+      }
+      .spiral-in {
+        animation: spiralIn 1.1s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+      }
+
       .animate-bounce-slow {
         animation: bounce-slow 2s infinite;
+      }
+
+      .animate-fade-in-down {
+        animation: fadeInDown 0.8s ease-out forwards;
+      }
+
+      .animate-fade-in-up {
+        animation: fadeInUp 0.8s ease-out forwards;
+      }
+
+      .animate-fade-in {
+        animation: fadeIn 1s ease-out forwards;
+      }
+
+      .animate-scale-in {
+        animation: scaleIn 0.6s ease-out forwards;
       }
       
       .section-bg {
@@ -112,6 +197,7 @@
         font-weight: bold;
         color: #ffffff;
         cursor: default;
+        text-shadow: 0 4px 24px rgba(0,0,0,0.4);
       }
 
       #name span {
@@ -139,234 +225,218 @@
       }
       
       .image-viewer {
+        display: none;
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        z-index: 60;
-        display: flex;
+        inset: 0;
+        background: rgba(0,0,0,0.92);
+        z-index: 100;
         align-items: center;
         justify-content: center;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
+        transition: opacity 0.2s;
       }
       .image-viewer.active {
+        display: flex;
         opacity: 1;
-        visibility: visible;
       }
       .image-viewer img {
-        max-width: 90%;
-        max-height: 90%;
-        object-fit: contain;
-        border-radius: 8px;
+        max-width: 90vw;
+        max-height: 80vh;
+        border-radius: 1rem;
+        box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+        background: #101820;
       }
       
       .smooth-scroll {
         transition: color 0.3s ease;
       }
+
+      .subtitle {
+        font-family: 'Inter', sans-serif;
+        font-weight: 400;
+        font-size: 1.1rem;
+        letter-spacing: 0.25em;
+        color: rgba(180, 210, 255, 0.85);
+        text-shadow: 0 2px 8px rgba(44, 130, 201, 0.18);
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
+        transition: color 0.3s;
+        text-transform: uppercase;
+        animation: fadeInUp 1.2s 0.3s both;
+      }
+
+      @keyframes flowIn {
+        0% {
+          opacity: 0;
+          transform: translateY(60px) scale(0.98);
+        }
+        80% {
+          opacity: 1;
+          transform: translateY(-8px) scale(1.02);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .flow-hidden {
+        opacity: 0;
+        transform: translateY(60px) scale(0.98);
+        transition: none;
+      }
+      .flow-in {
+        animation: flowIn 1.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+      }
+
+      @keyframes slideInCorner {
+        0% {
+          opacity: 0;
+          transform: translate(-60px, -60px) scale(0.95);
+        }
+        80% {
+          opacity: 1;
+          transform: translate(8px, 8px) scale(1.03);
+        }
+        100% {
+          opacity: 1;
+          transform: translate(0, 0) scale(1);
+        }
+      }
+      .corner-hidden {
+        opacity: 0;
+        transform: translate(-60px, -60px) scale(0.95);
+        transition: none;
+      }
+      .corner-in {
+        animation: slideInCorner 1.1s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+      }
+      .arrow-circle {
+        width: 56px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      .circle-anim {
+        border-radius: 50%;
+        border-width: 2px;
+        border-style: solid;
+        border-color: #4fc3f7;
+        opacity: 0.4;
+        box-shadow: 0 0 12px 2px #4fc3f7;
+        animation: rotateCircle 3.5s linear infinite;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+      }
+      @keyframes rotateCircle {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+      }
+      .spinning-circle {
+        width: 80px;
+        height: 80px;
+        pointer-events: none;
+      }
+      .spinning-circle svg {
+        display: block;
+      }
+      @keyframes spinCircle {
+        0% { transform: rotate(0deg);}
+        90% { transform: rotate(0deg);}
+        95% { transform: rotate(360deg);}
+        100% { transform: rotate(360deg);}
+      }
+      .spinning-circle {
+        animation: spinCircle 6s cubic-bezier(0.23, 1, 0.32, 1) infinite;
+      }
+      /* Add wave animation for Go to Projects text */
+      .wave-text span {
+        display: inline-block;
+        font-size: 2.2rem;
+        animation: none;
+        animation-fill-mode: both;
+      }
+      .wave-text.wave-animate span {
+        animation: wave 2s ease-in-out 1;
+        animation-fill-mode: both;
+      }
+      .wave-text span:nth-child(1) { animation-delay: 0s; }
+      .wave-text span:nth-child(2) { animation-delay: 0.15s; }
+      .wave-text span:nth-child(3) { animation-delay: 0.3s; }
+      .wave-text span:nth-child(4) { animation-delay: 0.45s; }
+      .wave-text span:nth-child(5) { animation-delay: 0.6s; }
+      .wave-text span:nth-child(6) { animation-delay: 0.75s; }
+      .wave-text span:nth-child(7) { animation-delay: 0.9s; }
+      .wave-text span:nth-child(8) { animation-delay: 1.05s; }
+      .wave-text span:nth-child(9) { animation-delay: 1.2s; }
+      .wave-text span:nth-child(10) { animation-delay: 1.35s; }
+      .wave-text span:nth-child(11) { animation-delay: 1.5s; }
+      .wave-text span:nth-child(12) { animation-delay: 1.65s; }
+      .wave-text span:nth-child(13) { animation-delay: 1.8s; }
+      .wave-text span:nth-child(14) { animation-delay: 1.95s; }
+      @keyframes wave {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+      }
     </style>
   </head>
   <body class="relative overflow-x-hidden">
-    <header class="fixed top-0 left-0 w-full z-50 backdrop-blur bg-white/5 px-6 py-4 flex items-center justify-between border-b border-white/10">
-      <div class="flex items-center gap-4">
-        <h1 class="text-lg sm:text-xl font-extrabold text-white">
-          Nicholas<span class="text-blue-500">Burgo</span>
-        </h1>
-      </div>
-      <div class="flex-1 flex justify-center">
-        <nav class="hidden md:flex gap-8 text-md font-bold text-white/80">
-          <a href="#home" class="hover:text-white smooth-scroll" onclick="smoothScrollTo('home')">Home</a>
-          <a href="#projects" class="hover:text-white smooth-scroll" onclick="smoothScrollTo('projects')">Projects</a>
-          <a href="#about" class="hover:text-white smooth-scroll" onclick="smoothScrollTo('about')">About me & Contact</a>
-        </nav>
-      </div>
-      <div class="flex gap-4 text-white text-lg">
-        <a href="https://github.com/NicholasBurgo" target="_blank" class="hover:text-blue-400"><i class="fab fa-github"></i></a>
-        <a href="https://www.linkedin.com/in/nicholas-burgo/" target="_blank" class="hover:text-blue-400"><i class="fab fa-linkedin"></i></a>
-        <a href="mailto:nicholas.burgo@selu.edu" class="hover:text-blue-400"><i class="fas fa-envelope"></i></a>
-      </div>
+    <header class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex items-center justify-center animate-fade-in-down">
+      <nav class="flex items-center justify-between gap-8 text-md font-bold text-white/90 bg-white/10 backdrop-filter blur-20px border border-white/20 rounded-full px-8 py-3 shadow-xl min-w-[340px] w-auto max-w-2xl">
+        <div class="flex gap-8">
+          <a href="index.html" class="text-blue-300 scale-105">Home</a>
+          <a href="projects.html" class="hover:text-blue-300 transition-all duration-300 hover:scale-105">Projects</a>
+          <a href="about.html" class="hover:text-blue-300 transition-all duration-300 hover:scale-105">About me & Contact</a>
+        </div>
+        <div class="flex gap-4 text-lg">
+          <a href="https://github.com/NicholasBurgo" target="_blank" class="hover:text-blue-400 transition-all duration-300 hover:scale-110"><i class="fab fa-github"></i></a>
+          <a href="https://www.linkedin.com/in/nicholas-burgo/" target="_blank" class="hover:text-blue-400 transition-all duration-300 hover:scale-110"><i class="fab fa-linkedin"></i></a>
+          <a href="mailto:nicholas.burgo@selu.edu" class="hover:text-blue-400 transition-all duration-300 hover:scale-110"><i class="fas fa-envelope"></i></a>
+        </div>
+      </nav>
     </header>
 
     <section id="home" class="section-bg home-bg min-h-screen flex flex-col items-center justify-center px-4 text-center pt-26">
-      <div class="relative z-10">
+      <!-- Particle background canvas -->
+      <canvas id="particles-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;"></canvas>
+      <div class="relative z-10 animate-scale-in">
         <h2 class="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-extrabold tracking-tight text-white mb-14 whitespace-nowrap">
           <div id="name" class="flex justify-center gap-0">
             <span class="text-4xl sm:text-5xl md:text-[5rem]"><span>N</span><span>I</span><span>C</span><span>H</span><span>O</span><span>L</span><span>A</span><span>S</span></span>
-            <span class="mx-1 sm:mx-2 md:mx-3 lg:mx-5">&nbsp;</span>
+            <span class="mx-2">&nbsp;</span>
             <span class="text-4xl sm:text-5xl md:text-[5rem]"><span> B</span><span>U</span><span>R</span><span>G</span><span>O</span></span>
           </div>
         </h2>
         <span class="mx-4"></span>
-        <p class="mt-8 text-base sm:text-lg text-white/80 tracking-widest uppercase ">
-          Computer Science Student | Data-Driven Developer
+        <p class="mt-8 text-base sm:text-lg text-white/80 tracking-widest uppercase">
+          <span class="subtitle flex justify-center gap-0">
+            <span>C</span><span>O</span><span>M</span><span>P</span><span>U</span><span>T</span><span>E</span><span>R</span>
+            <span class="mx-1">&nbsp;</span>
+            <span>S</span><span>C</span><span>I</span><span>E</span><span>N</span><span>C</span><span>E</span>
+            <span class="mx-1">&nbsp;</span>
+            <span>S</span><span>T</span><span>U</span><span>D</span><span>E</span><span>N</span><span>T</span>
+            <span class="mx-2">&nbsp;|&nbsp;</span>
+            <span>D</span><span>A</span><span>T</span><span>A</span>
+            <span class="mx-1">&nbsp;</span>
+            <span>D</span><span>R</span><span>I</span><span>V</span><span>E</span><span>N</span>
+            <span class="mx-1">&nbsp;</span>
+            <span>D</span><span>E</span><span>V</span><span>E</span><span>L</span><span>O</span><span>P</span><span>E</span><span>R</span>
+          </span>
         </p>
       </div>
-      <div class="absolute bottom-8 flex justify-center w-full">
-        <button onclick="smoothScrollTo('projects')">
-          <i class="fas fa-chevron-down text-white text-3xl animate-bounce-slow hover:text-blue-500 transition"></i>
-        </button>
+      <div class="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center w-full z-20">
+        <a href="projects.html" class="relative flex flex-col items-center group">
+          <span class="wave-text mb-2 text-white/80 text-lg tracking-widest z-10 transition-transform group-hover:scale-105">
+            <span>G</span><span>o</span><span>&nbsp;</span><span>t</span><span>o</span><span>&nbsp;</span><span>P</span><span>r</span><span>o</span><span>j</span><span>e</span><span>c</span><span>t</span><span>s</span>
+          </span>
+        </a>
       </div>
     </section>
 
-
-    <section id="projects" class="section-bg projects-bg min-h-screen px-6 pt-20 pb-32">
-      <h3 class="text-2xl font-semibold mb-8">See My latest Work (click to see more)</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-        <div onclick="openProjectModal(0)"
-        class="project-card bg-[#101820] p-5 rounded-xl shadow-lg cursor-pointer">
-          <img src="images/fable.png" alt="Fable Market" class="w-full h-48 object-cover rounded-lg mb-4" />
-          <h3 class="text-xl font-bold text-white mb-2">Fable Market</h3>
-          <div class="flex flex-wrap gap-2 mb-2">
-            <span class="bg-green-700 text-white text-xs px-3 py-1 rounded-full">Completed</span>
-            <span class="bg-blue-700 text-white text-xs px-3 py-1 rounded-full">Software Engineering</span>
-          </div>
-          <p class="text-[#b1c9e7] text-sm leading-relaxed mb-4">
-            A comprehensive book marketplace with features for buying books, reviews, and search filtering.
-          </p>
-        </div>
-        <div onclick="openProjectModal(1)"
-        class="project-card bg-[#101820] p-5 rounded-xl shadow-lg cursor-pointer">
-          <img src="images/car-dealership.jpg" alt="Car Dealership Database" class="w-full h-48 object-cover rounded-lg mb-4" />
-          <h3 class="text-xl font-bold text-white mb-2">Car Dealership Database</h3>
-          <div class="flex flex-wrap gap-2 mb-2">
-            <span class="bg-green-700 text-white text-xs px-3 py-1 rounded-full">Completed</span>
-            <span class="bg-blue-700 text-white text-xs px-3 py-1 rounded-full">Database Systems</span>
-          </div>
-          <p class="text-[#b1c9e7] text-sm leading-relaxed mb-4">
-            Architected a 5-table relational database system for car-rental operations with ER modeling and SQL implementation.
-          </p>
-        </div>
-        <div onclick="openProjectModal(2)"
-        class="project-card bg-[#101820] p-5 rounded-xl shadow-lg cursor-pointer">
-          <img src="images/vr.jpg" alt="VR Shooter" class="w-full h-48 object-cover rounded-lg mb-4" />
-          <h3 class="text-xl font-bold text-white mb-2">CityRift Vr</h3>
-          <div class="flex flex-wrap gap-2 mb-2">
-            <span class="bg-yellow-600 text-white text-xs px-3 py-1 rounded-full">In Progress</span>
-            <span class="bg-purple-700 text-white text-xs px-3 py-1 rounded-full">Innovation Hub</span>
-          </div>
-          <p class="text-[#b1c9e7] text-sm leading-relaxed mb-4">
-            VR sandbox in Unity with first-person mechanics, AI-driven world, and immersive simulation.
-          </p>
-        </div>
-        <div onclick="openProjectModal(3)"
-        class="project-card bg-[#101820] p-5 rounded-xl shadow-lg cursor-pointer">
-          <img src="images/lua.jpg" alt="Lua Multiplayer Networking" class="w-full h-48 object-cover rounded-lg mb-4" />
-          <h3 class="text-xl font-bold text-white mb-2">Lua Multiplayer Networking</h3>
-          <div class="flex flex-wrap gap-2 mb-2">
-            <span class="bg-green-700 text-white text-xs px-3 py-1 rounded-full">Completed</span>
-            <span class="bg-indigo-600 text-white text-xs px-3 py-1 rounded-full">Survey Programming</span>
-          </div>
-          <p class="text-[#b1c9e7] text-sm leading-relaxed mb-4">
-            Local multiplayer mini-games using Lua with host-client architecture and real-time interactions.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section id="about" class="section-bg about-bg min-h-screen px-6 lg:px-12 pt-20 pb-0 relative">
-      <h3 class="text-2xl font-semibold mb-10">About&nbsp;Me</h3>
-
-      <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-12 mb-20">
-        <div class="flex-1 min-w-0 flex flex-col md:flex-row gap-8">
-          <div class="md:w-48 flex-shrink-0 flex justify-center">
-            <img src="images/headshot-main.png"
-                alt="Nicholas Burgo portrait"
-                class="w-40 h-40 object-cover rounded-2xl shadow-lg ring-2 ring-blue-500/40"/>
-          </div>
-
-          <div class="flex-1">
-            <h4 class="text-xl font-extrabold mb-3 text-white tracking-tight">Who&nbsp;I&nbsp;Am</h4>
-            <p class="text-white/80 leading-relaxed mb-8">
-                I'm a Computer Science student at Southeastern Louisiana University, passionate about building data-driven apps and 
-                immersive digital experiences. I work in the Innovation Hub, where I deepen my skills 
-                in coding and game development while collaborating with like-minded peers. My projects 
-                range from full-stack apps like Fable Market to relational systems like the Car Dealership Database, 
-                as well as creative tech demos like CityRift VR and Lua Multiplayer Networking. I enjoy blending clean
-                 UI with solid backend logic to turn ideas into real, usable experiences.
-            </p>
-
-            <h4 class="text-xl font-extrabold mb-3 text-white tracking-tight">Core&nbsp;Skills</h4>
-            <div class="flex flex-wrap gap-2">
-              <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">React</span>
-              <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">TypeScript</span>
-              <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">Java</span>
-              <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">Python</span>
-              <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">SQL</span>
-              <span class="bg-blue-700/30 text-blue-300 px-3 py-1 rounded-full text-[11px]">Unity / C#</span>
-            </div>
-
-            <a href="documents/Nicholas_Burgo_Resume.pdf" download
-              class="inline-flex items-center gap-2 mt-10 px-6 py-3 rounded-full
-                      border border-blue-400 text-blue-300 hover:bg-blue-600 hover:text-white
-                      transition font-semibold shadow-sm">
-              <i class="fa-solid fa-file-arrow-down"></i> Download Résumé
-            </a>
-          </div>
-        </div>
-
-        <div class="lg:w-80 w-full">
-          <div class="bg-[#101820]/90 backdrop-blur-md border border-white/10
-                      rounded-xl p-6 shadow-xl">
-            <h4 class="text-xl font-bold text-white mb-4">Education</h4>
-            <p class="text-white/80 leading-relaxed">
-              <span class="block font-semibold">B.S. Computer Science</span>
-              Southeastern Louisiana University<br>
-              <span class="text-sm text-white/60">Concentration: Data Science</span><br>
-              <span class="text-sm text-white/60">Expected Graduation: Fall 2026</span>
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div id="contact" class="max-w-4xl mx-auto bg-[#101820]/90 backdrop-blur-md border border-white/10
-                   rounded-2xl p-8 shadow-xl flex flex-col gap-10 mb-20">
-
-        <div>
-          <h4 class="text-xl font-extrabold mb-4 text-white tracking-tight">Let's Work Together</h4>
-          <p class="text-white/80 leading-relaxed">
-            I'm <span class="text-blue-400 font-medium">open to freelance projects</span> and part-time collaborations  
-            involving web apps, data pipelines, or AI-powered features.
-            Let's discuss how I can help you turn ideas into reliable, data-driven products.
-          </p>
-        </div>
-
-        <div class="grid sm:grid-cols-3 gap-6">
-          <a href="mailto:nicholas.burgo@selu.edu"
-            class="bg-[#0f1320] rounded-xl p-6 border border-white/10 hover:border-blue-400
-                    flex flex-col items-center text-center transition">
-            <i class="fas fa-envelope text-2xl text-blue-400 mb-3"></i>
-            <span class="text-white font-semibold">Email</span>
-            <span class="text-white/60 text-sm mt-1">nicholas.burgo@selu.edu</span>
-          </a>
-
-          <a href="https://www.linkedin.com/in/nicholas-burgo" target="_blank"
-            class="bg-[#0f1320] rounded-xl p-6 border border-white/10 hover:border-blue-400
-                    flex flex-col items-center text-center transition">
-            <i class="fab fa-linkedin text-2xl text-blue-400 mb-3"></i>
-            <span class="text-white font-semibold">LinkedIn</span>
-            <span class="text-white/60 text-sm mt-1">@nicholas-burgo</span>
-          </a>
-
-          <a href="https://github.com/NicholasBurgo" target="_blank"
-            class="bg-[#0f1320] rounded-xl p-6 border border-white/10 hover:border-blue-400
-                    flex flex-col items-center text-center transition">
-            <i class="fab fa-github text-2xl text-blue-400 mb-3"></i>
-            <span class="text-white font-semibold">GitHub</span>
-            <span class="text-white/60 text-sm mt-1">github.com/NicholasBurgo</span>
-          </a>
-        </div>
-      </div>
-
-      <button
-        class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white text-3xl
-               animate-bounce-slow hover:text-blue-500 transition"
-        onclick="smoothScrollTo('home')">
-        <i class="fas fa-chevron-up"></i>
-      </button>
-    </section>
+    <div id="follower"></div>
 
     <div id="project-modal-overlay" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center hidden">
       <div id="project-modal" class="bg-[#17243b] rounded-3xl shadow-xl border-2 border-[#4fc3f7] max-w-4xl w-full mx-4 p-7 pt-5 relative max-h-[90vh] overflow-y-auto"
@@ -567,9 +637,11 @@
       });
     const name = document.getElementById('name');
     const letters = name.querySelectorAll('span');
+    const subtitle = document.querySelector('.mt-8 .flex');
+    const subtitleLetters = subtitle.querySelectorAll('span');
 
     document.addEventListener('mousemove', (e) => {
-      letters.forEach(letter => {
+      [...letters, ...subtitleLetters].forEach(letter => {
         const rect = letter.getBoundingClientRect();
         const letterX = rect.left + rect.width / 2;
         const letterY = rect.top + rect.height / 2;
@@ -588,7 +660,138 @@
       });
     });
 
+    // Staggered slide-in-from-corner animation for project cards
+    function animateProjectCardsCorner() {
+      const cards = document.querySelectorAll('.project-card');
+      cards.forEach((card, i) => {
+        setTimeout(() => {
+          card.classList.remove('corner-hidden');
+          card.classList.add('corner-in');
+        }, 250 * i);
+      });
+    }
+    // Use Intersection Observer to trigger when projects section is in view
+    const projectsSection = document.getElementById('projects');
+    let cornerAnimated = false;
+    if (projectsSection) {
+      const observer = new window.IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !cornerAnimated) {
+            animateProjectCardsCorner();
+            cornerAnimated = true;
+          }
+        });
+      }, { threshold: 0.3 });
+      observer.observe(projectsSection);
+    }
+
+    // Particle background for home section
+    (function() {
+      const canvas = document.getElementById('particles-bg');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let width = 0, height = 0, cx = 0, cy = 0;
+      function resize() {
+        const section = document.getElementById('home');
+        width = section.offsetWidth;
+        height = section.offsetHeight;
+        canvas.width = width;
+        canvas.height = height;
+        cx = width / 2;
+        cy = height / 2;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+      // 3D Particle definition
+      const PARTICLE_COUNT = 85;
+      const particles = [];
+      function randomBetween(a, b) { return a + Math.random() * (b - a); }
+      function resetParticle(p) {
+        const angle = randomBetween(0, 2 * Math.PI);
+        const radius = randomBetween(0, Math.min(width, height) * 0.7);
+        p.x = Math.cos(angle) * radius;
+        p.y = Math.sin(angle) * radius;
+        p.z = randomBetween(0.3, 1.6); // depth (1 = far, 0 = close)
+        p.size = randomBetween(0.3, 1.3);
+        p.opacity = randomBetween(0.1, 0.6);
+        p.speed = randomBetween(0.0001, 0.0006);
+        p.twinkle = randomBetween(0, 1);
+        p.twinkleSpeed = randomBetween(0.01, 0.04);
+        p.color = Math.random() < 0.3 ? '#4fc3f7' : 
+                 (Math.random() < 0.5 ? '#8b5cf6' : 
+                 (Math.random() < 0.7 ? '#3b82f6' : '#fff'));
+      }
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        const p = {};
+        resetParticle(p);
+        particles.push(p);
+      }
+      function draw() {
+        ctx.clearRect(0, 0, width, height);
+        for (let p of particles) {
+          p.z -= p.speed;
+          p.twinkle += p.twinkleSpeed;
+          
+          if (p.z < 0.05) {
+            resetParticle(p);
+            continue;
+          }
+          // Perspective projection
+          const perspective = 1 / p.z;
+          const px = cx + p.x * perspective;
+          const py = cy + p.y * perspective;
+          const scale = (0.4 + (2 / p.z)) * p.size;
+          
+          // Twinkling effect
+          const twinkleAlpha = 0.3 + 0.7 * Math.sin(p.twinkle);
+          const finalAlpha = p.opacity * (1.6 - p.z) * twinkleAlpha;
+          
+          ctx.globalAlpha = Math.max(0, Math.min(1, finalAlpha));
+          ctx.beginPath();
+          ctx.arc(px, py, scale, 0, 2 * Math.PI);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 10 * (1.6 - p.z) * twinkleAlpha;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+          
+          // Add glow effect for brighter particles
+          if (p.opacity > 0.4 && scale > 1.2) {
+            ctx.globalAlpha = finalAlpha * 0.2;
+            ctx.beginPath();
+            ctx.arc(px, py, scale * 2, 0, 2 * Math.PI);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+          }
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // Trigger wave animation: 2s animation, 6s pause
+    function triggerWave() {
+      const wave = document.querySelector('.wave-text');
+      if (!wave) return;
+      wave.classList.remove('wave-animate');
+      void wave.offsetWidth;
+      wave.classList.add('wave-animate');
+      // Wait for animation to complete (2s) plus 6s pause before next wave
+      setTimeout(triggerWave, 8000);
+    }
+    // Start the wave animation after 6 seconds
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(triggerWave, 6000);
+    });
+
+    function extractSection(html, section) {
+      // Extracts the section content from the longDesc HTML string
+      const regex = new RegExp(`<b>${section}<\\/b>\\s*([^<]*)`, 'i');
+      const match = html.match(regex);
+      return match ? match[1].trim() : '';
+    }
+
     </script>
-    <div id="follower"></div>
   </body>
 </html>
