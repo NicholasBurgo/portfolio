@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact - Nicholas Burgo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --primary-blue: #4fc3f7;
+        --secondary-blue: #2d3748;
+        --accent-color: #4fc3f7;
+        --text-primary: #f3f4f6;
+        --text-secondary: #cbd5e1;
+        --text-muted: #9ca3af;
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(79, 195, 247, 0.2);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(to bottom, #0a0f1a, #12161d);
+        color: var(--text-primary);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+        line-height: 1.6;
+      }
+      
+      /* Simplified background */
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: 
+          radial-gradient(ellipse at 30% 40%, rgba(79, 195, 247, 0.08) 0%, transparent 70%),
+          radial-gradient(ellipse at 70% 60%, rgba(79, 195, 247, 0.05) 0%, transparent 60%);
+        z-index: -1;
+        animation: nebulaShift 20s ease-in-out infinite;
+      }
+      
+      @keyframes nebulaShift {
+        0%, 100% { 
+          opacity: 0.6;
+          transform: scale(1);
+        }
+        50% { 
+          opacity: 0.8;
+          transform: scale(1.02);
+        }
+      }
+
+      html { 
+        scroll-behavior: smooth; 
+      }
+
+      /* Simplified Typography */
+      .text-gradient {
+        background: linear-gradient(135deg, #4fc3f7 0%, #ffffff 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* Enhanced animations */
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(50px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .animate-fade-in-up {
+        animation: fadeInUp 0.8s ease-out forwards;
+      }
+
+      .animate-slide-in-left {
+        animation: slideInLeft 1s ease-out forwards;
+      }
+
+      .animate-slide-in-right {
+        animation: slideInRight 1s ease-out forwards;
+      }
+
+      .animation-delay-200 { animation-delay: 0.2s; }
+      .animation-delay-400 { animation-delay: 0.4s; }
+      .animation-delay-600 { animation-delay: 0.6s; }
+
+      /* Simplified glass card styles */
+      .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(79, 195, 247, 0.2);
+        border-radius: 16px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .glass-card:hover {
+        transform: translateY(-4px);
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(79, 195, 247, 0.4);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Simplified contact cards */
+      .contact-card {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+      }
+
+      .contact-card:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(79, 195, 247, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      }
+
+
+
+      /* Simplified navigation */
+      nav {
+        background: rgba(255, 255, 255, 0.05) !important;
+        backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      }
+
+      nav a {
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      nav a::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: #4fc3f7;
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+      }
+
+      nav a:hover::after,
+      nav a.active::after {
+        width: 100%;
+      }
+
+      nav a.active {
+        color: #4fc3f7 !important;
+      }
+
+
+
+      /* Floating elements */
+      .floating {
+        animation: float 4s ease-in-out infinite;
+      }
+
+      .floating:nth-child(2) { animation-delay: 1s; }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+      }
+
+      /* Section improvements */
+      .section-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(79, 195, 247, 0.5), transparent);
+        margin: 48px 0;
+      }
+
+      /* Responsive improvements */
+      @media (max-width: 768px) {
+        nav {
+          min-width: 90vw !important;
+          max-width: 95vw !important;
+          padding: 8px 16px !important;
+        }
+        
+        nav .flex {
+          gap: 8px !important;
+        }
+        
+        nav a {
+          font-size: 13px !important;
+          padding: 8px 12px !important;
+        }
+        
+        #contact {
+          padding: 20px 12px !important;
+          padding-top: 100px !important;
+        }
+        
+        h3 {
+          font-size: 2.5rem !important;
+          margin-bottom: 32px !important;
+        }
+        
+
+        
+        .glass-card {
+          margin: 12px 0 !important;
+          padding: 20px !important;
+        }
+        
+        .contact-card {
+          padding: 16px !important;
+        }
+        
+
+        
+        h4 {
+          font-size: 1.8rem !important;
+        }
+        
+
+      }
+
+      @media (max-width: 480px) {
+        h3 {
+          font-size: 2rem !important;
+        }
+        
+        h4 {
+          font-size: 1.5rem !important;
+        }
+        
+        .glass-card {
+          padding: 16px !important;
+        }
+        
+
+        
+        .contact-card {
+          padding: 12px !important;
+        }
+      }
+    </style>
+  </head>
+  <body class="relative overflow-x-hidden">
+    <!-- Enhanced 3D Particle Background -->
+    <canvas id="galaxy-particles" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;"></canvas>
+    
+    <!-- Enhanced constellation patterns -->
+    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; opacity: 0.3;">
+      <svg width="100%" height="100%" style="position: absolute;">
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+            <feMerge> 
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <linearGradient id="constellationGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.4"/>
+            <stop offset="50%" style="stop-color:#4fc3f7;stop-opacity:0.8"/>
+            <stop offset="100%" style="stop-color:#ec4899;stop-opacity:0.4"/>
+          </linearGradient>
+        </defs>
+        <g stroke="url(#constellationGradient)" stroke-width="1.5" fill="none" filter="url(#glow)">
+          <line x1="10%" y1="20%" x2="25%" y2="30%" stroke-dasharray="3,6" class="constellation-line"/>
+          <line x1="25%" y1="30%" x2="40%" y2="25%" stroke-dasharray="3,6" class="constellation-line"/>
+          <line x1="70%" y1="15%" x2="85%" y2="35%" stroke-dasharray="3,6" class="constellation-line"/>
+          <line x1="15%" y1="70%" x2="30%" y2="80%" stroke-dasharray="3,6" class="constellation-line"/>
+          <line x1="60%" y1="75%" x2="80%" y2="85%" stroke-dasharray="3,6" class="constellation-line"/>
+          <circle cx="25%" cy="30%" r="2" fill="url(#constellationGradient)" class="constellation-star"/>
+          <circle cx="40%" cy="25%" r="1.5" fill="url(#constellationGradient)" class="constellation-star"/>
+          <circle cx="85%" cy="35%" r="2.5" fill="url(#constellationGradient)" class="constellation-star"/>
+        </g>
+      </svg>
+    </div>
+    
+    <style>
+      .constellation-line, .constellation-star {
+        animation: constellationPulse 8s ease-in-out infinite;
+      }
+      .constellation-line:nth-child(2), .constellation-star:nth-child(8) { animation-delay: 1s; }
+      .constellation-line:nth-child(3), .constellation-star:nth-child(9) { animation-delay: 2s; }
+      .constellation-line:nth-child(4) { animation-delay: 3s; }
+      .constellation-line:nth-child(5) { animation-delay: 4s; }
+      
+      @keyframes constellationPulse {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.8; }
+      }
+    </style>
+
+    <!-- Enhanced Header/Nav -->
+    <header class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex items-center justify-center">
+      <nav class="flex items-center justify-center gap-8 text-sm font-semibold text-white/90 rounded-full px-8 py-3 shadow-xl min-w-[340px] w-auto max-w-2xl animate-fade-in-up">
+        <div class="flex gap-8">
+          <a href="index.html" class="hover:text-blue-300 transition-all duration-300">Home</a>
+          <a href="projects.html" class="hover:text-blue-300 transition-all duration-300">Projects</a>
+          <a href="about.html" class="hover:text-blue-300 transition-all duration-300">About</a>
+          <a href="contact.html" class="active text-blue-300">Contact</a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Enhanced Contact section -->
+    <section id="contact" class="min-h-screen px-6 lg:px-12 pt-32 pb-20 relative z-10">
+      <div class="max-w-6xl mx-auto">
+        <!-- Enhanced main title -->
+        <div class="text-center mb-16">
+          <h3 class="text-5xl md:text-6xl font-black mb-6 text-gradient animate-fade-in-up">
+            Let's Work Together
+          </h3>
+          <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full animate-fade-in-up animation-delay-200"></div>
+        </div>
+
+        <div class="flex justify-center">
+          <!-- Enhanced contact info and links -->
+          <div class="max-w-2xl w-full">
+            <div class="glass-card p-8 opacity-0 animate-slide-in-left floating">
+              <h4 class="text-3xl font-bold text-gradient mb-6 text-center">Get In Touch</h4>
+              <p class="text-white/90 text-lg leading-relaxed mb-8 font-light text-center">
+                I'm <span class="text-blue-400 font-semibold">open to freelance projects</span> and collaborations involving web apps, data science, or creative tech solutions.
+              </p>
+              
+              <div class="space-y-6">
+                <a href="mailto:nicholas.burgo@selu.edu"
+                    class="contact-card p-6 flex items-center text-left group block">
+                    <div class="w-14 h-14 bg-gradient-to-br from-blue-500/30 to-blue-600/20 rounded-full flex items-center justify-center mr-5 group-hover:from-blue-500/50 group-hover:to-blue-600/30 transition-all duration-300">
+                      <i class="fas fa-envelope text-xl text-blue-400 icon-glow"></i>
+                    </div>
+                    <div>
+                      <span class="text-white font-bold block text-lg">Email</span>
+                      <span class="text-white/70 text-sm">nicholas.burgo@selu.edu</span>
+                    </div>
+                </a>
+
+                <a href="https://www.linkedin.com/in/nicholas-burgo" target="_blank"
+                    class="contact-card p-6 flex items-center text-left group block">
+                    <div class="w-14 h-14 bg-gradient-to-br from-blue-500/30 to-blue-600/20 rounded-full flex items-center justify-center mr-5 group-hover:from-blue-500/50 group-hover:to-blue-600/30 transition-all duration-300">
+                      <i class="fab fa-linkedin text-xl text-blue-400 icon-glow"></i>
+                    </div>
+                    <div>
+                      <span class="text-white font-bold block text-lg">LinkedIn</span>
+                      <span class="text-white/70 text-sm">@nicholas-burgo</span>
+                    </div>
+                </a>
+
+                <a href="https://github.com/NicholasBurgo" target="_blank"
+                    class="contact-card p-6 flex items-center text-left group block">
+                    <div class="w-14 h-14 bg-gradient-to-br from-purple-500/30 to-purple-600/20 rounded-full flex items-center justify-center mr-5 group-hover:from-purple-500/50 group-hover:to-purple-600/30 transition-all duration-300">
+                      <i class="fab fa-github text-xl text-purple-400 icon-glow"></i>
+                    </div>
+                    <div>
+                      <span class="text-white font-bold block text-lg">GitHub</span>
+                      <span class="text-white/70 text-sm">github.com/NicholasBurgo</span>
+                    </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+      </div>
+    </section>
+
+    <script>
+      // Enhanced Animation System
+      function initializeAnimations() {
+        // Animate elements on scroll
+        const animatedElements = document.querySelectorAll('[class*="animate-"]');
+        
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const element = entry.target;
+              
+              // Remove opacity-0 class to trigger animations
+              if (element.classList.contains('opacity-0')) {
+                element.classList.remove('opacity-0');
+              }
+            }
+          });
+        }, { 
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        });
+
+        animatedElements.forEach(element => {
+          observer.observe(element);
+        });
+      }
+
+      // Enhanced parallax and interaction effects
+      function addInteractiveEffects() {
+        // Subtle parallax for floating elements
+        document.addEventListener('scroll', () => {
+          const scrolled = window.pageYOffset;
+          const rate = scrolled * -0.3;
+          
+          document.querySelectorAll('.floating').forEach((element, index) => {
+            const speed = (index + 1) * 0.1;
+            element.style.transform = `translateY(${rate * speed}px)`;
+          });
+        });
+
+        // Enhanced hover effects for cards
+        document.querySelectorAll('.glass-card, .contact-card').forEach(card => {
+          card.addEventListener('mouseenter', function() {
+            if (this.classList.contains('glass-card')) {
+              this.style.transform = 'translateY(-8px) scale(1.02)';
+            } else {
+              this.style.transform = 'translateY(-6px) scale(1.03)';
+            }
+          });
+          
+          card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+          });
+        });
+
+        // Smooth navigation link transitions
+        document.querySelectorAll('nav a').forEach(link => {
+          link.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px)';
+          });
+          
+          link.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+          });
+        });
+      }
+
+      // Initialize all functionality
+      document.addEventListener('DOMContentLoaded', () => {
+        initializeAnimations();
+        addInteractiveEffects();
+        
+        // Add loading animation completion
+        setTimeout(() => {
+          document.body.classList.add('loaded');
+        }, 500);
+      });
+
+      // 3D Particle System for Galaxy Background
+      (function() {
+        const canvas = document.getElementById('galaxy-particles');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let width = 0, height = 0, cx = 0, cy = 0;
+        
+        function resize() {
+          width = window.innerWidth;
+          height = window.innerHeight;
+          canvas.width = width;
+          canvas.height = height;
+          cx = width / 2;
+          cy = height / 2;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+        
+        // 3D Particle definition
+        const PARTICLE_COUNT = 100;
+        const particles = [];
+        function randomBetween(a, b) { return a + Math.random() * (b - a); }
+        
+        function resetParticle(p) {
+          const angle = randomBetween(0, 2 * Math.PI);
+          const radius = randomBetween(0, Math.min(width, height) * 0.75);
+          p.x = Math.cos(angle) * radius;
+          p.y = Math.sin(angle) * radius;
+          p.z = randomBetween(0.4, 1.8);
+          p.size = randomBetween(0.3, 1.4);
+          p.opacity = randomBetween(0.05, 0.7);
+          p.speed = randomBetween(0.0001, 0.0006);
+          p.twinkle = randomBetween(0, 1);
+          p.twinkleSpeed = randomBetween(0.015, 0.04);
+          p.color = Math.random() < 0.25 ? '#8b5cf6' : 
+                   (Math.random() < 0.4 ? '#4fc3f7' : 
+                   (Math.random() < 0.6 ? '#ec4899' : 
+                   (Math.random() < 0.8 ? '#3b82f6' : '#fff')));
+        }
+        
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          const p = {};
+          resetParticle(p);
+          particles.push(p);
+        }
+        
+        function draw() {
+          ctx.clearRect(0, 0, width, height);
+          
+          for (let p of particles) {
+            p.z -= p.speed;
+            p.twinkle += p.twinkleSpeed;
+            
+            if (p.z < 0.05) {
+              resetParticle(p);
+              continue;
+            }
+            
+            const perspective = 1 / p.z;
+            const px = cx + p.x * perspective;
+            const py = cy + p.y * perspective;
+            const scale = (0.3 + (2.2 / p.z)) * p.size;
+            
+            const twinkleAlpha = 0.4 + 0.6 * Math.sin(p.twinkle);
+            const finalAlpha = p.opacity * (1.8 - p.z) * twinkleAlpha;
+            
+            ctx.globalAlpha = Math.max(0, Math.min(1, finalAlpha));
+            ctx.beginPath();
+            ctx.arc(px, py, scale, 0, 2 * Math.PI);
+            ctx.fillStyle = p.color;
+            ctx.shadowColor = p.color;
+            ctx.shadowBlur = 7 * (1.8 - p.z) * twinkleAlpha;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            
+            if (p.opacity > 0.3 && scale > 0.8) {
+              ctx.globalAlpha = finalAlpha * 0.25;
+              ctx.beginPath();
+              ctx.arc(px, py, scale * 1.6, 0, 2 * Math.PI);
+              ctx.fillStyle = p.color;
+              ctx.fill();
+            }
+          }
+          ctx.globalAlpha = 1;
+          requestAnimationFrame(draw);
+        }
+        draw();
+      })();
+    </script>
+  </body>
+</html> 
