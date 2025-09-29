@@ -265,71 +265,78 @@
 
         <!-- Main Content -->
         <div class="max-w-4xl mx-auto mb-12">
-          <!-- Profile Section -->
-          <div class="glass-card p-8 mb-8 opacity-0 animate-scale-in">
-            <div class="flex flex-col md:flex-row gap-8 items-center">
-              <div class="flex-shrink-0">
-                <img src="images/headshot-main.png"
-                    alt="Nicholas Burgo portrait"
-                    class="w-32 h-32 object-cover rounded-full border-2 border-white/20"/>
-              </div>
-              <div class="flex-1 text-center md:text-left">
-                <h2 class="text-3xl font-bold text-white mb-4">Nicholas Burgo</h2>
-                <p class="text-white/70 leading-relaxed mb-6">
-                  I'm Nicholas Burgo, a senior Computer Science major at Southeastern Louisiana University with a concentration in Data Science. I have hands-on experience in software and game development across multiple platforms, from building AI-powered web applications with FastAPI and PostgreSQL to creating immersive Unity projects and Raspberry Pi prototypes. My strengths lie in blending problem-solving with creativity, whether that's developing multiplayer games, designing intuitive user interfaces, or architecting scalable backend systems. Alongside my academic work, I actively explore entrepreneurial projects like mobile apps and social platforms, reflecting my passion for innovation and building solutions that make an impact.
-                </p>
-                <a href="documents/NicholasBurgoResV6.pdf" download
-                  class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg text-white hover:bg-white/20 hover:border-white/50 transition-all duration-300 font-medium group">
-                  <i class="fa-solid fa-file-arrow-down group-hover:animate-bounce"></i>
-                  Download Resume
-                </a>
+          <!-- Combined Profile, Education & Skills Section -->
+          <div class="glass-card p-8 opacity-0 animate-scale-in">
+            <!-- About Me Section - Card Style -->
+            <div class="mb-6">
+              <h3 class="text-lg font-semibold text-white mb-3 flex items-center">
+                <i class="fas fa-user text-blue-400 mr-3"></i>
+                About Me
+              </h3>
+              <div class="bg-white/5 rounded-lg p-4">
+                <div class="flex flex-col md:flex-row gap-6 items-start">
+                  <div class="flex-shrink-0 mx-auto md:mx-0">
+                    <img src="images/headshot-main.png"
+                        alt="Nicholas Burgo portrait"
+                        class="w-32 h-32 object-cover rounded-full border-2 border-white/20"/>
+                  </div>
+                  <div class="flex-1 text-center md:text-left">
+                    <p class="text-white/70 leading-relaxed">
+                      I'm Nicholas Burgo, a senior Computer Science major at Southeastern Louisiana University with a concentration in Data Science. I have hands-on experience in software and game development across multiple platforms, from building AI-powered web applications with FastAPI and PostgreSQL to creating immersive Unity projects and Raspberry Pi prototypes. My strengths lie in blending problem-solving with creativity, whether that's developing multiplayer games, designing intuitive user interfaces, or architecting scalable backend systems. Alongside my academic work, I actively explore entrepreneurial projects like mobile apps and social platforms, reflecting my passion for innovation and building solutions that make an impact.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-
-          <!-- Education Section -->
-          <div class="glass-card p-6 mb-8 opacity-0 animate-scale-in">
-            <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
-              <i class="fas fa-graduation-cap text-blue-400 mr-3"></i>
-              Education
-            </h3>
-            <div class="space-y-3">
-              <div>
-                <h4 class="text-lg font-medium text-blue-300">B.S. Computer Science</h4>
-                <p class="text-white/80">Southeastern Louisiana University</p>
+            
+            <!-- Education Section - Full Width -->
+            <div class="mb-6">
+              <h3 class="text-lg font-semibold text-white mb-3 flex items-center">
+                <i class="fas fa-graduation-cap text-blue-400 mr-3"></i>
+                Education
+              </h3>
+              <div class="bg-white/5 rounded-lg p-4">
+                <h4 class="text-lg font-medium text-blue-300 mb-1">B.S. Computer Science</h4>
+                <p class="text-white/80 mb-1">Southeastern Louisiana University</p>
                 <p class="text-sm text-white/60">Concentration: Data Science • Expected Graduation: Fall 2026</p>
               </div>
             </div>
+
+            <!-- Skills Section - Full Width -->
+            <div class="mb-6">
+              <h3 class="text-lg font-semibold text-white mb-3 flex items-center">
+                <i class="fas fa-code text-blue-400 mr-3"></i>
+                Skills & Interests
+              </h3>
+              <div class="grid md:grid-cols-2 gap-4 bg-white/5 rounded-lg p-4">
+                <div>
+                  <h4 class="text-sm font-medium text-white/90 mb-2">Programming</h4>
+                  <p class="text-sm text-white/70">Java, Python, JavaScript, HTML/CSS, SQL</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-white/90 mb-2">Development</h4>
+                  <p class="text-sm text-white/70">React, Unity, C#, Full-Stack Development</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-white/90 mb-2">Data Science</h4>
+                  <p class="text-sm text-white/70">Data Analysis, Machine Learning, Statistics</p>
+                </div>
+                <div>
+                  <h4 class="text-sm font-medium text-white/90 mb-2">Other</h4>
+                  <p class="text-sm text-white/70">Game Development, VR Development, Database Design</p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Resume Download Button - Bottom Right -->
+            <div class="flex justify-end mt-6">
+              <a href="documents/NicholasBurgoResV6.pdf" download
+                class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg text-white hover:bg-white/20 hover:border-white/50 transition-all duration-300 font-medium group">
+                <i class="fa-solid fa-file-arrow-down group-hover:animate-bounce"></i>
+                Download Resume
+              </a>
+            </div>
           </div>
-
-          <!-- Skills Section -->
-          <div class="glass-card p-6 mb-8 opacity-0 animate-scale-in">
-            <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
-              <i class="fas fa-code text-blue-400 mr-3"></i>
-              Skills & Interests
-            </h3>
-            <div class="grid md:grid-cols-2 gap-4">
-              <div>
-                <h4 class="text-sm font-medium text-white/90 mb-2">Programming</h4>
-                <p class="text-sm text-white/70">Java, Python, JavaScript, HTML/CSS, SQL</p>
-                     </div>
-              <div>
-                <h4 class="text-sm font-medium text-white/90 mb-2">Development</h4>
-                <p class="text-sm text-white/70">React, Unity, C#, Full-Stack Development</p>
-                     </div>
-              <div>
-                <h4 class="text-sm font-medium text-white/90 mb-2">Data Science</h4>
-                <p class="text-sm text-white/70">Data Analysis, Machine Learning, Statistics</p>
-                   </div>
-              <div>
-                <h4 class="text-sm font-medium text-white/90 mb-2">Other</h4>
-                <p class="text-sm text-white/70">Game Development, VR Development, Database Design</p>
-                   </div>
-                 </div>
-               </div>
-
-          </div>
-
         </div>
       </div>
     </section>
