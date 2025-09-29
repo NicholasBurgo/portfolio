@@ -35,7 +35,7 @@
         line-height: 1.6;
       }
       
-      /* Simplified background */
+      /* Enhanced background */
       body::before {
         content: '';
         position: fixed;
@@ -74,6 +74,17 @@
         }
 
       /* Enhanced animations */
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
       @keyframes fadeInUp {
         from {
         opacity: 0;
@@ -105,6 +116,10 @@
           opacity: 1;
           transform: scale(1);
         }
+      }
+
+      .animate-fade-in-down {
+        animation: fadeInDown 0.8s ease-out forwards;
       }
 
       .animate-fade-in-up {
@@ -154,31 +169,31 @@
         transform: scale(1.03);
       }
 
-      /* Simplified modal styles */
+      /* Modal styles - lighter to match page */
       .modal-overlay {
-        background: rgba(0, 0, 0, 0.8) !important;
-        backdrop-filter: blur(8px) !important;
-        -webkit-backdrop-filter: blur(8px) !important;
+        background: rgba(0, 0, 0, 0.6) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
       }
 
       .modal-glass {
-        background: linear-gradient(135deg, rgba(10, 15, 26, 0.95) 0%, rgba(18, 22, 29, 0.98) 100%) !important;
-        backdrop-filter: blur(20px) !important;
-        -webkit-backdrop-filter: blur(20px) !important;
-        border: 1px solid rgba(79, 195, 247, 0.3) !important;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        border: 1px solid rgba(79, 195, 247, 0.2) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
       }
 
-      /* Simplified close button */
+      /* Close button - matching site theme */
       .close-btn {
         position: absolute;
         top: 20px;
         right: 20px;
         width: 40px;
         height: 40px;
-        background: rgba(220, 38, 38, 0.9) !important;
-        color: white !important;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.05) !important;
+        color: #4fc3f7 !important;
+        border: 1px solid rgba(79, 195, 247, 0.2);
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -187,14 +202,18 @@
         cursor: pointer;
         transition: all 0.3s ease;
         z-index: 1000;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
       }
 
       .close-btn:hover {
-        background: rgba(220, 38, 38, 1) !important;
-        transform: scale(1.1);
+        background: rgba(79, 195, 247, 0.1) !important;
+        border-color: rgba(79, 195, 247, 0.4);
+        transform: scale(1.05);
+        color: white !important;
       }
 
-      /* Simplified modal gallery */
+      /* Modal gallery - lighter to match page */
       .modal-gallery {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -207,17 +226,21 @@
         max-width: 350px;
         max-height: 200px;
         object-fit: cover;
-        border-radius: 12px;
-        border: 1px solid rgba(79, 195, 247, 0.3);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        border-radius: 16px;
+        border: 1px solid rgba(79, 195, 247, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         cursor: pointer;
         transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
       }
 
       .modal-gallery img:hover {
         transform: scale(1.05);
-        border-color: rgba(79, 195, 247, 0.6);
-        box-shadow: 0 8px 25px rgba(79, 195, 247, 0.2);
+        border-color: rgba(79, 195, 247, 0.4);
+        box-shadow: 0 12px 40px rgba(79, 195, 247, 0.2);
+        background: rgba(255, 255, 255, 0.12);
       }
 
       /* Simplified image viewer */
@@ -295,7 +318,7 @@
         color: white;
       }
 
-      /* Simplified navigation */
+      /* Navigation styles */
       nav {
         background: rgba(255, 255, 255, 0.05) !important;
         backdrop-filter: blur(10px) !important;
@@ -329,15 +352,22 @@
         color: #4fc3f7 !important;
       }
 
-      /* Simplified content sections */
+      /* Content sections - lighter to match page */
       .content-section {
-        background: rgba(255, 255, 255, 0.05);
+        background: rgba(255, 255, 255, 0.08);
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         border: 1px solid rgba(79, 195, 247, 0.2);
         border-radius: 16px;
         padding: 24px;
         margin: 16px 0;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+
+      .content-section:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(79, 195, 247, 0.3);
       }
 
       /* Floating elements */
@@ -411,23 +441,6 @@
         transform: scale(1.05);
       }
 
-      /* Enhanced modal styles */
-      .modal-overlay {
-        background: rgba(0, 0, 0, 0.8) !important;
-        backdrop-filter: blur(12px) !important;
-        -webkit-backdrop-filter: blur(12px) !important;
-      }
-
-      .modal-glass {
-        background: linear-gradient(135deg, rgba(15, 20, 25, 0.95) 0%, rgba(10, 15, 20, 0.98) 100%) !important;
-        backdrop-filter: blur(30px) saturate(1.5) !important;
-        -webkit-backdrop-filter: blur(30px) saturate(1.5) !important;
-        border: 2px solid rgba(79, 195, 247, 0.3) !important;
-        box-shadow: 
-          0 30px 60px rgba(0, 0, 0, 0.6),
-          0 0 0 1px rgba(255, 255, 255, 0.1) inset,
-          0 2px 4px rgba(79, 195, 247, 0.1) inset !important;
-      }
 
       /* Enhanced close button */
       .close-btn {
@@ -588,6 +601,44 @@
         animation: modalSlideIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
       }
 
+      /* Section background system */
+      .section-bg {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .section-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0;
+        z-index: 0;
+        transition: opacity 0.8s ease;
+      }
+
+      .section-bg > * {
+        position: relative;
+        z-index: 1;
+      }
+      
+      .projects-bg::before {
+        background-image: url('images/Galaxy.jpg');
+      }
+      
+      .section-bg.active::before {
+        opacity: 0.3;
+      }
+
+      .projects-bg.active::before {
+        opacity: 0.2;
+      }
+
       /* Floating elements */
       .floating {
         animation: float 6s ease-in-out infinite;
@@ -600,6 +651,20 @@
       @keyframes float {
         0%, 100% { transform: translateY(0px); }
         50% { transform: translateY(-8px); }
+      }
+
+      #follower {
+        position: fixed;
+        width: 12px;
+        height: 12px;
+        background-color: rgba(79,195,247, 0.4); 
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translate(-50%, -50%) scale(1);
+        transition: transform 0.15s ease-out, background-color 0.2s ease-out;
+        backdrop-filter: blur(3px);
+        box-shadow: 0 0 6px rgba(79,195,247, 0.3);
+        z-index: 100;
       }
 
       /* Enhanced project grid stagger */
@@ -711,125 +776,63 @@
     </style>
   </head>
   <body class="relative overflow-x-hidden">
-    <!-- Enhanced 3D Particle Background -->
-    <canvas id="galaxy-particles" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;"></canvas>
-    
-    <!-- Enhanced constellation patterns -->
-    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; opacity: 0.3;">
-      <svg width="100%" height="100%" style="position: absolute;">
-        <defs>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-            <feMerge> 
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          <linearGradient id="constellationGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.4"/>
-            <stop offset="50%" style="stop-color:#4fc3f7;stop-opacity:0.8"/>
-            <stop offset="100%" style="stop-color:#ec4899;stop-opacity:0.4"/>
-          </linearGradient>
-        </defs>
-        <g stroke="url(#constellationGradient)" stroke-width="1.5" fill="none" filter="url(#glow)">
-          <line x1="15%" y1="25%" x2="30%" y2="35%" stroke-dasharray="3,6" class="constellation-line"/>
-          <line x1="30%" y1="35%" x2="45%" y2="30%" stroke-dasharray="3,6" class="constellation-line"/>
-          <line x1="65%" y1="20%" x2="80%" y2="40%" stroke-dasharray="3,6" class="constellation-line"/>
-          <line x1="20%" y1="65%" x2="35%" y2="75%" stroke-dasharray="3,6" class="constellation-line"/>
-          <line x1="55%" y1="70%" x2="75%" y2="80%" stroke-dasharray="3,6" class="constellation-line"/>
-          <circle cx="30%" cy="35%" r="2" fill="url(#constellationGradient)" class="constellation-star"/>
-          <circle cx="45%" cy="30%" r="1.5" fill="url(#constellationGradient)" class="constellation-star"/>
-          <circle cx="80%" cy="40%" r="2.5" fill="url(#constellationGradient)" class="constellation-star"/>
-        </g>
-      </svg>
-    </div>
-    
-    <style>
-      .constellation-line, .constellation-star {
-        animation: constellationPulse 8s ease-in-out infinite;
-      }
-      .constellation-line:nth-child(2), .constellation-star:nth-child(8) { animation-delay: 1s; }
-      .constellation-line:nth-child(3), .constellation-star:nth-child(9) { animation-delay: 2s; }
-      .constellation-line:nth-child(4) { animation-delay: 3s; }
-      .constellation-line:nth-child(5) { animation-delay: 4s; }
-      
-      @keyframes constellationPulse {
-        0%, 100% { opacity: 0.3; }
-        50% { opacity: 0.8; }
-      }
-    </style>
+    <!-- Particle background canvas -->
+    <canvas id="particles-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;"></canvas>
 
     <!-- Enhanced Header/Nav -->
-    <header class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex items-center justify-center">
-      <nav class="flex items-center justify-center gap-8 text-sm font-semibold text-white/90 rounded-full px-8 py-3 shadow-xl min-w-[340px] w-auto max-w-2xl animate-fade-in-up">
+    <header class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex items-center justify-center animate-fade-in-down">
+      <nav class="flex items-center justify-center gap-8 text-md font-bold text-white/90 bg-white/10 backdrop-filter blur-20px border border-white/20 rounded-full px-8 py-3 shadow-xl min-w-[340px] w-auto max-w-2xl">
         <div class="flex gap-8">
-          <a href="index.html" class="hover:text-blue-300 transition-all duration-300">Home</a>
-          <a href="projects.html" class="active text-blue-300">Projects</a>
-          <a href="about.html" class="hover:text-blue-300 transition-all duration-300">About</a>
-          <a href="contact.html" class="hover:text-blue-300 transition-all duration-300">Contact</a>
+          <a href="index.html" class="hover:text-blue-300 transition-all duration-300 hover:scale-105">Home</a>
+          <a href="projects.html" class="active text-blue-300 scale-105">Projects</a>
+          <a href="about.html" class="hover:text-blue-300 transition-all duration-300 hover:scale-105">About</a>
+          <a href="contact.html" class="hover:text-blue-300 transition-all duration-300 hover:scale-105">Contact</a>
         </div>
       </nav>
     </header>
 
     <!-- Enhanced Projects section -->
-    <section id="projects" class="min-h-screen px-6 lg:px-12 pt-32 pb-20 relative z-10">
+    <section id="projects" class="section-bg projects-bg min-h-screen px-6 lg:px-12 pt-32 pb-20 relative z-10">
       <div class="max-w-7xl mx-auto">
         <!-- Enhanced main title -->
         <div class="text-center mb-16">
-          <h3 class="text-5xl md:text-6xl font-black mb-6 text-gradient animate-fade-in-up">
-          My Latest Projects
-        </h3>
-          <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full animate-fade-in-up animation-delay-200 mb-6"></div>
+          <h3 id="projects-title" class="text-5xl md:text-6xl font-black mb-6 text-gradient animate-fade-in-up">
+            <span>M</span><span>y</span><span>&nbsp;</span><span>L</span><span>a</span><span>t</span><span>e</span><span>s</span><span>t</span><span>&nbsp;</span><span>P</span><span>r</span><span>o</span><span>j</span><span>e</span><span>c</span><span>t</span><span>s</span>
+          </h3>
           <p class="text-xl text-white/80 leading-relaxed max-w-3xl mx-auto font-light animate-slide-in-up animation-delay-400">
-          Click on any project to explore detailed information, screenshots, and technical implementations
+          (Click on any project to explore detailed information)
         </p>
         </div>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="projects-grid">
           <!-- Enhanced Project cards -->
-          <div onclick="openProjectModal(0)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-1 floating">
+          <div onclick="openProjectModal(0)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-1">
             <img src="images/fable.png" alt="Fable Market" class="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20" />
-            <h3 class="text-2xl font-bold text-white mb-4">Fable Market</h3>
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="status-badge status-completed">Completed</span>
-              <span class="status-badge category-badge">Software Engineering</span>
-          </div>
+            <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">Fable Market</h3>
             <p class="text-white/90 text-sm leading-relaxed font-light">
             A comprehensive book marketplace with features for buying books, reviews, and search filtering.
           </p>
         </div>
 
-          <div onclick="openProjectModal(1)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-2 floating">
+          <div onclick="openProjectModal(1)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-2">
             <img src="images/car-dealership.jpg" alt="Car Dealership Database" class="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20" />
-            <h3 class="text-2xl font-bold text-white mb-4">Car Dealership Database</h3>
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="status-badge status-completed">Completed</span>
-              <span class="status-badge category-badge">Database Systems</span>
-          </div>
+            <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">Car Dealership Database</h3>
             <p class="text-white/90 text-sm leading-relaxed font-light">
             Architected a 5-table relational database system for car-rental operations with ER modeling and SQL implementation.
           </p>
         </div>
 
-          <div onclick="openProjectModal(2)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-3 floating">
+          <div onclick="openProjectModal(2)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-3">
             <img src="images/vr.jpg" alt="CityRift VR" class="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20" />
-            <h3 class="text-2xl font-bold text-white mb-4">CityRift VR</h3>
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="status-badge status-progress">In Progress</span>
-              <span class="status-badge category-badge">Innovation Hub</span>
-          </div>
+            <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">CityRift VR</h3>
             <p class="text-white/90 text-sm leading-relaxed font-light">
             VR sandbox in Unity with first-person mechanics, AI-driven world, and immersive simulation.
           </p>
         </div>
 
-          <div onclick="openProjectModal(3)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-4 floating">
+          <div onclick="openProjectModal(3)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-4">
             <img src="images/lua.jpg" alt="Lua Multiplayer Networking" class="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20" />
-            <h3 class="text-2xl font-bold text-white mb-4">Lua Multiplayer Networking</h3>
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span class="status-badge status-completed">Completed</span>
-              <span class="status-badge category-badge">Survey Programming</span>
-          </div>
+            <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">Lua Multiplayer Networking</h3>
             <p class="text-white/90 text-sm leading-relaxed font-light">
             Local multiplayer mini-games using Lua with host-client architecture and real-time interactions.
           </p>
@@ -837,6 +840,8 @@
         </div>
       </div>
     </section>
+
+    <div id="follower"></div>
 
     <!-- Enhanced Modal for project details -->
     <div id="project-modal-overlay" class="fixed inset-0 modal-overlay z-50 flex items-center justify-center hidden">
@@ -954,12 +959,7 @@
             <b>Solution:</b> Designed and implemented a normalized 5-table database schema following 3NF principles with comprehensive ER-diagram modeling and SQL DDL implementation.<br>
             <b>Key Features:</b> Fully annotated ER-diagram with min/max participation constraints, SQL DDL with primary/foreign-key enforcement and cascading rules, seeded database with 100+ realistic records using bulk-load scripts, traceable BO&R documentation linking business requirements to database structure, and FK-mapping matrix for team collaboration.`,
           images: [],
-          links: [
-            {
-              type: "github",
-              url: "https://github.com/NicholasBurgo/Car-Dealership",
-            },
-          ],
+          links: [],
         },
         {
           title: "CityRift VR",
@@ -993,7 +993,12 @@
             "images/lua-games.jpg",
             "images/lua-games2.jpg"
           ],
-          links: [],
+          links: [
+            {
+              type: "github",
+              url: "https://github.com/NicholasBurgo/MultiplayerGame",
+            },
+          ],
         },
       ];
 
@@ -1081,16 +1086,106 @@
         }
       });
 
+      // Background image activation
+      function updateActiveBackground() {
+        const sections = document.querySelectorAll('.section-bg');
+        const windowHeight = window.innerHeight;
+        const scrollY = window.scrollY;
+        
+        sections.forEach(section => {
+          const rect = section.getBoundingClientRect();
+          const sectionTop = scrollY + rect.top;
+          const sectionBottom = sectionTop + rect.height;
+          const viewportCenter = scrollY + windowHeight / 2;
+          
+          if (viewportCenter >= sectionTop && viewportCenter < sectionBottom) {
+            section.classList.add('active');
+          } else {
+            section.classList.remove('active');
+          }
+        });
+      }
+
+      // Page load animations
+      function initializePageAnimations() {
+        // Add fade-in animation to main content
+        const mainContent = document.querySelector('#projects');
+        if (mainContent) {
+          mainContent.style.opacity = '0';
+          mainContent.style.transform = 'translateY(30px)';
+          
+          setTimeout(() => {
+            mainContent.style.transition = 'all 0.8s ease-out';
+            mainContent.style.opacity = '1';
+            mainContent.style.transform = 'translateY(0)';
+          }, 100);
+        }
+        
+        // Staggered animation for project cards
+        const cards = document.querySelectorAll('.project-card');
+        cards.forEach((card, index) => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(30px)';
+          
+          setTimeout(() => {
+            card.style.transition = 'all 0.6s ease-out';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          }, 200 + (index * 150));
+        });
+      }
+
+      // Mouse-following animation for title (using home page method)
+      function initializeTitleAnimation() {
+        const title = document.getElementById('projects-title');
+        if (!title) return;
+        
+        const letters = title.querySelectorAll('span');
+
+        document.addEventListener('mousemove', (e) => {
+          letters.forEach(letter => {
+            const rect = letter.getBoundingClientRect();
+            const letterX = rect.left + rect.width / 2;
+            const letterY = rect.top + rect.height / 2;
+
+            const distX = e.clientX - letterX;
+            const distY = e.clientY - letterY;
+            const distance = Math.sqrt(distX ** 2 + distY ** 2);
+            
+            if (distance < 80) {
+              const angle = Math.atan2(distY, distX);
+              const offset = (80 - distance) / 3;
+              letter.style.transform = `translate(${-Math.cos(angle) * offset}px, ${-Math.sin(angle) * offset}px)`;
+            } else {
+              letter.style.transform = 'translate(0, 0)';
+            }
+          });
+        });
+      }
+
+      // Mouse follower functionality
+      document.addEventListener('mousemove', function(e) {
+        const follower = document.getElementById('follower');
+        follower.style.left = `${e.clientX}px`;
+        follower.style.top = `${e.clientY}px`;
+      });
+
       // Initialize all functionality
       document.addEventListener('DOMContentLoaded', () => {
         initializeAnimations();
         addInteractiveEffects();
+        updateActiveBackground();
+        initializePageAnimations();
+        initializeTitleAnimation();
         
         // Add loading animation completion
         setTimeout(() => {
           document.body.classList.add('loaded');
         }, 500);
       });
+
+      window.addEventListener('scroll', updateActiveBackground);
+      window.addEventListener('load', updateActiveBackground);
 
       // Enhanced keyboard navigation
       document.addEventListener('keydown', function(e) {
@@ -1219,16 +1314,16 @@
         }, 10);
       }
 
-      // 3D Particle System for Galaxy Background
+      // Particle background for projects section
       (function() {
-        const canvas = document.getElementById('galaxy-particles');
+        const canvas = document.getElementById('particles-bg');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         let width = 0, height = 0, cx = 0, cy = 0;
-        
         function resize() {
-          width = window.innerWidth;
-          height = window.innerHeight;
+          const section = document.getElementById('projects');
+          width = section.offsetWidth;
+          height = section.offsetHeight;
           canvas.width = width;
           canvas.height = height;
           cx = width / 2;
@@ -1236,38 +1331,32 @@
         }
         window.addEventListener('resize', resize);
         resize();
-        
         // 3D Particle definition
-        const PARTICLE_COUNT = 120;
+        const PARTICLE_COUNT = 85;
         const particles = [];
         function randomBetween(a, b) { return a + Math.random() * (b - a); }
-        
         function resetParticle(p) {
           const angle = randomBetween(0, 2 * Math.PI);
-          const radius = randomBetween(0, Math.min(width, height) * 0.8);
+          const radius = randomBetween(0, Math.min(width, height) * 0.7);
           p.x = Math.cos(angle) * radius;
           p.y = Math.sin(angle) * radius;
-          p.z = randomBetween(0.5, 2.0); // depth (1 = far, 0 = close)
-          p.size = randomBetween(0.2, 1.5);
-          p.opacity = randomBetween(0.05, 0.8);
-          p.speed = randomBetween(0.0001, 0.0008);
+          p.z = randomBetween(0.3, 1.6); // depth (1 = far, 0 = close)
+          p.size = randomBetween(0.3, 1.3);
+          p.opacity = randomBetween(0.1, 0.6);
+          p.speed = randomBetween(0.0001, 0.0006);
           p.twinkle = randomBetween(0, 1);
-          p.twinkleSpeed = randomBetween(0.02, 0.05);
-          p.color = Math.random() < 0.25 ? '#8b5cf6' : 
-                   (Math.random() < 0.4 ? '#4fc3f7' : 
-                   (Math.random() < 0.6 ? '#ec4899' : 
-                   (Math.random() < 0.8 ? '#3b82f6' : '#fff')));
+          p.twinkleSpeed = randomBetween(0.01, 0.04);
+          p.color = Math.random() < 0.3 ? '#4fc3f7' : 
+                   (Math.random() < 0.5 ? '#8b5cf6' : 
+                   (Math.random() < 0.7 ? '#3b82f6' : '#fff'));
         }
-        
         for (let i = 0; i < PARTICLE_COUNT; i++) {
           const p = {};
           resetParticle(p);
           particles.push(p);
         }
-        
         function draw() {
           ctx.clearRect(0, 0, width, height);
-          
           for (let p of particles) {
             p.z -= p.speed;
             p.twinkle += p.twinkleSpeed;
@@ -1276,31 +1365,30 @@
               resetParticle(p);
               continue;
             }
-            
             // Perspective projection
             const perspective = 1 / p.z;
             const px = cx + p.x * perspective;
             const py = cy + p.y * perspective;
-            const scale = (0.2 + (2.5 / p.z)) * p.size;
+            const scale = (0.4 + (2 / p.z)) * p.size;
             
             // Twinkling effect
-            const twinkleAlpha = 0.5 + 0.5 * Math.sin(p.twinkle);
-            const finalAlpha = p.opacity * (2 - p.z) * twinkleAlpha;
+            const twinkleAlpha = 0.3 + 0.7 * Math.sin(p.twinkle);
+            const finalAlpha = p.opacity * (1.6 - p.z) * twinkleAlpha;
             
             ctx.globalAlpha = Math.max(0, Math.min(1, finalAlpha));
             ctx.beginPath();
             ctx.arc(px, py, scale, 0, 2 * Math.PI);
             ctx.fillStyle = p.color;
             ctx.shadowColor = p.color;
-            ctx.shadowBlur = 8 * (2 - p.z) * twinkleAlpha;
+            ctx.shadowBlur = 10 * (1.6 - p.z) * twinkleAlpha;
             ctx.fill();
             ctx.shadowBlur = 0;
             
-            // Add trailing effect for brighter particles
-            if (p.opacity > 0.4 && scale > 1) {
-              ctx.globalAlpha = finalAlpha * 0.3;
+            // Add glow effect for brighter particles
+            if (p.opacity > 0.4 && scale > 1.2) {
+              ctx.globalAlpha = finalAlpha * 0.2;
               ctx.beginPath();
-              ctx.arc(px, py, scale * 1.8, 0, 2 * Math.PI);
+              ctx.arc(px, py, scale * 2, 0, 2 * Math.PI);
               ctx.fillStyle = p.color;
               ctx.fill();
             }

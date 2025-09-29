@@ -35,7 +35,7 @@
         line-height: 1.6;
       }
       
-      /* Simplified background */
+      /* Enhanced background */
       body::before {
         content: '';
         position: fixed;
@@ -74,6 +74,17 @@
       }
 
       /* Enhanced animations */
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
       @keyframes fadeInUp {
         from {
           opacity: 0;
@@ -85,27 +96,6 @@
         }
       }
 
-      @keyframes slideInLeft {
-        from {
-          opacity: 0;
-          transform: translateX(-50px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
-
-      @keyframes slideInRight {
-        from {
-          opacity: 0;
-          transform: translateX(50px);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
 
       @keyframes scaleIn {
         from {
@@ -118,26 +108,17 @@
         }
       }
 
-      .animate-fade-in-up {
-        animation: fadeInUp 0.8s ease-out forwards;
+      .animate-fade-in-down {
+        animation: fadeInDown 0.8s ease-out forwards;
       }
 
-      .animate-slide-in-left {
-        animation: slideInLeft 1s ease-out forwards;
-        }
-
-      .animate-slide-in-right {
-        animation: slideInRight 1s ease-out forwards;
+      .animate-fade-in-up {
+        animation: fadeInUp 0.8s ease-out forwards;
       }
 
       .animate-scale-in {
         animation: scaleIn 0.8s ease-out forwards;
       }
-
-      .animation-delay-200 { animation-delay: 0.2s; }
-      .animation-delay-400 { animation-delay: 0.4s; }
-      .animation-delay-600 { animation-delay: 0.6s; }
-      .animation-delay-800 { animation-delay: 0.8s; }
 
       /* Simplified glass card styles */
       .glass-card {
@@ -151,101 +132,12 @@
         position: relative;
       }
 
-      .glass-card:hover {
-        transform: translateY(-4px);
-        background: rgba(255, 255, 255, 0.08);
-        border-color: rgba(79, 195, 247, 0.4);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-      }
 
-      /* Profile image enhancement */
-      .profile-container {
-        position: relative;
-        display: inline-block;
-      }
 
-      .profile-container::before {
-        content: '';
-        position: absolute;
-        top: -8px;
-        left: -8px;
-        right: -8px;
-        bottom: -8px;
-        background: linear-gradient(45deg, #4fc3f7, #2563eb);
-        border-radius: 50%;
-        opacity: 0.3;
-        z-index: -1;
-        animation: profileGlow 3s ease-in-out infinite;
-      }
 
-      @keyframes profileGlow {
-        0%, 100% { transform: scale(1); opacity: 0.3; }
-        50% { transform: scale(1.05); opacity: 0.5; }
-      }
 
-      .profile-image {
-        border: 3px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 0 20px rgba(79, 195, 247, 0.3);
-        transition: all 0.3s ease;
-        position: relative;
-        z-index: 1;
-      }
-
-      .profile-image:hover {
-        transform: scale(1.05);
-        border-color: rgba(79, 195, 247, 0.6);
-        box-shadow: 0 0 30px rgba(79, 195, 247, 0.5);
-      }
-
-      /* Simplified skill progress bars */
-      .skill-item {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        padding: 16px;
-        transition: all 0.3s ease;
-      }
-
-      .skill-item:hover {
-        background: rgba(255, 255, 255, 0.06);
-        border-color: rgba(79, 195, 247, 0.3);
-        transform: translateY(-2px);
-      }
-
-      .skill-progress {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        height: 8px;
-        overflow: hidden;
-        margin-top: 8px;
-        position: relative;
-      }
-
-      .skill-progress-bar {
-        background: linear-gradient(90deg, #4fc3f7 0%, #2563eb 100%);
-        height: 100%;
-        border-radius: 8px;
-        transition: width 2s ease;
-        box-shadow: 0 0 10px rgba(79, 195, 247, 0.5);
-        position: relative;
-      }
-
-      /* Simplified button styles */
-      .download-btn {
-        background: linear-gradient(135deg, #4fc3f7 0%, #2563eb 100%);
-        border: 1px solid rgba(79, 195, 247, 0.4);
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-        position: relative;
-      }
-
-      .download-btn:hover {
-        transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 8px 25px rgba(79, 195, 247, 0.4);
-        border-color: rgba(79, 195, 247, 0.6);
-        }
         
-      /* Simplified navigation */
+      /* Navigation styles */
       nav {
         background: rgba(255, 255, 255, 0.05) !important;
         backdrop-filter: blur(10px) !important;
@@ -279,6 +171,44 @@
         color: #4fc3f7 !important;
         }
         
+      /* Section background system */
+      .section-bg {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .section-bg::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0;
+        z-index: 0;
+        transition: opacity 0.8s ease;
+      }
+
+      .section-bg > * {
+        position: relative;
+        z-index: 1;
+      }
+      
+      .about-bg::before {
+        background-image: url('images/Galaxy.jpg');
+      }
+      
+      .section-bg.active::before {
+        opacity: 0.3;
+      }
+
+      .about-bg.active::before {
+        opacity: 0.15;
+      }
+        
       /* Floating elements */
       .floating {
         animation: float 4s ease-in-out infinite;
@@ -291,273 +221,123 @@
         0%, 100% { transform: translateY(0px); }
         50% { transform: translateY(-5px); }
       }
+
+      #follower {
+        position: fixed;
+        width: 12px;
+        height: 12px;
+        background-color: rgba(79,195,247, 0.4); 
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translate(-50%, -50%) scale(1);
+        transition: transform 0.15s ease-out, background-color 0.2s ease-out;
+        backdrop-filter: blur(3px);
+        box-shadow: 0 0 6px rgba(79,195,247, 0.3);
+        z-index: 100;
+      }
     </style>
   </head>
   <body class="relative overflow-x-hidden">
-    <!-- Enhanced 3D Particle Background -->
-    <canvas id="galaxy-particles" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;"></canvas>
-    
-    <!-- Enhanced constellation patterns -->
-    <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; opacity: 0.3;">
-      <svg width="100%" height="100%" style="position: absolute;">
-        <defs>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
-            <feMerge> 
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          <linearGradient id="constellationGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.4"/>
-            <stop offset="50%" style="stop-color:#4fc3f7;stop-opacity:0.8"/>
-            <stop offset="100%" style="stop-color:#ec4899;stop-opacity:0.4"/>
-          </linearGradient>
-        </defs>
-        <g stroke="url(#constellationGradient)" stroke-width="1.5" fill="none" filter="url(#glow)">
-          <line x1="10%" y1="20%" x2="25%" y2="30%" stroke-dasharray="3,6" class="constellation-line"/>
-          <line x1="25%" y1="30%" x2="40%" y2="25%" stroke-dasharray="3,6" class="constellation-line"/>
-          <line x1="70%" y1="15%" x2="85%" y2="35%" stroke-dasharray="3,6" class="constellation-line"/>
-          <line x1="15%" y1="70%" x2="30%" y2="80%" stroke-dasharray="3,6" class="constellation-line"/>
-          <line x1="60%" y1="75%" x2="80%" y2="85%" stroke-dasharray="3,6" class="constellation-line"/>
-          <circle cx="25%" cy="30%" r="2" fill="url(#constellationGradient)" class="constellation-star"/>
-          <circle cx="40%" cy="25%" r="1.5" fill="url(#constellationGradient)" class="constellation-star"/>
-          <circle cx="85%" cy="35%" r="2.5" fill="url(#constellationGradient)" class="constellation-star"/>
-        </g>
-      </svg>
-    </div>
-    
-    <style>
-      .constellation-line, .constellation-star {
-        animation: constellationPulse 8s ease-in-out infinite;
-      }
-      .constellation-line:nth-child(2), .constellation-star:nth-child(8) { animation-delay: 1s; }
-      .constellation-line:nth-child(3), .constellation-star:nth-child(9) { animation-delay: 2s; }
-      .constellation-line:nth-child(4) { animation-delay: 3s; }
-      .constellation-line:nth-child(5) { animation-delay: 4s; }
-      
-      @keyframes constellationPulse {
-        0%, 100% { opacity: 0.3; }
-        50% { opacity: 0.8; }
-      }
-    </style>
+    <!-- Particle background canvas -->
+    <canvas id="particles-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;"></canvas>
 
     <!-- Enhanced Header/Nav -->
-    <header class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex items-center justify-center">
-      <nav class="flex items-center justify-center gap-8 text-sm font-semibold text-white/90 rounded-full px-8 py-3 shadow-xl min-w-[340px] w-auto max-w-2xl animate-fade-in-up">
+    <header class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex items-center justify-center animate-fade-in-down">
+      <nav class="flex items-center justify-center gap-8 text-md font-bold text-white/90 bg-white/10 backdrop-filter blur-20px border border-white/20 rounded-full px-8 py-3 shadow-xl min-w-[340px] w-auto max-w-2xl">
         <div class="flex gap-8">
-          <a href="index.html" class="hover:text-blue-300 transition-all duration-300">Home</a>
-          <a href="projects.html" class="hover:text-blue-300 transition-all duration-300">Projects</a>
-          <a href="about.html" class="active text-blue-300">About</a>
-          <a href="contact.html" class="hover:text-blue-300 transition-all duration-300">Contact</a>
+          <a href="index.html" class="hover:text-blue-300 transition-all duration-300 hover:scale-105">Home</a>
+          <a href="projects.html" class="hover:text-blue-300 transition-all duration-300 hover:scale-105">Projects</a>
+          <a href="about.html" class="active text-blue-300 scale-105">About</a>
+          <a href="contact.html" class="hover:text-blue-300 transition-all duration-300 hover:scale-105">Contact</a>
         </div>
       </nav>
     </header>
 
     <!-- Enhanced About section -->
-    <section id="about" class="min-h-screen px-6 lg:px-12 pt-32 pb-20 relative z-10">
+    <section id="about" class="section-bg about-bg min-h-screen px-6 lg:px-12 pt-32 pb-20 relative z-10">
       <div class="max-w-7xl mx-auto">
         <!-- Enhanced main title -->
         <div class="text-center mb-16">
-          <h3 class="text-5xl md:text-6xl font-black mb-6 text-gradient animate-fade-in-up">
-          About Me
-        </h3>
-          <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full animate-fade-in-up animation-delay-200"></div>
+          <h3 id="about-title" class="text-5xl md:text-6xl font-black mb-6 text-gradient animate-fade-in-up">
+            <span>A</span><span>b</span><span>o</span><span>u</span><span>t</span><span>&nbsp;</span><span>M</span><span>e</span>
+          </h3>
         </div>
 
-        <!-- Enhanced main content grid -->
-        <div class="grid lg:grid-cols-2 gap-8 mb-12">
-          <!-- Enhanced Profile section -->
-          <div>
-            <div class="glass-card p-8 opacity-0 animate-slide-in-left floating mb-8">
-              <div class="flex flex-col md:flex-row gap-8 items-center md:items-start">
-                <div class="flex-shrink-0">
-                  <div class="profile-container">
-                  <img src="images/headshot-main.png"
-                      alt="Nicholas Burgo portrait"
-                        class="profile-image w-48 h-48 object-cover rounded-full opacity-0 animate-scale-in animation-delay-400"/>
-                  </div>
-                </div>
-
-                <div class="flex-1 space-y-6 text-center md:text-left">
-                  <div>
-                    <h4 class="text-4xl font-black mb-6 text-gradient">
-                      Who I Am
-                    </h4>
-                    <p class="text-white/90 leading-relaxed text-lg font-light">
-                      I'm a passionate Computer Science student at <span class="text-blue-300 font-medium">Southeastern Louisiana University</span>, 
-                      dedicated to building innovative data-driven applications and immersive digital experiences. 
-                      I thrive on creating clean, functional solutions that solve real-world problems and make a meaningful impact.
-                    </p>
-                  </div>
-                  
-                  <div class="flex flex-wrap gap-3 justify-center md:justify-start pt-4">
-                    <span class="px-4 py-2 bg-blue-500/20 text-blue-300 rounded-full text-sm font-medium border border-blue-500/30">
-                      Problem Solver
-                    </span>
-                    <span class="px-4 py-2 bg-purple-500/20 text-purple-300 rounded-full text-sm font-medium border border-purple-500/30">
-                      Creative Thinker
-                    </span>
-                    <span class="px-4 py-2 bg-pink-500/20 text-pink-300 rounded-full text-sm font-medium border border-pink-500/30">
-                      Tech Enthusiast
-                    </span>
-                  </div>
-                </div>
+        <!-- Main Content -->
+        <div class="max-w-4xl mx-auto mb-12">
+          <!-- Profile Section -->
+          <div class="glass-card p-8 mb-8 opacity-0 animate-scale-in">
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+              <div class="flex-shrink-0">
+                <img src="images/headshot-main.png"
+                    alt="Nicholas Burgo portrait"
+                    class="w-32 h-32 object-cover rounded-full border-2 border-white/20"/>
               </div>
-            </div>
-
-            <!-- Enhanced Education & Quick Info -->
-            <div class="grid md:grid-cols-2 gap-6">
-              <div class="glass-card p-6 opacity-0 animate-slide-in-left floating animation-delay-200">
-                <h4 class="text-2xl font-bold text-white mb-6 flex items-center">
-                  <i class="fas fa-graduation-cap text-blue-400 mr-3 icon-glow"></i>
-                  Education
-                </h4>
-                <div class="space-y-4">
-                  <div class="bg-gradient-to-r from-blue-500/10 to-purple-500/10 p-4 rounded-xl border border-white/10">
-                    <span class="block font-bold text-blue-300 text-xl">B.S. Computer Science</span>
-                    <span class="text-white/90 font-medium">Southeastern Louisiana University</span>
-                  </div>
-                  <div class="text-sm text-white/80 space-y-3">
-                    <div class="flex items-center"><i class="fas fa-chart-line text-blue-400 mr-3 w-4"></i>Concentration: Data Science</div>
-                    <div class="flex items-center"><i class="fas fa-calendar text-blue-400 mr-3 w-4"></i>Expected Graduation: Fall 2026</div>
-                    <div class="flex items-center"><i class="fas fa-map-marker-alt text-blue-400 mr-3 w-4"></i>Hammond, Louisiana</div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="glass-card p-6 opacity-0 animate-slide-in-left floating animation-delay-400">
-                <h4 class="text-2xl font-bold text-white mb-6 flex items-center">
-                  <i class="fas fa-code text-blue-400 mr-3 icon-glow"></i>
-                  Focus Areas
-                </h4>
-                <div class="space-y-4">
-                  <div class="flex items-center p-3 bg-blue-500/10 rounded-xl border border-blue-500/20 hover:bg-blue-500/20 transition-all duration-300">
-                    <i class="fas fa-database text-blue-400 mr-3 w-5"></i>
-                    <span class="text-white/90 font-medium">Data Science & Analytics</span>
-                </div>
-                  <div class="flex items-center p-3 bg-purple-500/10 rounded-xl border border-purple-500/20 hover:bg-purple-500/20 transition-all duration-300">
-                    <i class="fas fa-laptop-code text-purple-400 mr-3 w-5"></i>
-                    <span class="text-white/90 font-medium">Full-Stack Development</span>
-                  </div>
-                  <div class="flex items-center p-3 bg-pink-500/10 rounded-xl border border-pink-500/20 hover:bg-pink-500/20 transition-all duration-300">
-                    <i class="fas fa-vr-cardboard text-pink-400 mr-3 w-5"></i>
-                    <span class="text-white/90 font-medium">Game & VR Development</span>
-                  </div>
-                </div>
+              <div class="flex-1 text-center md:text-left">
+                <h2 class="text-3xl font-bold text-white mb-4">Nicholas Burgo</h2>
+                <p class="text-white/70 leading-relaxed mb-6">
+                  I'm Nicholas Burgo, a senior Computer Science major at Southeastern Louisiana University with a concentration in Data Science. I have hands-on experience in software and game development across multiple platforms, from building AI-powered web applications with FastAPI and PostgreSQL to creating immersive Unity projects and Raspberry Pi prototypes. My strengths lie in blending problem-solving with creativity, whether that's developing multiplayer games, designing intuitive user interfaces, or architecting scalable backend systems. Alongside my academic work, I actively explore entrepreneurial projects like mobile apps and social platforms, reflecting my passion for innovation and building solutions that make an impact.
+                </p>
+                <a href="documents/NicholasBurgoResV6.pdf" download
+                  class="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg text-white hover:bg-white/20 hover:border-white/50 transition-all duration-300 font-medium group">
+                  <i class="fa-solid fa-file-arrow-down group-hover:animate-bounce"></i>
+                  Download Resume
+                </a>
               </div>
             </div>
           </div>
 
-          <!-- Enhanced Skills section -->
-          <div class="glass-card p-8 opacity-0 animate-slide-in-right floating animation-delay-600">
-            <div class="text-center mb-8">
-              <h4 class="text-3xl font-black mb-4 text-gradient">
-              Core Skills & Technologies
-            </h4>
-              <p class="text-white/70 text-base font-light">
-                A comprehensive overview of my technical expertise and proficiency levels across various domains
-              </p>
-            </div>
-            
-            <div class="space-y-8">
-              <!-- Frontend Skills -->
-              <div class="skill-category">
-                <h5 class="text-xl font-bold text-blue-300 flex items-center mb-4">
-                  <i class="fas fa-code text-blue-400 mr-3 icon-glow"></i>Frontend
-                </h5>
-                <div class="space-y-3">
-                  <div class="skill-item">
-                    <div class="flex justify-between text-sm mb-2">
-                      <span class="text-white/90 font-medium">React & TypeScript</span>
-                      <span class="text-blue-300 font-semibold">Intermediate</span>
-                     </div>
-                     <div class="skill-progress">
-                      <div class="skill-progress-bar" style="width: 0%" data-width="65%"></div>
-                     </div>
-                   </div>
-                  <div class="skill-item">
-                    <div class="flex justify-between text-sm mb-2">
-                      <span class="text-white/90 font-medium">HTML/CSS/JS</span>
-                      <span class="text-blue-300 font-semibold">Proficient</span>
-                     </div>
-                     <div class="skill-progress">
-                      <div class="skill-progress-bar" style="width: 0%" data-width="75%"></div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-
-              <!-- Backend Skills -->
-              <div class="skill-category">
-                <h5 class="text-xl font-bold text-purple-300 flex items-center mb-4">
-                  <i class="fas fa-server text-purple-400 mr-3 icon-glow"></i>Backend
-                 </h5>
-                <div class="space-y-3">
-                  <div class="skill-item">
-                    <div class="flex justify-between text-sm mb-2">
-                      <span class="text-white/90 font-medium">Java & Python</span>
-                      <span class="text-purple-300 font-semibold">Intermediate</span>
-                     </div>
-                     <div class="skill-progress">
-                      <div class="skill-progress-bar" style="width: 0%" data-width="60%"></div>
-                     </div>
-                   </div>
-                  <div class="skill-item">
-                    <div class="flex justify-between text-sm mb-2">
-                      <span class="text-white/90 font-medium">SQL Databases</span>
-                      <span class="text-purple-300 font-semibold">Intermediate</span>
-                     </div>
-                     <div class="skill-progress">
-                      <div class="skill-progress-bar" style="width: 0%" data-width="55%"></div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-
-              <!-- Game Development Skills -->
-              <div class="skill-category">
-                <h5 class="text-xl font-bold text-pink-300 flex items-center mb-4">
-                  <i class="fas fa-gamepad text-pink-400 mr-3 icon-glow"></i>Game Dev
-                 </h5>
-                <div class="space-y-3">
-                  <div class="skill-item">
-                    <div class="flex justify-between text-sm mb-2">
-                      <span class="text-white/90 font-medium">Unity & C#</span>
-                      <span class="text-pink-300 font-semibold">Learning</span>
-                     </div>
-                     <div class="skill-progress">
-                      <div class="skill-progress-bar" style="width: 0%" data-width="50%"></div>
-                     </div>
-                   </div>
-                  <div class="skill-item">
-                    <div class="flex justify-between text-sm mb-2">
-                      <span class="text-white/90 font-medium">VR Development</span>
-                      <span class="text-pink-300 font-semibold">Beginner</span>
-                     </div>
-                     <div class="skill-progress">
-                      <div class="skill-progress-bar" style="width: 0%" data-width="40%"></div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-            </div>
-
-            <!-- Enhanced download button -->
-            <div class="mt-8 flex justify-center">
-              <a href="documents/nicholas-burgo-resume.pdf" download
-                class="download-btn inline-flex items-center gap-3 px-8 py-4 rounded-full text-blue-300 hover:text-white font-bold shadow-2xl text-base group">
-                <i class="fa-solid fa-file-arrow-down text-lg group-hover:animate-bounce"></i> 
-                Download Résumé
-              </a>
+          <!-- Education Section -->
+          <div class="glass-card p-6 mb-8 opacity-0 animate-scale-in">
+            <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+              <i class="fas fa-graduation-cap text-blue-400 mr-3"></i>
+              Education
+            </h3>
+            <div class="space-y-3">
+              <div>
+                <h4 class="text-lg font-medium text-blue-300">B.S. Computer Science</h4>
+                <p class="text-white/80">Southeastern Louisiana University</p>
+                <p class="text-sm text-white/60">Concentration: Data Science • Expected Graduation: Fall 2026</p>
+              </div>
             </div>
           </div>
+
+          <!-- Skills Section -->
+          <div class="glass-card p-6 mb-8 opacity-0 animate-scale-in">
+            <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+              <i class="fas fa-code text-blue-400 mr-3"></i>
+              Skills & Interests
+            </h3>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <h4 class="text-sm font-medium text-white/90 mb-2">Programming</h4>
+                <p class="text-sm text-white/70">Java, Python, JavaScript, HTML/CSS, SQL</p>
+                     </div>
+              <div>
+                <h4 class="text-sm font-medium text-white/90 mb-2">Development</h4>
+                <p class="text-sm text-white/70">React, Unity, C#, Full-Stack Development</p>
+                     </div>
+              <div>
+                <h4 class="text-sm font-medium text-white/90 mb-2">Data Science</h4>
+                <p class="text-sm text-white/70">Data Analysis, Machine Learning, Statistics</p>
+                   </div>
+              <div>
+                <h4 class="text-sm font-medium text-white/90 mb-2">Other</h4>
+                <p class="text-sm text-white/70">Game Development, VR Development, Database Design</p>
+                   </div>
+                 </div>
+               </div>
+
+          </div>
+
         </div>
       </div>
     </section>
 
+    <div id="follower"></div>
+
     <script>
-      // Enhanced Animation System
+      // Animation System
       function initializeAnimations() {
         // Animate elements on scroll
         const animatedElements = document.querySelectorAll('[class*="animate-"]');
@@ -583,68 +363,9 @@
         });
       }
 
-      // Enhanced skill progress bar animations
-      function animateSkillBars() {
-        const progressBars = document.querySelectorAll('.skill-progress-bar');
-        
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const bar = entry.target;
-              const targetWidth = bar.getAttribute('data-width');
-              
-              // Add a staggered delay based on position
-              const delay = Array.from(progressBars).indexOf(bar) * 150;
-              
-              setTimeout(() => {
-                bar.style.width = targetWidth;
-                
-                // Add a pulse effect when animation completes
-                setTimeout(() => {
-                  bar.style.boxShadow = `
-                    0 0 20px rgba(79, 195, 247, 0.8),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.3)
-                  `;
-                  
-                  setTimeout(() => {
-                    bar.style.boxShadow = `
-                      0 0 15px rgba(79, 195, 247, 0.5),
-                      inset 0 1px 0 rgba(255, 255, 255, 0.3)
-                    `;
-                  }, 300);
-                }, 2000);
-              }, delay);
-            }
-          });
-        }, { threshold: 0.3 });
 
-        progressBars.forEach(bar => observer.observe(bar));
-      }
-
-      // Enhanced parallax and interaction effects
+      // Interactive effects
       function addInteractiveEffects() {
-        // Subtle parallax for floating elements
-        document.addEventListener('scroll', () => {
-          const scrolled = window.pageYOffset;
-          const rate = scrolled * -0.3;
-          
-          document.querySelectorAll('.floating').forEach((element, index) => {
-            const speed = (index + 1) * 0.1;
-            element.style.transform = `translateY(${rate * speed}px)`;
-          });
-        });
-
-        // Enhanced hover effects for cards
-        document.querySelectorAll('.glass-card').forEach(card => {
-          card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-8px) scale(1.02)';
-          });
-          
-          card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-          });
-        });
-
         // Smooth navigation link transitions
         document.querySelectorAll('nav a').forEach(link => {
           link.addEventListener('mouseenter', function() {
@@ -657,17 +378,72 @@
       });
       }
 
+      // Background image activation
+      function updateActiveBackground() {
+        const sections = document.querySelectorAll('.section-bg');
+        const windowHeight = window.innerHeight;
+        const scrollY = window.scrollY;
+        
+        sections.forEach(section => {
+          const rect = section.getBoundingClientRect();
+          const sectionTop = scrollY + rect.top;
+          const sectionBottom = sectionTop + rect.height;
+          const viewportCenter = scrollY + windowHeight / 2;
+          
+          if (viewportCenter >= sectionTop && viewportCenter < sectionBottom) {
+            section.classList.add('active');
+          } else {
+            section.classList.remove('active');
+          }
+      });
+      }
+
+
+      // Mouse-following animation for title (using home page method)
+      function initializeTitleAnimation() {
+        const title = document.getElementById('about-title');
+        if (!title) return;
+        
+        const letters = title.querySelectorAll('span');
+
+        document.addEventListener('mousemove', (e) => {
+          letters.forEach(letter => {
+            const rect = letter.getBoundingClientRect();
+            const letterX = rect.left + rect.width / 2;
+            const letterY = rect.top + rect.height / 2;
+
+            const distX = e.clientX - letterX;
+            const distY = e.clientY - letterY;
+            const distance = Math.sqrt(distX ** 2 + distY ** 2);
+            
+            if (distance < 80) {
+              const angle = Math.atan2(distY, distX);
+              const offset = (80 - distance) / 3;
+              letter.style.transform = `translate(${-Math.cos(angle) * offset}px, ${-Math.sin(angle) * offset}px)`;
+            } else {
+              letter.style.transform = 'translate(0, 0)';
+            }
+          });
+        });
+      }
+
+      // Mouse follower functionality
+      document.addEventListener('mousemove', function(e) {
+        const follower = document.getElementById('follower');
+        follower.style.left = `${e.clientX}px`;
+        follower.style.top = `${e.clientY}px`;
+      });
+
       // Initialize all functionality
       document.addEventListener('DOMContentLoaded', () => {
         initializeAnimations();
-        animateSkillBars();
         addInteractiveEffects();
-        
-        // Add loading animation completion
-        setTimeout(() => {
-          document.body.classList.add('loaded');
-        }, 500);
+        updateActiveBackground();
+        initializeTitleAnimation();
       });
+
+      window.addEventListener('scroll', updateActiveBackground);
+      window.addEventListener('load', updateActiveBackground);
 
       // Keyboard accessibility
       document.addEventListener('keydown', function(e) {
@@ -681,16 +457,16 @@
         }
       });
 
-      // 3D Particle System for Galaxy Background
+      // Particle background for about section
       (function() {
-        const canvas = document.getElementById('galaxy-particles');
+        const canvas = document.getElementById('particles-bg');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
         let width = 0, height = 0, cx = 0, cy = 0;
-        
         function resize() {
-          width = window.innerWidth;
-          height = window.innerHeight;
+          const section = document.getElementById('about');
+          width = section.offsetWidth;
+          height = section.offsetHeight;
           canvas.width = width;
           canvas.height = height;
           cx = width / 2;
@@ -698,38 +474,32 @@
         }
         window.addEventListener('resize', resize);
         resize();
-        
         // 3D Particle definition
-        const PARTICLE_COUNT = 100;
+        const PARTICLE_COUNT = 85;
         const particles = [];
         function randomBetween(a, b) { return a + Math.random() * (b - a); }
-        
         function resetParticle(p) {
           const angle = randomBetween(0, 2 * Math.PI);
-          const radius = randomBetween(0, Math.min(width, height) * 0.75);
+          const radius = randomBetween(0, Math.min(width, height) * 0.7);
           p.x = Math.cos(angle) * radius;
           p.y = Math.sin(angle) * radius;
-          p.z = randomBetween(0.4, 1.8); // depth (1 = far, 0 = close)
-          p.size = randomBetween(0.3, 1.4);
-          p.opacity = randomBetween(0.05, 0.7);
+          p.z = randomBetween(0.3, 1.6); // depth (1 = far, 0 = close)
+          p.size = randomBetween(0.3, 1.3);
+          p.opacity = randomBetween(0.1, 0.6);
           p.speed = randomBetween(0.0001, 0.0006);
           p.twinkle = randomBetween(0, 1);
-          p.twinkleSpeed = randomBetween(0.015, 0.04);
-          p.color = Math.random() < 0.25 ? '#8b5cf6' : 
-                   (Math.random() < 0.4 ? '#4fc3f7' : 
-                   (Math.random() < 0.6 ? '#ec4899' : 
-                   (Math.random() < 0.8 ? '#3b82f6' : '#fff')));
+          p.twinkleSpeed = randomBetween(0.01, 0.04);
+          p.color = Math.random() < 0.3 ? '#4fc3f7' : 
+                   (Math.random() < 0.5 ? '#8b5cf6' : 
+                   (Math.random() < 0.7 ? '#3b82f6' : '#fff'));
         }
-        
         for (let i = 0; i < PARTICLE_COUNT; i++) {
           const p = {};
           resetParticle(p);
           particles.push(p);
         }
-        
         function draw() {
           ctx.clearRect(0, 0, width, height);
-          
           for (let p of particles) {
             p.z -= p.speed;
             p.twinkle += p.twinkleSpeed;
@@ -738,31 +508,30 @@
               resetParticle(p);
               continue;
             }
-            
             // Perspective projection
             const perspective = 1 / p.z;
             const px = cx + p.x * perspective;
             const py = cy + p.y * perspective;
-            const scale = (0.3 + (2.2 / p.z)) * p.size;
+            const scale = (0.4 + (2 / p.z)) * p.size;
             
             // Twinkling effect
-            const twinkleAlpha = 0.4 + 0.6 * Math.sin(p.twinkle);
-            const finalAlpha = p.opacity * (1.8 - p.z) * twinkleAlpha;
+            const twinkleAlpha = 0.3 + 0.7 * Math.sin(p.twinkle);
+            const finalAlpha = p.opacity * (1.6 - p.z) * twinkleAlpha;
             
             ctx.globalAlpha = Math.max(0, Math.min(1, finalAlpha));
             ctx.beginPath();
             ctx.arc(px, py, scale, 0, 2 * Math.PI);
             ctx.fillStyle = p.color;
             ctx.shadowColor = p.color;
-            ctx.shadowBlur = 7 * (1.8 - p.z) * twinkleAlpha;
+            ctx.shadowBlur = 10 * (1.6 - p.z) * twinkleAlpha;
             ctx.fill();
             ctx.shadowBlur = 0;
             
-            // Add subtle trailing effect for larger particles
-            if (p.opacity > 0.3 && scale > 0.8) {
-              ctx.globalAlpha = finalAlpha * 0.25;
+            // Add glow effect for brighter particles
+            if (p.opacity > 0.4 && scale > 1.2) {
+              ctx.globalAlpha = finalAlpha * 0.2;
               ctx.beginPath();
-              ctx.arc(px, py, scale * 1.6, 0, 2 * Math.PI);
+              ctx.arc(px, py, scale * 2, 0, 2 * Math.PI);
               ctx.fillStyle = p.color;
               ctx.fill();
             }
