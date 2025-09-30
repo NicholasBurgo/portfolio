@@ -718,6 +718,140 @@
         pointer-events: auto;
       }
 
+      /* Carousel Styles */
+      .carousel-container {
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+        margin: 0 auto;
+      }
+
+      .carousel-track {
+        display: flex;
+        transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        gap: 1.5rem;
+      }
+
+      .carousel-track .project-card {
+        flex: 0 0 calc(25% - 1.5rem);
+        min-width: 280px;
+      }
+
+      /* Navigation Arrows */
+      .carousel-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(79, 195, 247, 0.3);
+        border-radius: 50%;
+        color: rgba(79, 195, 247, 0.9);
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 
+          0 8px 32px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      }
+
+      .carousel-nav:hover {
+        background: rgba(79, 195, 247, 0.15);
+        border-color: rgba(79, 195, 247, 0.6);
+        color: white;
+        transform: translateY(-50%) scale(1.05);
+        box-shadow: 
+          0 12px 40px rgba(79, 195, 247, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      }
+
+      .carousel-nav-left {
+        left: -70px;
+      }
+
+      .carousel-nav-right {
+        right: -65px;
+      }
+
+      /* Responsive carousel */
+      @media (max-width: 1200px) {
+        .carousel-track {
+          gap: 1.25rem;
+        }
+        
+        .carousel-track .project-card {
+          flex: 0 0 calc(33.333% - 1.25rem);
+        }
+        
+        .carousel-nav {
+          width: 55px;
+          height: 55px;
+          font-size: 18px;
+        }
+        
+        .carousel-nav-left {
+          left: -60px;
+        }
+        
+        .carousel-nav-right {
+          right: -60px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .carousel-track {
+          gap: 1rem;
+        }
+        
+        .carousel-track .project-card {
+          flex: 0 0 calc(50% - 1rem);
+        }
+        
+        .carousel-nav {
+          width: 50px;
+          height: 50px;
+          font-size: 16px;
+        }
+        
+        .carousel-nav-left {
+          left: -55px;
+        }
+        
+        .carousel-nav-right {
+          right: -55px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .carousel-track {
+          gap: 0.75rem;
+        }
+        
+        .carousel-track .project-card {
+          flex: 0 0 calc(100% - 0.75rem);
+        }
+        
+        .carousel-nav {
+          width: 45px;
+          height: 45px;
+          font-size: 14px;
+        }
+        
+        .carousel-nav-left {
+          left: -50px;
+        }
+        
+        .carousel-nav-right {
+          right: -50px;
+        }
+      }
+
       /* Section improvements */
       .section-divider {
         height: 1px;
@@ -837,20 +971,20 @@
     </header>
 
     <!-- Enhanced Projects section -->
-    <section id="projects" class="section-bg projects-bg min-h-screen px-6 lg:px-12 pt-32 pb-20 relative z-10">
+    <section id="projects" class="section-bg projects-bg min-h-screen px-6 lg:px-12 pt-20 pb-16 relative z-10">
       <div class="max-w-7xl mx-auto">
         <!-- Enhanced main title -->
-        <div class="text-center mb-16">
-          <h3 id="projects-title" class="text-5xl md:text-6xl font-black mb-6 text-gradient animate-fade-in-up">
+        <div class="text-center mb-8">
+          <h3 id="projects-title" class="text-5xl md:text-6xl font-black mb-4 text-gradient animate-fade-in-up">
             <span>M</span><span>y</span><span>&nbsp;</span><span>P</span><span>r</span><span>o</span><span>j</span><span>e</span><span>c</span><span>t</span><span>s</span>
         </h3>
-          <p class="text-xl text-white/80 leading-relaxed max-w-3xl mx-auto font-light animate-slide-in-up animation-delay-400">
+          <p class="text-lg text-white/80 leading-relaxed max-w-3xl mx-auto font-light animate-slide-in-up animation-delay-400">
           (Click on any project to explore detailed information)
         </p>
         </div>
         
         <!-- Filter Buttons -->
-        <div class="flex flex-wrap justify-center gap-4 mb-12 animate-fade-in-up animation-delay-600">
+        <div class="flex flex-wrap justify-center gap-4 mb-8 animate-fade-in-up animation-delay-600">
           <button class="filter-btn active" data-filter="all">
             <i class="fas fa-th-large mr-2"></i>All Projects
           </button>
@@ -866,50 +1000,64 @@
           <button class="filter-btn" data-filter="frontend">
             <i class="fas fa-palette mr-2"></i>Frontend
           </button>
-        </div>
+          </div>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="projects-grid">
-          <!-- Enhanced Project cards -->
-          <div onclick="openProjectModal(0)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-1" data-category="fullstack">
-            <img src="images/fable.png" alt="Fable Market" class="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20" />
-            <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">Fable Market</h3>
-            <p class="text-white/90 text-sm leading-relaxed font-light">
+        <!-- Projects Carousel -->
+        <div class="relative mt-4">
+          <!-- Navigation Arrows -->
+          <button id="carousel-prev" class="carousel-nav carousel-nav-left">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button id="carousel-next" class="carousel-nav carousel-nav-right">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+          
+          <!-- Carousel Container -->
+          <div class="carousel-container">
+            <div class="carousel-track" id="carousel-track">
+              <!-- Enhanced Project cards -->
+              <div onclick="openProjectModal(0)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-1" data-category="fullstack">
+                <img src="images/fable.png" alt="Fable Market" class="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20" />
+                <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">Fable Market</h3>
+                <p class="text-white/90 text-sm leading-relaxed font-light">
             A comprehensive book marketplace with features for buying books, reviews, and search filtering.
           </p>
         </div>
 
-          <div onclick="openProjectModal(1)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-2" data-category="database">
-            <img src="images/car-dealership.jpg" alt="Car Dealership Database" class="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20" />
-            <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">Car Dealership Database</h3>
-            <p class="text-white/90 text-sm leading-relaxed font-light">
+              <div onclick="openProjectModal(1)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-2" data-category="database">
+                <img src="images/car-dealership.jpg" alt="Car Dealership Database" class="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20" />
+                <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">Car Dealership Database</h3>
+                <p class="text-white/90 text-sm leading-relaxed font-light">
             Architected a 5-table relational database system for car-rental operations with ER modeling and SQL implementation.
           </p>
         </div>
 
-          <div onclick="openProjectModal(2)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-3" data-category="gamedev">
-            <img src="images/vr.jpg" alt="CityRift VR" class="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20" />
-            <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">CityRift VR</h3>
-            <p class="text-white/90 text-sm leading-relaxed font-light">
+              <div onclick="openProjectModal(2)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-3" data-category="gamedev">
+                <img src="images/vr.jpg" alt="CityRift VR" class="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20" />
+                <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">CityRift VR</h3>
+                <p class="text-white/90 text-sm leading-relaxed font-light">
             VR sandbox in Unity with first-person mechanics, AI-driven world, and immersive simulation.
           </p>
         </div>
 
-          <div onclick="openProjectModal(3)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-4" data-category="gamedev">
-            <img src="images/lua.jpg" alt="Lua Multiplayer Networking" class="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20" />
-            <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">Lua Multiplayer Networking</h3>
-            <p class="text-white/90 text-sm leading-relaxed font-light">
+              <div onclick="openProjectModal(3)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-4" data-category="gamedev">
+                <img src="images/lua.jpg" alt="Lua Multiplayer Networking" class="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20" />
+                <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">Lua Multiplayer Networking</h3>
+                <p class="text-white/90 text-sm leading-relaxed font-light">
             Local multiplayer mini-games using Lua with host-client architecture and real-time interactions.
           </p>
           </div>
 
-          <div onclick="openProjectModal(4)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-1" data-category="frontend">
-            <div class="w-full h-48 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-2xl mb-6 border border-white/20 flex items-center justify-center">
-              <i class="fas fa-code text-6xl text-blue-400"></i>
+              <div onclick="openProjectModal(4)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-1" data-category="frontend">
+                <div class="w-full h-48 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-2xl mb-6 border border-white/20 flex items-center justify-center">
+                  <i class="fas fa-code text-6xl text-blue-400"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">Portfolio Template</h3>
+                <p class="text-white/90 text-sm leading-relaxed font-light">
+                Single-page portfolio template with dark theme and interactive animations for students.
+              </p>
+              </div>
             </div>
-            <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">Portfolio Template</h3>
-            <p class="text-white/90 text-sm leading-relaxed font-light">
-            Single-page portfolio template with dark theme and interactive animations for students.
-          </p>
           </div>
         </div>
       </div>
@@ -1268,6 +1416,126 @@
         follower.style.top = `${e.clientY}px`;
       });
 
+      // Carousel functionality
+      let currentIndex = 0;
+      let totalProjects = 5; // Total number of projects
+      let visibleProjects = 4; // Projects visible at once
+
+      function initializeCarousel() {
+        const track = document.getElementById('carousel-track');
+        const prevBtn = document.getElementById('carousel-prev');
+        const nextBtn = document.getElementById('carousel-next');
+        
+        if (!track || !prevBtn || !nextBtn) {
+          console.error('Carousel elements not found');
+          return;
+        }
+        
+        // Update visible projects based on screen size
+        function updateVisibleProjects() {
+          if (window.innerWidth <= 480) {
+            visibleProjects = 1;
+          } else if (window.innerWidth <= 768) {
+            visibleProjects = 2;
+          } else if (window.innerWidth <= 1200) {
+            visibleProjects = 3;
+          } else {
+            visibleProjects = 4;
+          }
+          updateCarousel();
+        }
+        
+        function updateCarousel() {
+          const cardWidth = 100 / visibleProjects;
+          const translateX = -currentIndex * cardWidth;
+          track.style.transform = `translateX(${translateX}%)`;
+          
+          // Update button visibility - hide arrows when there's nothing to navigate to
+          const maxIndex = Math.max(0, totalProjects - visibleProjects);
+          
+          // If there are fewer or equal projects than visible, hide both arrows
+          if (totalProjects <= visibleProjects) {
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            return;
+          }
+          
+          // Hide prev button if at the beginning
+          if (currentIndex === 0) {
+            prevBtn.style.display = 'none';
+          } else {
+            prevBtn.style.display = 'flex';
+          }
+          
+          // Hide next button if at the end
+          if (currentIndex >= maxIndex) {
+            nextBtn.style.display = 'none';
+          } else {
+            nextBtn.style.display = 'flex';
+          }
+        }
+        
+        function nextSlide() {
+          const maxIndex = Math.max(0, totalProjects - visibleProjects);
+          if (currentIndex < maxIndex) {
+            currentIndex++;
+          } else {
+            currentIndex = 0; // Loop to beginning
+          }
+          updateCarousel();
+        }
+        
+        function prevSlide() {
+          if (currentIndex > 0) {
+            currentIndex--;
+          } else {
+            const maxIndex = Math.max(0, totalProjects - visibleProjects);
+            currentIndex = maxIndex; // Loop to end
+          }
+          updateCarousel();
+        }
+        
+        // Event listeners
+        nextBtn.addEventListener('click', nextSlide);
+        prevBtn.addEventListener('click', prevSlide);
+        
+        // Touch/swipe support
+        let startX = 0;
+        let endX = 0;
+        
+        track.addEventListener('touchstart', (e) => {
+          startX = e.touches[0].clientX;
+        });
+        
+        track.addEventListener('touchend', (e) => {
+          endX = e.changedTouches[0].clientX;
+          const diff = startX - endX;
+          
+          if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+              nextSlide();
+            } else {
+              prevSlide();
+            }
+        }
+      });
+
+      // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft') {
+            prevSlide();
+          } else if (e.key === 'ArrowRight') {
+            nextSlide();
+          }
+        });
+        
+        // Window resize listener
+        window.addEventListener('resize', updateVisibleProjects);
+        
+        // Initialize
+        updateVisibleProjects();
+      }
+
       // Filter functionality
       function initializeFilterSystem() {
         const filterButtons = document.querySelectorAll('.filter-btn');
@@ -1281,22 +1549,27 @@
             filterButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
             
-            // Filter projects with animation
+            // Filter projects
+            let visibleCount = 0;
             projectCards.forEach((card, index) => {
               const category = card.getAttribute('data-category');
               
               if (filter === 'all' || category === filter) {
-                // Show project
-                setTimeout(() => {
-                  card.classList.remove('filtered-out');
-                  card.classList.add('filtered-in');
-                }, index * 50); // Staggered animation
+                card.style.display = 'block';
+                visibleCount++;
               } else {
-                // Hide project
-                card.classList.remove('filtered-in');
-                card.classList.add('filtered-out');
+                card.style.display = 'none';
               }
             });
+            
+            // Update carousel variables
+            totalProjects = visibleCount;
+            currentIndex = 0; // Reset to first slide
+            
+            // Re-initialize carousel with new count
+            setTimeout(() => {
+              initializeCarousel();
+            }, 100);
           });
         });
       }
@@ -1308,6 +1581,7 @@
         updateActiveBackground();
         initializePageAnimations();
         initializeTitleAnimation();
+        initializeCarousel();
         initializeFilterSystem();
         
         // Add loading animation completion
