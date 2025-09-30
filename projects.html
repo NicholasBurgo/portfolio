@@ -152,22 +152,42 @@
         cursor: pointer;
       }
 
-      .project-card:hover {
-        transform: translateY(-6px) scale(1.02);
-        background: rgba(255, 255, 255, 0.08);
-        border-color: rgba(79, 195, 247, 0.4);
-        box-shadow: 0 15px 40px rgba(79, 195, 247, 0.2);
+      .project-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(79, 195, 247, 0.1), transparent);
+        transition: left 0.6s ease;
       }
 
+      .project-card:hover::before {
+        left: 100%;
+      }
+
+      .project-card:hover {
+        transform: translateY(-12px) scale(1.03);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+        border-color: rgba(79, 195, 247, 0.5);
+        box-shadow: 
+          0 25px 50px rgba(79, 195, 247, 0.2),
+          0 0 0 1px rgba(79, 195, 247, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      }
+
+
       .project-card img {
-        transition: all 0.3s ease;
-        filter: brightness(0.9);
+        transition: all 0.4s ease;
+        filter: brightness(0.9) saturate(0.8);
       }
 
       .project-card:hover img {
-        filter: brightness(1.1);
-        transform: scale(1.03);
+        filter: brightness(1.1) saturate(1.2);
+        transform: scale(1.05);
       }
+
 
       /* Modal styles - lighter to match page */
       .modal-overlay {
@@ -282,10 +302,6 @@
         display: inline-block;
       }
 
-      .tech-tag:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(79, 195, 247, 0.4);
-      }
 
       /* Simplified status badges */
       .status-badge {
@@ -365,10 +381,6 @@
         transition: all 0.3s ease;
       }
 
-      .content-section:hover {
-        background: rgba(255, 255, 255, 0.12);
-        border-color: rgba(79, 195, 247, 0.3);
-      }
 
       /* Floating elements */
       .floating {
@@ -417,29 +429,12 @@
         transition: left 0.6s ease;
       }
 
-      .project-card:hover::before {
-        left: 100%;
-      }
-
-      .project-card:hover {
-        transform: translateY(-12px) scale(1.03);
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
-        border-color: rgba(79, 195, 247, 0.5);
-        box-shadow: 
-          0 25px 50px rgba(79, 195, 247, 0.2),
-          0 0 0 1px rgba(79, 195, 247, 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.2);
-      }
 
       .project-card img {
         transition: all 0.4s ease;
         filter: brightness(0.9) saturate(0.8);
       }
 
-      .project-card:hover img {
-        filter: brightness(1.1) saturate(1.2);
-        transform: scale(1.05);
-      }
 
 
       /* Enhanced close button */
@@ -538,10 +533,6 @@
         display: inline-block;
       }
 
-      .tech-tag:hover {
-        transform: translateY(-2px) scale(1.05);
-        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.5);
-      }
 
       /* Enhanced status badges */
       .status-badge {
@@ -837,6 +828,16 @@
             Local multiplayer mini-games using Lua with host-client architecture and real-time interactions.
           </p>
           </div>
+
+          <div onclick="openProjectModal(4)" class="project-card p-6 rounded-3xl opacity-0 animate-scale-in project-stagger-1">
+            <div class="w-full h-48 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-2xl mb-6 border border-white/20 flex items-center justify-center">
+              <i class="fas fa-code text-6xl text-blue-400"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-4 h-16 flex items-center">Portfolio Template</h3>
+            <p class="text-white/90 text-sm leading-relaxed font-light">
+            Single-page portfolio template with dark theme and interactive animations for students.
+          </p>
+          </div>
         </div>
       </div>
     </section>
@@ -937,7 +938,7 @@
       const projectData = [
         {
           title: "Fable Market",
-          tech: ["React", "TypeScript", "C#"],
+          tech: ["React", "FastAPI", "PostgreSQL"],
           desc: "A comprehensive book marketplace platform with features for purchasing books, leaving reviews, and creating personalized book lists with advanced search functionality.",
           longDesc: `<b>Role:</b> Team Leader, Full Stack Developer<br>
             <b>Problem:</b> Need for a comprehensive platform where users can discover, purchase, and review books with personalized features.<br>
@@ -997,6 +998,30 @@
             {
               type: "github",
               url: "https://github.com/NicholasBurgo/MultiplayerGame",
+            },
+          ],
+        },
+        {
+          title: "Portfolio Template",
+          tech: ["HTML", "CSS", "JavaScript"],
+          desc: "A clean, single-page portfolio template with dark theme and interactive animations - perfect for students and developers who want a professional, customizable portfolio.",
+          longDesc: `<b>Role:</b> Frontend Developer, UI/UX Designer<br>
+            <b>Problem:</b> Need for a professional portfolio template that's better than basic online templates, with cool animations and easy customization for students.<br>
+            <b>Solution:</b> Created a single-page portfolio template with dark theme, interactive hover effects, and a simple configuration system for easy personalization.<br>
+            <b>Key Features:</b> Single-page design with dark theme, interactive name hover effects, project showcase with modal system, about me section with skills, contact information, easy-to-use configuration object, Tailwind CSS styling, Font Awesome icons, and GitHub Pages deployment ready.`,
+          images: [
+            "images/portfolio-template-1.jpg",
+            "images/portfolio-template-2.jpg",
+            "images/portfolio-template-3.jpg"
+          ],
+          links: [
+            {
+              type: "github",
+              url: "https://github.com/NicholasBurgo/portfolio_Template",
+            },
+            {
+              type: "demo",
+              url: "https://nicholasburgo.github.io/portfolio_Template/",
             },
           ],
         },
