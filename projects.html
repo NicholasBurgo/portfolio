@@ -1252,6 +1252,11 @@
                         class="inline-flex items-center px-6 py-3 border-2 border-blue-400 text-blue-400 rounded-full hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl hover:scale-105">
                       <i class="fa-brands fa-github mr-3 text-lg"></i> View on GitHub
                     </a>`
+                  : link.type === 'demo'
+                  ? `<a href="${link.url}" target="_blank"
+                        class="inline-flex items-center px-6 py-3 border-2 border-green-400 text-green-400 rounded-full hover:bg-green-600 hover:text-white hover:border-green-600 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl hover:scale-105">
+                      <i class="fa-solid fa-external-link-alt mr-3 text-lg"></i> Live Demo
+                    </a>`
                   : '')
               .join('');
 
