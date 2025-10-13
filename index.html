@@ -1068,16 +1068,55 @@
         p.vy = Math.sin(angleToCenter) * speed * 0.35 + Math.sin(tangentialAngle) * speed * 0.65;
       }
       
+      // Initialize particles at various positions along their path for immediate animation
       for (let i = 0; i < PARTICLE_COUNT; i++) {
         const p = {};
         resetParticle(p);
+        
+        // Distribute some particles along their path (not all at the edge)
+        // 60% of particles start mid-journey for immediate visual interest
+        if (i < PARTICLE_COUNT * 0.6) {
+          // Calculate progress along the spiral path (0.2 to 0.8 = 20% to 80% of journey)
+          const progress = 0.2 + (Math.random() * 0.6);
+          
+          // Scale position to simulate progress toward center
+          p.x *= (1 - progress * 0.7);
+          p.y *= (1 - progress * 0.7);
+          
+          // Adjust velocity to match the current position in the spiral
+          const distance = Math.sqrt(p.x * p.x + p.y * p.y);
+          const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          const angleToCenter = Math.atan2(-p.y, -p.x);
+          const tangentialAngle = angleToCenter + Math.PI / 2;
+          
+          // Recalculate velocity based on new position to maintain spiral
+          p.vx = Math.cos(angleToCenter) * currentSpeed * 0.35 + Math.cos(tangentialAngle) * currentSpeed * 0.65;
+          p.vy = Math.sin(angleToCenter) * currentSpeed * 0.35 + Math.sin(tangentialAngle) * currentSpeed * 0.65;
+        }
+        
         particles.push(p);
       }
       
-      // Initialize code bubbles with even spacing
+      // Initialize code bubbles with varied positions for natural look
       for (let i = 0; i < CODE_BUBBLE_COUNT; i++) {
         const bubble = {};
         resetCodeBubble(bubble, i);
+        
+        // Distribute 50% of bubbles along their path
+        if (i < CODE_BUBBLE_COUNT * 0.5) {
+          const progress = 0.3 + (Math.random() * 0.5);
+          bubble.x *= (1 - progress * 0.6);
+          bubble.y *= (1 - progress * 0.6);
+          
+          // Recalculate velocity
+          const currentSpeed = Math.sqrt(bubble.vx * bubble.vx + bubble.vy * bubble.vy);
+          const angleToCenter = Math.atan2(-bubble.y, -bubble.x);
+          const tangentialAngle = angleToCenter + Math.PI / 2;
+          
+          bubble.vx = Math.cos(angleToCenter) * currentSpeed * 0.35 + Math.cos(tangentialAngle) * currentSpeed * 0.65;
+          bubble.vy = Math.sin(angleToCenter) * currentSpeed * 0.35 + Math.sin(tangentialAngle) * currentSpeed * 0.65;
+        }
+        
         codeBubbles.push(bubble);
       }
       
@@ -1407,6 +1446,7 @@
             if (currentCharIndex === 0) {
               createLetterSpans(currentPhrase);
               pausedAtReady = false;
+              updateCursorPosition(); // Show cursor when starting new phrase
             }
             letterElements[currentCharIndex].style.opacity = '1';
             letterElements[currentCharIndex].style.visibility = 'visible';
@@ -1414,12 +1454,12 @@
             updateCursorPosition(); // Move cursor after each character
             setTimeout(typeCharacter, 80); // Typing speed
           } else {
-            // Finished typing, wait before deleting
+            // Finished typing, keep cursor blinking and wait before deleting
             setTimeout(() => {
               isDeleting = true;
               pausedAtReady = false;
               typeCharacter();
-            }, 3000); // Pause at end
+            }, 4500); // Longer pause at end with blinking cursor
           }
         } else {
           // Deleting backward
@@ -1442,11 +1482,14 @@
             updateCursorPosition(); // Move cursor back as we delete
             setTimeout(typeCharacter, 40); // Deleting speed (faster)
           } else {
-            // Finished deleting, move to next phrase
+            // Finished deleting, hide cursor briefly before next phrase
+            if (cursorElement && cursorElement.parentNode) {
+              cursorElement.parentNode.removeChild(cursorElement);
+            }
             isDeleting = false;
             pausedAtReady = false;
             currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
-            setTimeout(typeCharacter, 500); // Pause before next phrase
+            setTimeout(typeCharacter, 800); // Brief pause before next phrase (cursor hidden)
           }
         }
       }
