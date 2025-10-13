@@ -330,6 +330,23 @@
         animation: fadeInUp 1.2s 0.3s both;
       }
 
+      /* Blinking cursor effect */
+      .typing-cursor {
+        display: inline-block;
+        width: 2px;
+        height: 1em;
+        background-color: rgba(180, 210, 255, 0.85); /* Same color as subtitle text */
+        margin-left: 2px;
+        animation: blink 1s step-end infinite;
+        vertical-align: baseline;
+        transform: translateY(0.25em); /* Fine-tune vertical position - perfect alignment */
+      }
+
+      @keyframes blink {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0; }
+      }
+
       /* Enhanced floating elements */
       .floating {
         animation: float 4s ease-in-out infinite;
@@ -542,25 +559,13 @@
       <div class="relative z-10 animate-scale-in">
         <h2 class="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-extrabold tracking-tight text-white mb-14 whitespace-nowrap">
           <div id="name" class="flex justify-center gap-0">
-            <span class="text-4xl sm:text-5xl md:text-[5rem]"><span>N</span><span>I</span><span>C</span><span>H</span><span>O</span><span>L</span><span>A</span><span>S</span></span>
-            <span class="mx-2">&nbsp;</span>
-            <span class="text-4xl sm:text-5xl md:text-[5rem]"><span> B</span><span>U</span><span>R</span><span>G</span><span>O</span></span>
+            <!-- Name letters will be typed in with animation -->
           </div>
         </h2>
         <span class="mx-4"></span>
         <p class="mt-8 text-base sm:text-lg text-white/80 tracking-widest uppercase">
-          <span class="subtitle flex justify-center gap-0">
-            <span>C</span><span>O</span><span>M</span><span>P</span><span>U</span><span>T</span><span>E</span><span>R</span>
-            <span class="mx-1">&nbsp;</span>
-            <span>S</span><span>C</span><span>I</span><span>E</span><span>N</span><span>C</span><span>E</span>
-            <span class="mx-1">&nbsp;</span>
-            <span>S</span><span>T</span><span>U</span><span>D</span><span>E</span><span>N</span><span>T</span>
-            <span class="mx-2">&nbsp;|&nbsp;</span>
-            <span>F</span><span>U</span><span>L</span><span>L</span>
-            <span class="mx-1">&nbsp;</span>
-            <span>S</span><span>T</span><span>A</span><span>C</span><span>K</span>
-            <span class="mx-1">&nbsp;</span>
-            <span>D</span><span>E</span><span>V</span><span>E</span><span>L</span><span>O</span><span>P</span><span>E</span><span>R</span>
+          <span id="typing-subtitle" class="subtitle flex justify-center gap-0">
+            <!-- Typing text will be inserted here dynamically -->
           </span>
         </p>
       </div>
@@ -797,13 +802,83 @@
           closeImageViewer();
         }
       });
-    const name = document.getElementById('name');
-    const letters = name.querySelectorAll('span');
-    const subtitle = document.querySelector('.mt-8 .flex');
-    const subtitleLetters = subtitle.querySelectorAll('span');
-
+    // Name typing animation
+    let nameLetters = [];
+    let subtitleReady = false;
+    let nameCursor = null;
+    
+    function initializeNameTyping() {
+      const nameElement = document.getElementById('name');
+      const fullName = 'NICHOLAS BURGO';
+      
+      // Pre-create all letter spans for fixed layout
+      nameElement.innerHTML = '';
+      
+      // Create name cursor
+      nameCursor = document.createElement('span');
+      nameCursor.className = 'typing-cursor';
+      
+      fullName.split('').forEach((char, index) => {
+        const span = document.createElement('span');
+        span.className = 'text-4xl sm:text-5xl md:text-[5rem]';
+        
+        const letterSpan = document.createElement('span');
+        if (char === ' ') {
+          letterSpan.innerHTML = '&nbsp;';
+          letterSpan.classList.add('mx-2');
+        } else {
+          letterSpan.textContent = char;
+        }
+        
+        letterSpan.style.opacity = '0';
+        letterSpan.style.display = 'inline-block';
+        letterSpan.style.transition = 'transform 0.2s ease-out';
+        
+        span.appendChild(letterSpan);
+        nameElement.appendChild(span);
+        nameLetters.push(letterSpan);
+      });
+      
+      // Add cursor at the start
+      if (nameLetters.length > 0) {
+        nameElement.insertBefore(nameCursor, nameElement.firstChild);
+      }
+    }
+    
+    function updateNameCursorPosition(index) {
+      // Remove cursor from current position
+      if (nameCursor.parentNode) {
+        nameCursor.parentNode.removeChild(nameCursor);
+      }
+      
+      // Insert cursor after the last typed letter
+      if (index > 0 && nameLetters[index - 1]) {
+        nameLetters[index - 1].parentNode.insertAdjacentElement('afterend', nameCursor);
+      } else {
+        // At the beginning
+        const nameElement = document.getElementById('name');
+        nameElement.insertBefore(nameCursor, nameElement.firstChild);
+      }
+    }
+    
+    function typeNameLetter(index) {
+      if (index < nameLetters.length) {
+        nameLetters[index].style.opacity = '1';
+        updateNameCursorPosition(index + 1);
+        setTimeout(() => typeNameLetter(index + 1), 100); // Type name at 100ms per letter
+      } else {
+        // Name typing complete, remove cursor and signal subtitle to start
+        if (nameCursor && nameCursor.parentNode) {
+          nameCursor.parentNode.removeChild(nameCursor);
+        }
+        subtitleReady = true;
+      }
+    }
+    
+    // Mouse-over effect for both name and subtitle
     document.addEventListener('mousemove', (e) => {
-      [...letters, ...subtitleLetters].forEach(letter => {
+      nameLetters.forEach(letter => {
+        if (letter.style.opacity === '1') {
         const rect = letter.getBoundingClientRect();
         const letterX = rect.left + rect.width / 2;
         const letterY = rect.top + rect.height / 2;
@@ -818,9 +893,14 @@
           letter.style.transform = `translate(${-Math.cos(angle) * offset}px, ${-Math.sin(angle) * offset}px)`;
         } else {
           letter.style.transform = 'translate(0, 0)';
+          }
         }
       });
     });
+    
+    // Start name typing on page load
+    initializeNameTyping();
+    setTimeout(() => typeNameLetter(0), 500); // Start after 500ms
 
     // Staggered slide-in-from-corner animation for project cards
     function animateProjectCardsCorner() {
@@ -847,12 +927,24 @@
       observer.observe(projectsSection);
     }
 
-    // Particle background for home section
+    // Gravity Well Particle System for home section
     (function() {
       const canvas = document.getElementById('particles-bg');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
       let width = 0, height = 0, cx = 0, cy = 0;
+      
+      // Gravity well properties
+      let gravityWell = {
+        x: 0,
+        y: 0,
+        radiusX: 350, // Oval width (increased to cover full name)
+        radiusY: 70,  // Oval height (increased to cover full name)
+        strength: 0.01,
+        eventHorizonX: 350, // Destruction zone width
+        eventHorizonY: 70   // Destruction zone height
+      };
+      
       function resize() {
         const section = document.getElementById('home');
         width = section.offsetWidth;
@@ -861,43 +953,225 @@
         canvas.height = height;
         cx = width / 2;
         cy = height / 2;
+        
+        // Update gravity well position to center (where name is)
+        gravityWell.x = cx;
+        gravityWell.y = cy;
       }
       window.addEventListener('resize', resize);
       resize();
-      // 3D Particle definition
-      const PARTICLE_COUNT = 85;
+      
+      // Enhanced 3D Particle definition
+      const PARTICLE_COUNT = 120; // Higher count for constant stream from all sides
       const particles = [];
+      const destroyedParticles = [];
+      
+      // Code bubbles that follow particles
+      const CODE_BUBBLE_COUNT = 15; // More bubbles for better coverage
+      const codeBubbles = [];
+      const codeSymbols = ['()', '{}', '[]', '<>'];
+      // Technologies from your actual projects
+      const codeTechs = ['React', 'FastAPI', 'PostgreSQL', 'C#', 'Unity', 'Blender', 
+                         'Lua', 'HTML', 'CSS', 'JavaScript', 'SQL'];
+      
       function randomBetween(a, b) { return a + Math.random() * (b - a); }
+      
+      function resetCodeBubble(bubble, index) {
+        // Evenly space bubbles around the screen for less clutter
+        const totalBubbles = CODE_BUBBLE_COUNT;
+        const angleStep = (2 * Math.PI) / totalBubbles;
+        const angle = angleStep * index + Math.random() * angleStep * 0.3; // Small randomness
+        
+        // Spawn at consistent distance with slight variation
+        const spawnDistance = Math.max(width, height) * (0.45 + Math.random() * 0.1);
+        
+        bubble.x = Math.cos(angle) * spawnDistance;
+        bubble.y = Math.sin(angle) * spawnDistance;
+        bubble.z = randomBetween(0.8, 1.2); // Consistent depth
+        
+        // Use actual project technologies (40% symbols, 60% techs)
+        const useSymbol = Math.random() < 0.4;
+        bubble.text = useSymbol ? 
+          codeSymbols[Math.floor(Math.random() * codeSymbols.length)] :
+          codeTechs[Math.floor(Math.random() * codeTechs.length)];
+        
+        bubble.size = randomBetween(25, 32);
+        bubble.opacity = randomBetween(0.25, 0.45); // More faded/subtle
+        
+        // Same velocity as particles for following effect
+        const speed = randomBetween(0.3, 0.6); // Exact same speed as particles
+        const angleToCenter = Math.atan2(-bubble.y, -bubble.x);
+        const tangentialAngle = angleToCenter + Math.PI / 2;
+        
+        bubble.vx = Math.cos(angleToCenter) * speed * 0.35 + Math.cos(tangentialAngle) * speed * 0.65;
+        bubble.vy = Math.sin(angleToCenter) * speed * 0.35 + Math.sin(tangentialAngle) * speed * 0.65;
+      }
+      
       function resetParticle(p) {
-        const angle = randomBetween(0, 2 * Math.PI);
-        const radius = randomBetween(0, Math.min(width, height) * 0.7);
-        p.x = Math.cos(angle) * radius;
-        p.y = Math.sin(angle) * radius;
-        p.z = randomBetween(0.3, 1.6); // depth (1 = far, 0 = close)
-        p.size = randomBetween(0.3, 1.3);
-        p.opacity = randomBetween(0.1, 0.6);
-        p.speed = randomBetween(0.0001, 0.0006);
+        // Spawn particles from all four sides for constant stream
+        const spawnSide = Math.floor(Math.random() * 4); // 0=left, 1=right, 2=top, 3=bottom
+        
+        let spawnX, spawnY;
+        
+        if (spawnSide === 0) {
+          // Left side
+          spawnX = -(width * 0.45 + Math.random() * width * 0.1);
+          spawnY = (Math.random() - 0.5) * height * 0.6;
+        } else if (spawnSide === 1) {
+          // Right side
+          spawnX = (width * 0.45 + Math.random() * width * 0.1);
+          spawnY = (Math.random() - 0.5) * height * 0.6;
+        } else if (spawnSide === 2) {
+          // Top
+          spawnX = (Math.random() - 0.5) * width * 0.6;
+          spawnY = -(height * 0.45 + Math.random() * height * 0.1);
+        } else {
+          // Bottom
+          spawnX = (Math.random() - 0.5) * width * 0.6;
+          spawnY = (height * 0.45 + Math.random() * height * 0.1);
+        }
+        
+        p.x = spawnX;
+        p.y = spawnY;
+        
+        p.z = randomBetween(0.5, 1.5);
+        p.size = randomBetween(0.5, 1.5);
+        p.opacity = randomBetween(0.3, 0.8);
+        p.speed = randomBetween(0.0002, 0.0008);
         p.twinkle = randomBetween(0, 1);
         p.twinkleSpeed = randomBetween(0.01, 0.04);
-        p.color = Math.random() < 0.3 ? '#4fc3f7' : 
-                 (Math.random() < 0.5 ? '#8b5cf6' : 
-                 (Math.random() < 0.7 ? '#3b82f6' : '#fff'));
+        
+        // Blue/white colors to match home screen theme
+        const colorChoice = Math.random();
+        if (colorChoice < 0.4) {
+          p.color = '#4fc3f7'; // Bright blue (primary)
+        } else if (colorChoice < 0.7) {
+          p.color = '#ffffff'; // White
+        } else if (colorChoice < 0.85) {
+          p.color = '#81d4fa'; // Light blue
+        } else {
+          p.color = '#b3e5fc'; // Very light blue
+        }
+        
+        // Initial velocity: move toward center with spiral
+        const distance = Math.sqrt(p.x * p.x + p.y * p.y);
+        const speed = randomBetween(0.3, 0.6);
+        
+        // Direction toward center
+        const angleToCenter = Math.atan2(-p.y, -p.x);
+        
+        // Add tangential component for immediate spiral (perpendicular to inward)
+        const tangentialAngle = angleToCenter + Math.PI / 2;
+        
+        // Start with proper spiral motion: 35% inward, 65% tangential
+        p.vx = Math.cos(angleToCenter) * speed * 0.35 + Math.cos(tangentialAngle) * speed * 0.65;
+        p.vy = Math.sin(angleToCenter) * speed * 0.35 + Math.sin(tangentialAngle) * speed * 0.65;
       }
+      
       for (let i = 0; i < PARTICLE_COUNT; i++) {
         const p = {};
         resetParticle(p);
         particles.push(p);
       }
+      
+      // Initialize code bubbles with even spacing
+      for (let i = 0; i < CODE_BUBBLE_COUNT; i++) {
+        const bubble = {};
+        resetCodeBubble(bubble, i);
+        codeBubbles.push(bubble);
+      }
+      
+      function isPointInOval(px, py, ox, oy, rx, ry) {
+        const dx = px - ox;
+        const dy = py - oy;
+        return (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) <= 1;
+      }
+      
+      function applyGravityWell(p) {
+        // Get particle's current screen position
+        const screenX = cx + p.x;
+        const screenY = cy + p.y;
+        
+        // Calculate distance to black hole center
+        const dx = gravityWell.x - screenX;
+        const dy = gravityWell.y - screenY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // Apply gentle knowledge absorption effect
+        const maxDistance = Math.max(width, height) * 0.6;
+        
+        if (distance > 0 && distance < maxDistance) {
+          // Maintain constant speed while creating spiral effect
+          const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          
+          // Calculate direction FROM particle TO black hole
+          const angleToBlackHole = Math.atan2(dy, dx);
+          
+          // Create spiral by combining inward and tangential motion
+          // Tangential (perpendicular to inward) for circular motion
+          const tangentialAngle = angleToBlackHole + Math.PI / 2;
+          
+          // Spiral effect: balanced for half-circle spiral
+          const spiralInward = 0.35; // 35% inward for tighter spiral
+          const spiralTangential = 0.65; // 65% circular
+          
+          const targetVx = Math.cos(angleToBlackHole) * currentSpeed * spiralInward + 
+                          Math.cos(tangentialAngle) * currentSpeed * spiralTangential;
+          const targetVy = Math.sin(angleToBlackHole) * currentSpeed * spiralInward + 
+                          Math.sin(tangentialAngle) * currentSpeed * spiralTangential;
+          
+          // Smoothly blend current velocity with spiral target
+          p.vx = p.vx * 0.95 + targetVx * 0.05;
+          p.vy = p.vy * 0.95 + targetVy * 0.05;
+          
+          // Normalize to maintain constant speed
+          const newSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          if (newSpeed > 0) {
+            p.vx = (p.vx / newSpeed) * currentSpeed;
+            p.vy = (p.vy / newSpeed) * currentSpeed;
+          }
+          
+          // Check if particle hits oval - just delete it silently
+          if (isPointInOval(screenX, screenY, gravityWell.x, gravityWell.y, 
+                           gravityWell.eventHorizonX, gravityWell.eventHorizonY)) {
+            resetParticle(p);
+            return false; // Particle deleted
+          }
+        }
+        
+        return true; // Particle still learning
+      }
+      
       function draw() {
         ctx.clearRect(0, 0, width, height);
-        for (let p of particles) {
-          p.z -= p.speed;
+        
+        // Gravity well is invisible now - no drawing
+        
+        // Update and draw particles
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
+          
+          // Apply gravity well
+          if (!applyGravityWell(p)) {
+            continue; // Particle was destroyed
+          }
+          
+          // Update particle position
+          p.x += p.vx;
+          p.y += p.vy;
+          // Keep z constant to avoid perspective explosion
+          // p.z -= p.speed;
           p.twinkle += p.twinkleSpeed;
           
-          if (p.z < 0.05) {
+          // Check bounds and reset if needed
+          const screenX = cx + p.x;
+          const screenY = cy + p.y;
+          if (screenX < -50 || screenX > width + 50 || 
+              screenY < -50 || screenY > height + 50) {
             resetParticle(p);
             continue;
           }
+          
           // Perspective projection
           const perspective = 1 / p.z;
           const px = cx + p.x * perspective;
@@ -908,6 +1182,21 @@
           const twinkleAlpha = 0.3 + 0.7 * Math.sin(p.twinkle);
           const finalAlpha = p.opacity * (1.6 - p.z) * twinkleAlpha;
           
+          // Draw particle trail (knowledge trails)
+          const speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          
+          if (speed > 0.1) {
+            // Draw knowledge trail
+            ctx.globalAlpha = finalAlpha * 0.2;
+            ctx.beginPath();
+            ctx.moveTo(px, py);
+            ctx.lineTo(px - p.vx * 5, py - p.vy * 5);
+            ctx.strokeStyle = p.color;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+          
+          // Draw particle
           ctx.globalAlpha = Math.max(0, Math.min(1, finalAlpha));
           ctx.beginPath();
           ctx.arc(px, py, scale, 0, 2 * Math.PI);
@@ -926,9 +1215,95 @@
             ctx.fill();
           }
         }
+        
+        // No destroyed particle effects - removed
+        
+        // Update and draw code bubbles
+        for (let i = codeBubbles.length - 1; i >= 0; i--) {
+          const bubble = codeBubbles[i];
+          
+          // Apply same gravity well logic as particles
+          const screenX = cx + bubble.x;
+          const screenY = cy + bubble.y;
+          const dx = gravityWell.x - screenX;
+          const dy = gravityWell.y - screenY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const maxDistance = Math.max(width, height) * 0.6;
+          
+          if (distance > 0 && distance < maxDistance) {
+            const currentSpeed = Math.sqrt(bubble.vx * bubble.vx + bubble.vy * bubble.vy);
+            const angleToBlackHole = Math.atan2(dy, dx);
+            const tangentialAngle = angleToBlackHole + Math.PI / 2;
+            const spiralInward = 0.35;
+            const spiralTangential = 0.65;
+            
+            const targetVx = Math.cos(angleToBlackHole) * currentSpeed * spiralInward + 
+                            Math.cos(tangentialAngle) * currentSpeed * spiralTangential;
+            const targetVy = Math.sin(angleToBlackHole) * currentSpeed * spiralInward + 
+                            Math.sin(tangentialAngle) * currentSpeed * spiralTangential;
+            
+            bubble.vx = bubble.vx * 0.95 + targetVx * 0.05;
+            bubble.vy = bubble.vy * 0.95 + targetVy * 0.05;
+            
+            const newSpeed = Math.sqrt(bubble.vx * bubble.vx + bubble.vy * bubble.vy);
+            if (newSpeed > 0) {
+              bubble.vx = (bubble.vx / newSpeed) * currentSpeed;
+              bubble.vy = (bubble.vy / newSpeed) * currentSpeed;
+            }
+            
+            // Check if bubble hits gravity well
+            if (isPointInOval(screenX, screenY, gravityWell.x, gravityWell.y, 
+                             gravityWell.eventHorizonX, gravityWell.eventHorizonY)) {
+              resetCodeBubble(bubble, i);
+            continue;
+            }
+          }
+          
+          // Update position
+          bubble.x += bubble.vx;
+          bubble.y += bubble.vy;
+          
+          // Check bounds
+          if (screenX < -100 || screenX > width + 100 || 
+              screenY < -100 || screenY > height + 100) {
+            resetCodeBubble(bubble, i);
+            continue;
+          }
+          
+          // Draw bubble
+          const perspective = 1 / bubble.z;
+          const bx = cx + bubble.x * perspective;
+          const by = cy + bubble.y * perspective;
+          const bubbleRadius = bubble.size * perspective;
+          
+          // Draw bubble circle with glass effect - very subtle
+          ctx.globalAlpha = bubble.opacity * 0.2;
+          ctx.fillStyle = 'rgba(79, 195, 247, 0.1)';
+          ctx.beginPath();
+          ctx.arc(bx, by, bubbleRadius, 0, 2 * Math.PI);
+          ctx.fill();
+          
+          // Draw bubble border - subtle
+          ctx.globalAlpha = bubble.opacity * 0.4;
+          ctx.strokeStyle = '#4fc3f7';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(bx, by, bubbleRadius, 0, 2 * Math.PI);
+          ctx.stroke();
+          
+          // Draw text inside bubble - more faded
+          ctx.globalAlpha = bubble.opacity * 0.8;
+          ctx.fillStyle = '#ffffff';
+          ctx.font = `${Math.floor(bubbleRadius * 0.6)}px 'Inter', monospace`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(bubble.text, bx, by);
+        }
+        
         ctx.globalAlpha = 1;
         requestAnimationFrame(draw);
       }
+      
       draw();
     })();
 
@@ -953,6 +1328,163 @@
       const match = html.match(regex);
       return match ? match[1].trim() : '';
     }
+
+    // Typing effect for subtitle with cycling phrases
+    (function() {
+      const subtitleElement = document.getElementById('typing-subtitle');
+      if (!subtitleElement) return;
+
+      const phrases = [
+        'COMPUTER SCIENCE STUDENT | FULL STACK DEVELOPER.',
+        'READY TO INNOVATE.',
+        'READY TO COLLABORATE.',
+        'READY TO BUILD THE FUTURE.'
+      ];
+
+      let currentPhraseIndex = 0;
+      let currentCharIndex = 0;
+      let isDeleting = false;
+      let letterElements = [];
+      let cursorElement = null;
+      let pausedAtReady = false;
+
+      function createLetterSpans(text) {
+        subtitleElement.innerHTML = '';
+        letterElements = [];
+        
+        // Create cursor first (will be repositioned during typing)
+        if (!cursorElement) {
+          cursorElement = document.createElement('span');
+          cursorElement.className = 'typing-cursor';
+        }
+        
+        // Pre-render all letters to prevent layout shift
+        for (let i = 0; i < text.length; i++) {
+          const char = text[i];
+          const span = document.createElement('span');
+          
+          if (char === ' ') {
+            span.innerHTML = '&nbsp;';
+            span.classList.add('mx-1');
+          } else {
+            span.textContent = char;
+          }
+          
+          span.style.opacity = '0';
+          span.style.display = 'inline-block';
+          span.style.transition = 'transform 0.2s ease-out';
+          span.style.visibility = 'hidden'; // Hidden but takes up space
+          subtitleElement.appendChild(span);
+          letterElements.push(span);
+        }
+      }
+      
+      function updateCursorPosition() {
+        // Remove cursor from current position
+        if (cursorElement.parentNode) {
+          cursorElement.parentNode.removeChild(cursorElement);
+        }
+        
+        // Insert cursor after the last visible character
+        if (currentCharIndex > 0 && letterElements[currentCharIndex - 1]) {
+          letterElements[currentCharIndex - 1].insertAdjacentElement('afterend', cursorElement);
+        } else {
+          // If no characters are visible yet, add cursor at the beginning
+          if (letterElements.length > 0) {
+            subtitleElement.insertBefore(cursorElement, letterElements[0]);
+          } else {
+            subtitleElement.appendChild(cursorElement);
+          }
+        }
+      }
+
+      function typeCharacter() {
+        const currentPhrase = phrases[currentPhraseIndex];
+        
+        if (!isDeleting) {
+          // Typing forward
+          if (currentCharIndex < currentPhrase.length) {
+            if (currentCharIndex === 0) {
+              createLetterSpans(currentPhrase);
+              pausedAtReady = false;
+            }
+            letterElements[currentCharIndex].style.opacity = '1';
+            letterElements[currentCharIndex].style.visibility = 'visible';
+            currentCharIndex++;
+            updateCursorPosition(); // Move cursor after each character
+            setTimeout(typeCharacter, 80); // Typing speed
+          } else {
+            // Finished typing, wait before deleting
+            setTimeout(() => {
+              isDeleting = true;
+              pausedAtReady = false;
+              typeCharacter();
+            }, 3000); // Pause at end
+          }
+        } else {
+          // Deleting backward
+          if (currentCharIndex > 0) {
+            const currentText = currentPhrase.substring(0, currentCharIndex);
+            const nextPhrase = phrases[(currentPhraseIndex + 1) % phrases.length];
+            
+            // Check if we just deleted down to "READY TO " (6 chars)
+            if (!pausedAtReady && currentCharIndex === 9 && currentPhrase.startsWith('READY TO') && 
+                nextPhrase.startsWith('COMPUTER')) {
+              pausedAtReady = true;
+              // Pause for 1.5 seconds at "READY TO " to show thinking
+              setTimeout(typeCharacter, 1500);
+              return;
+            }
+            
+            currentCharIndex--;
+            letterElements[currentCharIndex].style.opacity = '0';
+            letterElements[currentCharIndex].style.visibility = 'hidden';
+            updateCursorPosition(); // Move cursor back as we delete
+            setTimeout(typeCharacter, 40); // Deleting speed (faster)
+          } else {
+            // Finished deleting, move to next phrase
+            isDeleting = false;
+            pausedAtReady = false;
+            currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
+            setTimeout(typeCharacter, 500); // Pause before next phrase
+          }
+        }
+      }
+
+      // Mouse-over effect for letters
+      document.addEventListener('mousemove', (e) => {
+        letterElements.forEach(letter => {
+          if (letter.style.opacity === '1') {
+            const rect = letter.getBoundingClientRect();
+            const letterX = rect.left + rect.width / 2;
+            const letterY = rect.top + rect.height / 2;
+
+            const distX = e.clientX - letterX;
+            const distY = e.clientY - letterY;
+            const distance = Math.sqrt(distX ** 2 + distY ** 2);
+            
+            if (distance < 80) {
+              const angle = Math.atan2(distY, distX);
+              const offset = (80 - distance) / 3;
+              letter.style.transform = `translate(${-Math.cos(angle) * offset}px, ${-Math.sin(angle) * offset}px)`;
+            } else {
+              letter.style.transform = 'translate(0, 0)';
+            }
+          }
+        });
+      });
+
+      // Wait for name to finish typing, then start subtitle
+      function startSubtitleWhenReady() {
+        if (subtitleReady) {
+          setTimeout(typeCharacter, 500); // Start subtitle 500ms after name completes
+        } else {
+          setTimeout(startSubtitleWhenReady, 100); // Check again in 100ms
+        }
+      }
+      
+      startSubtitleWhenReady();
+    })();
 
     </script>
   </body>

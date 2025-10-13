@@ -1757,9 +1757,17 @@
           p.speed = randomBetween(0.0001, 0.0006);
           p.twinkle = randomBetween(0, 1);
           p.twinkleSpeed = randomBetween(0.01, 0.04);
-          p.color = Math.random() < 0.3 ? '#4fc3f7' : 
-                   (Math.random() < 0.5 ? '#8b5cf6' : 
-                   (Math.random() < 0.7 ? '#3b82f6' : '#fff'));
+          // Blue/white colors to match home page theme
+          const colorChoice = Math.random();
+          if (colorChoice < 0.4) {
+            p.color = '#4fc3f7'; // Bright blue (primary)
+          } else if (colorChoice < 0.7) {
+            p.color = '#ffffff'; // White
+          } else if (colorChoice < 0.85) {
+            p.color = '#81d4fa'; // Light blue
+          } else {
+            p.color = '#b3e5fc'; // Very light blue
+          }
         }
         for (let i = 0; i < PARTICLE_COUNT; i++) {
           const p = {};
