@@ -330,21 +330,60 @@
         animation: fadeInUp 1.2s 0.3s both;
       }
 
-      /* Blinking cursor effect */
-      .typing-cursor {
-        display: inline-block;
-        width: 2px;
-        height: 1em;
-        background-color: rgba(180, 210, 255, 0.85); /* Same color as subtitle text */
-        margin-left: 2px;
-        animation: blink 1s step-end infinite;
-        vertical-align: baseline;
-        transform: translateY(0.25em); /* Fine-tune vertical position - perfect alignment */
+      /* Glitch effect */
+      @keyframes glitchIn {
+        0% {
+          opacity: 0;
+          transform: translateX(-3px);
+          filter: blur(2px);
+        }
+        20% {
+          opacity: 0.3;
+          transform: translateX(2px);
+        }
+        40% {
+          opacity: 0.7;
+          transform: translateX(-1px);
+        }
+        60% {
+          opacity: 0.9;
+          transform: translateX(1px);
+          filter: blur(0px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0);
+          filter: blur(0px);
+        }
       }
 
-      @keyframes blink {
-        0%, 50% { opacity: 1; }
-        51%, 100% { opacity: 0; }
+      @keyframes glitchOut {
+        0% {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        30% {
+          opacity: 0.8;
+          transform: translateX(2px);
+        }
+        60% {
+          opacity: 0.4;
+          transform: translateX(-2px);
+          filter: blur(1px);
+        }
+        100% {
+          opacity: 0;
+          transform: translateX(1px);
+          filter: blur(2px);
+        }
+      }
+
+      .glitch-in {
+        animation: glitchIn 0.3s ease-out forwards;
+      }
+
+      .glitch-out {
+        animation: glitchOut 0.25s ease-in forwards;
       }
 
       /* Enhanced floating elements */
@@ -802,21 +841,20 @@
           closeImageViewer();
         }
       });
-    // Name typing animation
+    // Name glitch animation
     let nameLetters = [];
     let subtitleReady = false;
-    let nameCursor = null;
+    let nameWrapper = null;
     
-    function initializeNameTyping() {
+    function initializeName() {
       const nameElement = document.getElementById('name');
       const fullName = 'NICHOLAS BURGO';
       
-      // Pre-create all letter spans for fixed layout
+      // Clear and create wrapper
       nameElement.innerHTML = '';
-      
-      // Create name cursor
-      nameCursor = document.createElement('span');
-      nameCursor.className = 'typing-cursor';
+      nameWrapper = document.createElement('div');
+      nameWrapper.style.display = 'inline-flex';
+      nameWrapper.style.gap = '0';
       
       fullName.split('').forEach((char, index) => {
         const span = document.createElement('span');
@@ -830,55 +868,30 @@
           letterSpan.textContent = char;
         }
         
-        letterSpan.style.opacity = '0';
         letterSpan.style.display = 'inline-block';
         letterSpan.style.transition = 'transform 0.2s ease-out';
         
         span.appendChild(letterSpan);
-        nameElement.appendChild(span);
+        nameWrapper.appendChild(span);
         nameLetters.push(letterSpan);
       });
       
-      // Add cursor at the start
-      if (nameLetters.length > 0) {
-        nameElement.insertBefore(nameCursor, nameElement.firstChild);
-      }
+      nameElement.appendChild(nameWrapper);
     }
     
-    function updateNameCursorPosition(index) {
-      // Remove cursor from current position
-      if (nameCursor.parentNode) {
-        nameCursor.parentNode.removeChild(nameCursor);
-      }
+    function glitchInName() {
+      // Trigger glitch in animation
+      nameWrapper.classList.add('glitch-in');
       
-      // Insert cursor after the last typed letter
-      if (index > 0 && nameLetters[index - 1]) {
-        nameLetters[index - 1].parentNode.insertAdjacentElement('afterend', nameCursor);
-      } else {
-        // At the beginning
-        const nameElement = document.getElementById('name');
-        nameElement.insertBefore(nameCursor, nameElement.firstChild);
-      }
-    }
-    
-    function typeNameLetter(index) {
-      if (index < nameLetters.length) {
-        nameLetters[index].style.opacity = '1';
-        updateNameCursorPosition(index + 1);
-        setTimeout(() => typeNameLetter(index + 1), 100); // Type name at 100ms per letter
-      } else {
-        // Name typing complete, remove cursor and signal subtitle to start
-        if (nameCursor && nameCursor.parentNode) {
-          nameCursor.parentNode.removeChild(nameCursor);
-        }
+      // After animation completes, signal subtitle to start
+      setTimeout(() => {
         subtitleReady = true;
-      }
+      }, 400); // Match glitchIn animation duration plus a bit
     }
     
-    // Mouse-over effect for both name and subtitle
+    // Mouse-over effect for name
     document.addEventListener('mousemove', (e) => {
       nameLetters.forEach(letter => {
-        if (letter.style.opacity === '1') {
         const rect = letter.getBoundingClientRect();
         const letterX = rect.left + rect.width / 2;
         const letterY = rect.top + rect.height / 2;
@@ -893,14 +906,13 @@
           letter.style.transform = `translate(${-Math.cos(angle) * offset}px, ${-Math.sin(angle) * offset}px)`;
         } else {
           letter.style.transform = 'translate(0, 0)';
-          }
         }
       });
     });
     
-    // Start name typing on page load
-    initializeNameTyping();
-    setTimeout(() => typeNameLetter(0), 500); // Start after 500ms
+    // Start name glitch on page load
+    initializeName();
+    setTimeout(() => glitchInName(), 500); // Start after 500ms
 
     // Staggered slide-in-from-corner animation for project cards
     function animateProjectCardsCorner() {
@@ -1368,7 +1380,7 @@
       return match ? match[1].trim() : '';
     }
 
-    // Typing effect for subtitle with cycling phrases
+    // Glitch effect for subtitle with cycling phrases
     (function() {
       const subtitleElement = document.getElementById('typing-subtitle');
       if (!subtitleElement) return;
@@ -1381,23 +1393,19 @@
       ];
 
       let currentPhraseIndex = 0;
-      let currentCharIndex = 0;
-      let isDeleting = false;
       let letterElements = [];
-      let cursorElement = null;
-      let pausedAtReady = false;
+      let lineWrapper = null;
 
       function createLetterSpans(text) {
         subtitleElement.innerHTML = '';
         letterElements = [];
         
-        // Create cursor first (will be repositioned during typing)
-        if (!cursorElement) {
-          cursorElement = document.createElement('span');
-          cursorElement.className = 'typing-cursor';
-        }
+        // Create a wrapper for the entire line
+        lineWrapper = document.createElement('div');
+        lineWrapper.style.display = 'inline-flex';
+        lineWrapper.style.gap = '0';
         
-        // Pre-render all letters to prevent layout shift
+        // Create letter spans for mouseover effect
         for (let i = 0; i < text.length; i++) {
           const char = text[i];
           const span = document.createElement('span');
@@ -1409,110 +1417,56 @@
             span.textContent = char;
           }
           
-          span.style.opacity = '0';
           span.style.display = 'inline-block';
           span.style.transition = 'transform 0.2s ease-out';
-          span.style.visibility = 'hidden'; // Hidden but takes up space
-          subtitleElement.appendChild(span);
+          lineWrapper.appendChild(span);
           letterElements.push(span);
         }
-      }
-      
-      function updateCursorPosition() {
-        // Remove cursor from current position
-        if (cursorElement.parentNode) {
-          cursorElement.parentNode.removeChild(cursorElement);
-        }
         
-        // Insert cursor after the last visible character
-        if (currentCharIndex > 0 && letterElements[currentCharIndex - 1]) {
-          letterElements[currentCharIndex - 1].insertAdjacentElement('afterend', cursorElement);
-        } else {
-          // If no characters are visible yet, add cursor at the beginning
-          if (letterElements.length > 0) {
-            subtitleElement.insertBefore(cursorElement, letterElements[0]);
-          } else {
-            subtitleElement.appendChild(cursorElement);
-          }
-        }
+        subtitleElement.appendChild(lineWrapper);
       }
 
-      function typeCharacter() {
+      function glitchInPhrase() {
         const currentPhrase = phrases[currentPhraseIndex];
+        createLetterSpans(currentPhrase);
         
-        if (!isDeleting) {
-          // Typing forward
-          if (currentCharIndex < currentPhrase.length) {
-            if (currentCharIndex === 0) {
-              createLetterSpans(currentPhrase);
-              pausedAtReady = false;
-              updateCursorPosition(); // Show cursor when starting new phrase
-            }
-            letterElements[currentCharIndex].style.opacity = '1';
-            letterElements[currentCharIndex].style.visibility = 'visible';
-            currentCharIndex++;
-            updateCursorPosition(); // Move cursor after each character
-            setTimeout(typeCharacter, 80); // Typing speed
-          } else {
-            // Finished typing, keep cursor blinking and wait before deleting
-            setTimeout(() => {
-              isDeleting = true;
-              pausedAtReady = false;
-              typeCharacter();
-            }, 4500); // Longer pause at end with blinking cursor
-          }
-        } else {
-          // Deleting backward
-          if (currentCharIndex > 0) {
-            const currentText = currentPhrase.substring(0, currentCharIndex);
-            const nextPhrase = phrases[(currentPhraseIndex + 1) % phrases.length];
-            
-            // Check if we just deleted down to "READY TO " (6 chars)
-            if (!pausedAtReady && currentCharIndex === 9 && currentPhrase.startsWith('READY TO') && 
-                nextPhrase.startsWith('COMPUTER')) {
-              pausedAtReady = true;
-              // Pause for 1.5 seconds at "READY TO " to show thinking
-              setTimeout(typeCharacter, 1500);
-              return;
-            }
-            
-            currentCharIndex--;
-            letterElements[currentCharIndex].style.opacity = '0';
-            letterElements[currentCharIndex].style.visibility = 'hidden';
-            updateCursorPosition(); // Move cursor back as we delete
-            setTimeout(typeCharacter, 40); // Deleting speed (faster)
-          } else {
-            // Finished deleting, hide cursor briefly before next phrase
-            if (cursorElement && cursorElement.parentNode) {
-              cursorElement.parentNode.removeChild(cursorElement);
-            }
-            isDeleting = false;
-            pausedAtReady = false;
-            currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
-            setTimeout(typeCharacter, 800); // Brief pause before next phrase (cursor hidden)
-          }
-        }
+        // Trigger glitch in animation
+        lineWrapper.classList.add('glitch-in');
+        
+        // After display time, glitch out and move to next phrase
+        setTimeout(() => {
+          glitchOutPhrase();
+        }, 3500); // Display for 3.5 seconds
+      }
+
+      function glitchOutPhrase() {
+        lineWrapper.classList.remove('glitch-in');
+        lineWrapper.classList.add('glitch-out');
+        
+        // After glitch out completes, show next phrase
+        setTimeout(() => {
+          currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
+          glitchInPhrase();
+        }, 300); // Match glitchOut animation duration
       }
 
       // Mouse-over effect for letters
       document.addEventListener('mousemove', (e) => {
         letterElements.forEach(letter => {
-          if (letter.style.opacity === '1') {
-            const rect = letter.getBoundingClientRect();
-            const letterX = rect.left + rect.width / 2;
-            const letterY = rect.top + rect.height / 2;
+          const rect = letter.getBoundingClientRect();
+          const letterX = rect.left + rect.width / 2;
+          const letterY = rect.top + rect.height / 2;
 
-            const distX = e.clientX - letterX;
-            const distY = e.clientY - letterY;
-            const distance = Math.sqrt(distX ** 2 + distY ** 2);
-            
-            if (distance < 80) {
-              const angle = Math.atan2(distY, distX);
-              const offset = (80 - distance) / 3;
-              letter.style.transform = `translate(${-Math.cos(angle) * offset}px, ${-Math.sin(angle) * offset}px)`;
-            } else {
-              letter.style.transform = 'translate(0, 0)';
-            }
+          const distX = e.clientX - letterX;
+          const distY = e.clientY - letterY;
+          const distance = Math.sqrt(distX ** 2 + distY ** 2);
+          
+          if (distance < 80) {
+            const angle = Math.atan2(distY, distX);
+            const offset = (80 - distance) / 3;
+            letter.style.transform = `translate(${-Math.cos(angle) * offset}px, ${-Math.sin(angle) * offset}px)`;
+          } else {
+            letter.style.transform = 'translate(0, 0)';
           }
         });
       });
@@ -1520,7 +1474,7 @@
       // Wait for name to finish typing, then start subtitle
       function startSubtitleWhenReady() {
         if (subtitleReady) {
-          setTimeout(typeCharacter, 500); // Start subtitle 500ms after name completes
+          setTimeout(glitchInPhrase, 500); // Start subtitle 500ms after name completes
         } else {
           setTimeout(startSubtitleWhenReady, 100); // Check again in 100ms
         }
