@@ -7,6 +7,10 @@ import MouseFollower from "./components/MouseFollower";
 import ParticleBackground from "./components/ParticleBackground";
 
 // Lazy load routes for code splitting
+// Vite's build wraps these with le() which uses Dt() to prepend base path
+// However, relative imports resolve from current URL, so we need to ensure
+// the base path is correctly used. The issue is that on /portfolio/projects,
+// ./Projects.js resolves to /portfolio/projects/Projects.js instead of /portfolio/assets/Projects.js
 const Home = lazy(() => import("./routes/Home"));
 const About = lazy(() => import("./routes/About"));
 const Projects = lazy(() => import("./routes/Projects"));
