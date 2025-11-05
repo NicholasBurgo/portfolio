@@ -20,12 +20,13 @@ export default function ParticleBackground() {
   const codeBubblesRef = useRef<any[]>([]);
   const transitionPhaseRef = useRef<'none' | 'collapsing' | 'exploding'>('none');
   const transitionProgressRef = useRef<number>(0);
+  const delayedExplosionFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    let ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     let width = window.innerWidth;
@@ -406,6 +407,20 @@ export default function ParticleBackground() {
     }
 
     function draw() {
+      // Safety check: ensure ctx is still valid (could be lost in some browsers)
+      if (!ctx || !canvas) {
+        // Try to recover context
+        const newCtx = canvas?.getContext("2d");
+        if (!newCtx) {
+          // Can't recover, stop animation
+          if (animationFrameRef.current) {
+            cancelAnimationFrame(animationFrameRef.current);
+          }
+          return;
+        }
+        ctx = newCtx; // Recover context
+      }
+      
       if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
 
@@ -430,8 +445,10 @@ export default function ParticleBackground() {
           // Signal that collapse is complete (for Navbar to navigate)
           transitionState.setIsTransitioning(false);
           
-          // Small delay before starting explosion to allow navigation
-          setTimeout(() => {
+          // Use requestAnimationFrame instead of setTimeout for better sync with animation
+          // This ensures the timeout is tied to the animation loop
+          const startExplosion = () => {
+            if (!ctx) return; // Safety check
             transitionPhaseRef.current = 'exploding';
             transitionProgressRef.current = 0;
             // Force all particles to exact center for explosion
@@ -444,7 +461,21 @@ export default function ParticleBackground() {
             });
             // Signal that explosion can start
             transitionState.setIsTransitioning(true);
-          }, 100);
+          };
+          
+          // Small delay before starting explosion to allow navigation
+          // Use a counter to delay by a few frames instead of setTimeout
+          let frameDelay = 0;
+          const delayedExplosion = () => {
+            frameDelay++;
+            if (frameDelay >= 6) { // ~100ms at 60fps
+              startExplosion();
+              delayedExplosionFrameRef.current = null;
+            } else {
+              delayedExplosionFrameRef.current = requestAnimationFrame(delayedExplosion);
+            }
+          };
+          delayedExplosionFrameRef.current = requestAnimationFrame(delayedExplosion);
         }
       } else if (transitionPhaseRef.current === 'exploding') {
         // Slow down explosion to last ~2 seconds (at 60fps: 120 frames, so 1.0/120 = 0.0083 per frame)
@@ -704,6 +735,12 @@ export default function ParticleBackground() {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
+      if (delayedExplosionFrameRef.current) {
+        cancelAnimationFrame(delayedExplosionFrameRef.current);
+        delayedExplosionFrameRef.current = null;
+      }
+      // Reset transition state on unmount
+      transitionState.setIsTransitioning(false);
     };
   }, [location.pathname]);
 

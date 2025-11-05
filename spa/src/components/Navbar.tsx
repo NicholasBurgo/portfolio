@@ -21,9 +21,16 @@ export default function Navbar() {
       window.dispatchEvent(new CustomEvent('startCollapse', { detail: { targetPath: path } }));
       
       // Wait for collapse to complete, then navigate
+      let checkCount = 0;
+      const maxChecks = 300; // ~5 seconds max at 60fps
       const checkCollapse = () => {
-        if (!transitionState.isTransitioning) {
-          // Collapse complete, now navigate
+        checkCount++;
+        if (!transitionState.isTransitioning || checkCount >= maxChecks) {
+          // Collapse complete or timeout, now navigate
+          if (checkCount >= maxChecks) {
+            // Force reset on timeout
+            transitionState.setIsTransitioning(false);
+          }
           navigate(path);
         } else {
           // Still collapsing, check again
