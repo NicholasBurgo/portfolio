@@ -63,18 +63,6 @@ export default function ProjectModal({ project, isOpen, onClose, onImageClick }:
     )
     .join("");
 
-  const imagesHTML =
-    project.images && project.images.length > 0
-      ? `<div class="modal-gallery">
-           ${project.images
-             .map(
-               (img, i) =>
-                 `<img src="${img}" alt="${project.title} screenshot ${i + 1}" data-img-idx="${i}" class="cursor-pointer" />`
-             )
-             .join("")}
-         </div>`
-      : "";
-
   function extractSection(html: string, section: string) {
     const regex = new RegExp(`<b>${section}<\\/b>\\s*([^<]*)`, "i");
     const match = html.match(regex);

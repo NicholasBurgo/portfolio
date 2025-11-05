@@ -48,7 +48,7 @@ export default function ParticleBackground() {
     window.addEventListener("resize", resize);
 
     // Listen for collapse start event (from Navbar)
-    const handleStartCollapse = (event: CustomEvent) => {
+    const handleStartCollapse = (_event: CustomEvent) => {
       if (location.pathname === "/" && transitionPhaseRef.current === 'none') {
         transitionState.setIsTransitioning(true);
         transitionPhaseRef.current = 'collapsing';
@@ -193,7 +193,6 @@ export default function ParticleBackground() {
       }
 
       if (isHomePage) {
-        const distance = Math.sqrt(p.x * p.x + p.y * p.y);
         const speed = randomBetween(0.3, 0.6);
         const angleToCenter = Math.atan2(-p.y, -p.x);
         const tangentialAngle = angleToCenter + Math.PI / 2;
@@ -221,7 +220,6 @@ export default function ParticleBackground() {
           p.x *= 1 - progress * 0.7;
           p.y *= 1 - progress * 0.7;
 
-          const distance = Math.sqrt(p.x * p.x + p.y * p.y);
           const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
           const angleToCenter = Math.atan2(-p.y, -p.x);
           const tangentialAngle = angleToCenter + Math.PI / 2;
@@ -408,6 +406,7 @@ export default function ParticleBackground() {
     }
 
     function draw() {
+      if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
 
       // Update transition progress

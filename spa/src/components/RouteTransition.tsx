@@ -1,5 +1,4 @@
 import { ReactNode, useEffect, useState } from "react";
-import { transitionState } from "./ParticleBackground";
 
 interface RouteTransitionProps {
   children: ReactNode;
