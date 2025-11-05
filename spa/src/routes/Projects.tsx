@@ -246,9 +246,9 @@ export default function Projects() {
                     className="project-card p-6 rounded-3xl opacity-0 animate-scale-in"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    {project.images.length > 0 ? (
+                    {project.thumbnail ? (
                       <img
-                        src={project.images[0]}
+                        src={project.thumbnail}
                         alt={project.title}
                         className="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20"
                         loading="lazy"
