@@ -5,8 +5,10 @@ import { HelmetProvider } from "react-helmet-async";
 import App from "./App";
 import "./styles/globals.css";
 
-// Get base path from environment or default to /portfolio/ for GitHub Pages
-const basename = import.meta.env.BASE_URL?.replace(/\/$/, '') || '/portfolio';
+// Get base path from environment or default to /portfolio for GitHub Pages
+// Remove trailing slash for React Router basename (it doesn't want one)
+const baseUrl = import.meta.env.BASE_URL || '/portfolio/';
+const basename = baseUrl.replace(/\/$/, '') || '/portfolio';
 
 // Error boundary for better error handling
 class ErrorBoundary extends React.Component<
