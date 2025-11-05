@@ -26,7 +26,7 @@ function usePrefetchRoutes() {
       const idleCallback = (window as any).requestIdleCallback || ((fn: () => void) => setTimeout(fn, 1));
 
       idleCallback(() => {
-        // Prefetch route chunks
+        // Prefetch route chunks (React Router handles basename)
         prefetch("/projects");
         prefetch("/about");
         prefetch("/contact");
@@ -46,7 +46,7 @@ function App() {
       <Navbar />
       <RouteTransition>
         <Suspense fallback={
-          <div className="min-h-screen flex items-center justify-center">
+          <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0a0f1a] to-[#12161d]">
             <div className="text-white text-xl">Loading...</div>
           </div>
         }>
