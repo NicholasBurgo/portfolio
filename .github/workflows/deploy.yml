@@ -39,6 +39,12 @@ jobs:
 
       - name: Add .nojekyll file
         run: touch spa/dist/.nojekyll
+      
+      - name: Ensure 404.html exists
+        run: |
+          if [ ! -f spa/dist/404.html ]; then
+            cp spa/public/404.html spa/dist/404.html 2>/dev/null || echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=/portfolio/"></head><body></body></html>' > spa/dist/404.html
+          fi
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

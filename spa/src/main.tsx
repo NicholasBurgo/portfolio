@@ -50,6 +50,13 @@ class ErrorBoundary extends React.Component<
   }
 }
 
+// Handle GitHub Pages 404 redirect
+if (sessionStorage.redirect) {
+  const redirect = sessionStorage.redirect;
+  sessionStorage.removeItem('redirect');
+  window.history.replaceState(null, '', redirect);
+}
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ErrorBoundary>
