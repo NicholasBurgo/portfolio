@@ -91,7 +91,7 @@ export default function About() {
                   <div className="flex flex-col md:flex-row gap-6 items-start">
                     <div className="flex-shrink-0 mx-auto md:mx-0">
                       <img
-                        src="/images/headshot-main.png"
+                        src={`${import.meta.env.BASE_URL}images/headshot-main.png`}
                         alt="Nicholas Burgo portrait"
                         className="w-32 h-32 object-cover rounded-full border-2 border-white/20"
                         loading="lazy"
@@ -165,7 +165,7 @@ export default function About() {
 
               <div className="flex justify-end mt-6">
                 <a
-                  href="/documents/NicholasBurgoResV6.pdf"
+                  href={`${import.meta.env.BASE_URL}documents/NicholasBurgoResV6.pdf`}
                   download
                   className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg text-white hover:bg-white/20 hover:border-white/50 transition-all duration-300 font-medium group"
                 >

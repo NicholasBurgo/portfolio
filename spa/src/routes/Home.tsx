@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { transitionState } from "../components/ParticleBackground";
+import { getAllPosts } from "../data/blogPosts";
+import { projectData } from "../lib/projectData";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -11,37 +13,51 @@ export default function Home() {
   const [subtitleReady, setSubtitleReady] = useState(false);
   const waveTextRef = useRef<HTMLDivElement>(null);
 
-  const handleGoToProjects = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    
-    // Trigger collapse animation
-    transitionState.setIsTransitioning(true);
-    
-    // Dispatch event to start collapse
-    window.dispatchEvent(new CustomEvent('startCollapse', { detail: { targetPath: '/projects' } }));
-    
-    // Wait for collapse to complete, then navigate
-    let checkCount = 0;
-    const maxChecks = 300; // ~5 seconds max at 60fps
-    const checkCollapse = () => {
-      checkCount++;
-      if (!transitionState.isTransitioning || checkCount >= maxChecks) {
-        // Collapse complete or timeout, now navigate
-        if (checkCount >= maxChecks) {
-          // Force reset on timeout
-          transitionState.setIsTransitioning(false);
+  const handleNavigation = (path: string) => {
+    return (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      
+      // Trigger collapse animation
+      transitionState.setIsTransitioning(true);
+      
+      // Dispatch event to start collapse
+      window.dispatchEvent(new CustomEvent('startCollapse', { detail: { targetPath: path } }));
+      
+      // Wait for collapse to complete, then navigate
+      let checkCount = 0;
+      const maxChecks = 300; // ~5 seconds max at 60fps
+      const checkCollapse = () => {
+        checkCount++;
+        if (!transitionState.isTransitioning || checkCount >= maxChecks) {
+          // Collapse complete or timeout, now navigate
+          if (checkCount >= maxChecks) {
+            // Force reset on timeout
+            transitionState.setIsTransitioning(false);
+          }
+          navigate(path);
+        } else {
+          // Still collapsing, check again
+          requestAnimationFrame(checkCollapse);
         }
-        navigate('/projects');
-      } else {
-        // Still collapsing, check again
+      };
+      
+      // Start checking after a brief delay to let collapse start
+      setTimeout(() => {
         requestAnimationFrame(checkCollapse);
-      }
+      }, 50);
     };
-    
-    // Start checking after a brief delay to let collapse start
-    setTimeout(() => {
-      requestAnimationFrame(checkCollapse);
-    }, 50);
+  };
+
+  const latestPosts = getAllPosts().slice(0, 3);
+  const featuredProjects = projectData.slice(0, 3);
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
   };
 
   const phrases = [
@@ -272,26 +288,136 @@ export default function Home() {
           </div>
         </div>
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center w-full z-20">
-          <Link to="/projects" onClick={handleGoToProjects} className="relative flex flex-col items-center group go-to-projects-link">
-            <span className="wave-text mb-2 text-white/80 text-lg tracking-widest z-10 transition-all duration-300 group-hover:scale-105 group-hover:text-blue-300" ref={waveTextRef}>
-              <span>G</span>
-              <span>o</span>
-              <span>&nbsp;</span>
-              <span>t</span>
-              <span>o</span>
-              <span>&nbsp;</span>
-              <span>P</span>
-              <span>r</span>
-              <span>o</span>
-              <span>j</span>
-              <span>e</span>
-              <span>c</span>
-              <span>t</span>
-              <span>s</span>
-            </span>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 items-center">
+            <Link
+              to="/blog"
+              onClick={handleNavigation("/blog")}
+              className="px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/50"
+            >
+              Read the Blog
+            </Link>
+            <Link
+              to="/projects"
+              onClick={handleNavigation("/projects")}
+              className="px-8 py-3 bg-white/10 hover:bg-white/20 backdrop-filter backdrop-blur-sm border border-white/20 text-white font-semibold rounded-full transition-all duration-300 hover:scale-105 hover:border-blue-300"
+            >
+              View Projects
+            </Link>
+          </div>
         </div>
       </section>
+
+      {/* Latest from the Blog Section */}
+      {latestPosts.length > 0 && (
+        <section className="py-24 px-4 bg-gradient-to-b from-transparent to-[#0a0f1a]">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center justify-between mb-12">
+              <h2 className="text-4xl md:text-5xl font-extrabold text-white">
+                Latest from the Blog
+              </h2>
+              <Link
+                to="/blog"
+                onClick={handleNavigation("/blog")}
+                className="text-blue-300 hover:text-blue-400 font-semibold transition-colors"
+              >
+                View all posts →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {latestPosts.map((post) => (
+                <Link
+                  key={post.slug}
+                  to={`/blog/${post.slug}`}
+                  onClick={handleNavigation(`/blog/${post.slug}`)}
+                  className="blog-card block"
+                >
+                  <article className="project-card p-6 h-full flex flex-col">
+                    <h3 className="text-xl font-bold text-white mb-2 hover:text-blue-300 transition-colors">
+                      {post.title}
+                    </h3>
+                    <div className="flex items-center gap-2 text-sm text-white/60 mb-3">
+                      <span>{formatDate(post.date)}</span>
+                      <span>•</span>
+                      <span>{post.readingTime}</span>
+                    </div>
+                    {post.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        {post.tags.slice(0, 3).map((tag) => (
+                          <span
+                            key={tag}
+                            className="tech-tag text-xs px-2 py-1"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <p className="text-white/70 text-sm mb-4 flex-grow line-clamp-3">
+                      {post.excerpt}
+                    </p>
+                    <div className="text-blue-300 font-semibold text-sm">
+                      Read →
+                    </div>
+                  </article>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Featured Projects Section */}
+      {featuredProjects.length > 0 && (
+        <section className="py-24 px-4 bg-gradient-to-b from-[#0a0f1a] to-transparent">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center justify-between mb-12">
+              <h2 className="text-4xl md:text-5xl font-extrabold text-white">
+                Featured Projects
+              </h2>
+              <Link
+                to="/projects"
+                onClick={handleNavigation("/projects")}
+                className="text-blue-300 hover:text-blue-400 font-semibold transition-colors"
+              >
+                View all projects →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {featuredProjects.map((project) => (
+                <div key={project.title} className="project-card p-6">
+                  {project.thumbnail && (
+                    <img
+                      src={project.thumbnail}
+                      alt={project.title}
+                      className="w-full h-48 object-cover rounded-lg mb-4"
+                    />
+                  )}
+                  <h3 className="text-xl font-bold text-white mb-2">
+                    {project.title}
+                  </h3>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {project.tech.slice(0, 3).map((tech) => (
+                      <span key={tech} className="tech-tag text-xs px-2 py-1">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-white/70 text-sm mb-4 line-clamp-3">
+                    {project.desc}
+                  </p>
+                  <Link
+                    to="/projects"
+                    onClick={handleNavigation("/projects")}
+                    className="text-blue-300 font-semibold text-sm hover:text-blue-400 transition-colors"
+                  >
+                    Learn more →
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </>
   );
 }

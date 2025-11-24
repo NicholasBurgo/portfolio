@@ -9,6 +9,11 @@ export interface Project {
   category: "fullstack" | "gamedev" | "database" | "frontend";
 }
 
+const getAssetPath = (path: string) => {
+  if (!path) return path;
+  return import.meta.env.BASE_URL + path.replace(/^\//, '');
+};
+
 export const projectData: Project[] = [
   {
     title: "Fable Market",
@@ -18,11 +23,11 @@ export const projectData: Project[] = [
       <b>Problem:</b> Need for a comprehensive platform where users can discover, purchase, and review books with personalized features.<br>
       <b>Solution:</b> Developed a full-featured book marketplace with advanced search capabilities, user reviews, and personalized book lists to enhance the book discovery experience.<br>
       <b>Key Features:</b> Advanced search functionality by title, author, and genre using optimized string comparison queries, integrated database management for efficient data operations, user review system, and personalized book list creation with data integrity enforcement.`,
-    thumbnail: "/images/fable.png",
+    thumbnail: getAssetPath("images/fable.png"),
     images: [
-      "/images/fableMarket2.png",
-      "/images/fable-search.jpg",
-      "/images/fable-search2.jpg",
+      getAssetPath("images/fableMarket2.png"),
+      getAssetPath("images/fable-search.jpg"),
+      getAssetPath("images/fable-search2.jpg"),
     ],
     links: [],
     category: "fullstack",
@@ -35,7 +40,7 @@ export const projectData: Project[] = [
       <b>Problem:</b> Need for a robust relational database system to manage complex car-rental operations with proper data integrity.<br>
       <b>Solution:</b> Designed and implemented a normalized 5-table database schema following 3NF principles with comprehensive ER-diagram modeling and SQL DDL implementation.<br>
       <b>Key Features:</b> Fully annotated ER-diagram with min/max participation constraints, SQL DDL with primary/foreign-key enforcement and cascading rules, seeded database with 100+ realistic records using bulk-load scripts, traceable BO&R documentation linking business requirements to database structure, and FK-mapping matrix for team collaboration.`,
-    thumbnail: "/images/car-dealership.jpg",
+    thumbnail: getAssetPath("images/car-dealership.jpg"),
     images: [],
     links: [
       {
@@ -53,8 +58,8 @@ export const projectData: Project[] = [
       <b>Problem:</b> Creating an immersive VR experience that combines realistic weapon mechanics with intelligent AI behavior in an open world.<br>
       <b>Solution:</b> Built a comprehensive VR sandbox using Unity with C# comprising 90% of the codebase, featuring advanced VR-rig locomotion, ray-cast gun mechanics, and autonomous AI systems.<br>
       <b>Key Features:</b> VR-rig locomotion system with comfortable movement, ray-cast gun logic with realistic weapon mechanics, enemy/pedestrian state machines with reactive AI behavior, autonomous traffic system with lane-following rules, explorable streetscape environment, multiplatform builds with IL2CPP + Burst optimization, and comprehensive version control with clean collaboration setup.`,
-    thumbnail: "/images/vr.jpg",
-    images: ["/images/vr-shooter2.jpg"],
+    thumbnail: getAssetPath("images/vr.jpg"),
+    images: [getAssetPath("images/vr-shooter2.jpg")],
     links: [
       {
         type: "github",
@@ -71,12 +76,12 @@ export const projectData: Project[] = [
       <b>Problem:</b> Creating engaging multiplayer experiences with real-time communication and seamless player interactions.<br>
       <b>Solution:</b> Developed local multiplayer mini-games using Lua and Love Engine with robust host-client networking architecture for dynamic player interactions.<br>
       <b>Key Features:</b> Host-client architecture for reliable multiplayer connections, real-time communication system enabling dynamic player interactions, multiple mini-game modes with engaging gameplay mechanics, and optimized networking code for smooth multiplayer experience.`,
-    thumbnail: "/images/lua.jpg",
+    thumbnail: getAssetPath("images/lua.jpg"),
     images: [
-      "/images/lua-multiplayer2.jpg",
-      "/images/lua-networking.jpg",
-      "/images/lua-games.jpg",
-      "/images/lua-games2.jpg",
+      getAssetPath("images/lua-multiplayer2.jpg"),
+      getAssetPath("images/lua-networking.jpg"),
+      getAssetPath("images/lua-games.jpg"),
+      getAssetPath("images/lua-games2.jpg"),
     ],
     links: [
       {
@@ -96,9 +101,9 @@ export const projectData: Project[] = [
       <b>Key Features:</b> Single-page design with dark theme, interactive name hover effects, project showcase with modal system, about me section with skills, contact information, easy-to-use configuration object, Tailwind CSS styling, Font Awesome icons, and GitHub Pages deployment ready.`,
     thumbnail: "", // No thumbnail - uses icon placeholder
     images: [
-      "/images/portfolio-template-1.jpg",
-      "/images/portfolio-template-2.jpg",
-      "/images/portfolio-template-3.jpg",
+      getAssetPath("images/portfolio-template-1.jpg"),
+      getAssetPath("images/portfolio-template-2.jpg"),
+      getAssetPath("images/portfolio-template-3.jpg"),
     ],
     links: [
       {

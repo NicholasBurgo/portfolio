@@ -15,6 +15,8 @@ const Home = lazy(() => import("./routes/Home"));
 const About = lazy(() => import("./routes/About"));
 const Projects = lazy(() => import("./routes/Projects"));
 const Contact = lazy(() => import("./routes/Contact"));
+const Blog = lazy(() => import("./routes/Blog"));
+const BlogPost = lazy(() => import("./routes/BlogPost"));
 
 // Prefetch routes on idle
 function usePrefetchRoutes() {
@@ -31,6 +33,7 @@ function usePrefetchRoutes() {
 
       idleCallback(() => {
         // Prefetch route chunks (React Router handles basename)
+        prefetch("/blog");
         prefetch("/projects");
         prefetch("/about");
         prefetch("/contact");
@@ -56,6 +59,8 @@ function App() {
         }>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
