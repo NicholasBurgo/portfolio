@@ -61,6 +61,16 @@ export default function Navbar() {
             Home
           </Link>
           <Link
+            to="/blog"
+            onClick={(e) => handleNavClick(e, "/blog")}
+            className={`transition-all duration-300 hover:scale-105 ${
+              isActive("/blog") || location.pathname.startsWith("/blog/") ? "text-blue-300 scale-105" : "hover:text-blue-300"
+            }`}
+            aria-current={isActive("/blog") || location.pathname.startsWith("/blog/") ? "page" : undefined}
+          >
+            Blog
+          </Link>
+          <Link
             to="/projects"
             onClick={(e) => handleNavClick(e, "/projects")}
             className={`transition-all duration-300 hover:scale-105 ${

@@ -21,6 +21,8 @@ export default function ParticleBackground() {
   const transitionPhaseRef = useRef<'none' | 'collapsing' | 'exploding'>('none');
   const transitionProgressRef = useRef<number>(0);
   const delayedExplosionFrameRef = useRef<number | null>(null);
+  const directionChangeTimeoutRef = useRef<number | null>(null);
+  const postExplosionTimeRef = useRef<number>(-1); // -1 means disabled, 0-59 means active
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -90,8 +92,8 @@ export default function ParticleBackground() {
       eventHorizonY: 70,
     };
 
-    const PARTICLE_COUNT = isHomePage ? 120 : 85;
-    const CODE_BUBBLE_COUNT = isHomePage ? 15 : 0;
+    const PARTICLE_COUNT = isHomePage ? 60 : 43;
+    const CODE_BUBBLE_COUNT = isHomePage ? 8 : 0;
     const codeSymbols = ["()", "{}", "[]", "<>"];
     const codeTechs = [
       "React",
@@ -221,16 +223,33 @@ export default function ParticleBackground() {
           p.x *= 1 - progress * 0.7;
           p.y *= 1 - progress * 0.7;
 
-          const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          // Ensure velocities are valid
+          if (typeof p.vx !== 'number' || isNaN(p.vx) || !isFinite(p.vx)) {
+            p.vx = 0;
+          }
+          if (typeof p.vy !== 'number' || isNaN(p.vy) || !isFinite(p.vy)) {
+            p.vy = 0;
+          }
+
+          const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy) || 0.5;
           const angleToCenter = Math.atan2(-p.y, -p.x);
           const tangentialAngle = angleToCenter + Math.PI / 2;
 
-          p.vx =
+          const newVx =
             Math.cos(angleToCenter) * currentSpeed * 0.35 +
             Math.cos(tangentialAngle) * currentSpeed * 0.65;
-          p.vy =
+          const newVy =
             Math.sin(angleToCenter) * currentSpeed * 0.35 +
             Math.sin(tangentialAngle) * currentSpeed * 0.65;
+
+          // Validate before assigning
+          if (isFinite(newVx) && isFinite(newVy)) {
+            p.vx = newVx;
+            p.vy = newVy;
+          } else {
+            // Fallback: reset particle if calculation fails
+            resetParticle(p);
+          }
         }
 
         particles.push(p);
@@ -313,6 +332,14 @@ export default function ParticleBackground() {
           return true;
         }
 
+        // Ensure velocities are valid numbers
+        if (typeof p.vx !== 'number' || isNaN(p.vx) || !isFinite(p.vx)) {
+          p.vx = 0;
+        }
+        if (typeof p.vy !== 'number' || isNaN(p.vy) || !isFinite(p.vy)) {
+          p.vy = 0;
+        }
+
         // Enhanced gravity well with spiral motion - gentler pull (dialed back by 2)
         const collapseStrength = 1.0 + transitionProgressRef.current * 2; // Reduced from 4 to 2
         const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy) || 0.5; // Fallback speed
@@ -333,6 +360,12 @@ export default function ParticleBackground() {
           Math.sin(angleToBlackHole) * enhancedSpeed * spiralInward +
           Math.sin(tangentialAngle) * enhancedSpeed * spiralTangential;
 
+        // Validate target velocities
+        if (isNaN(targetVx) || !isFinite(targetVx) || isNaN(targetVy) || !isFinite(targetVy)) {
+          resetParticle(p);
+          return false;
+        }
+
         // Gentler interpolation toward target velocity (more gradual change)
         p.vx = p.vx * 0.85 + targetVx * 0.15; // Changed from 0.7/0.3 to 0.85/0.15
         p.vy = p.vy * 0.85 + targetVy * 0.15;
@@ -342,15 +375,21 @@ export default function ParticleBackground() {
         p.vx += Math.cos(angleToBlackHole) * acceleration;
         p.vy += Math.sin(angleToBlackHole) * acceleration;
 
+        // Final validation
+        if (isNaN(p.vx) || !isFinite(p.vx) || isNaN(p.vy) || !isFinite(p.vy)) {
+          resetParticle(p);
+          return false;
+        }
+
         return true;
       }
 
       // Exploding phase: particles explode outward (slower, less aggressive)
       if (transitionPhaseRef.current === 'exploding') {
         if (p.collapsed) {
-          // Explode outward in random direction with slower speed
+          // Explode outward in random direction with much slower speed
           const angle = Math.random() * Math.PI * 2;
-          const explosionSpeed = 4 + Math.random() * 3; // Reduced from 8-12 to 4-7
+          const explosionSpeed = 2 + Math.random() * 2; // Reduced to 2-4 for slower, more visible explosion
           p.vx = Math.cos(angle) * explosionSpeed;
           p.vy = Math.sin(angle) * explosionSpeed;
           p.z = 0.5 + Math.random(); // Start at various depths
@@ -358,15 +397,23 @@ export default function ParticleBackground() {
         }
         // Gradually slow down particles during explosion for smoother effect
         if (!p.collapsed) {
-          p.vx *= 0.995; // Very gradual slowdown
-          p.vy *= 0.995;
+          p.vx *= 0.99; // Slightly faster slowdown (was 0.995)
+          p.vy *= 0.99;
         }
         return true;
       }
 
       // Normal gravity well behavior for home page
       if (distance > 0 && distance < maxDistance) {
-        const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+        // Ensure velocities are valid numbers
+        if (typeof p.vx !== 'number' || isNaN(p.vx) || !isFinite(p.vx)) {
+          p.vx = 0;
+        }
+        if (typeof p.vy !== 'number' || isNaN(p.vy) || !isFinite(p.vy)) {
+          p.vy = 0;
+        }
+        
+        const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy) || 0.5;
         const angleToBlackHole = Math.atan2(dy, dx);
         const tangentialAngle = angleToBlackHole + Math.PI / 2;
         const spiralInward = 0.35;
@@ -382,10 +429,20 @@ export default function ParticleBackground() {
         p.vx = p.vx * 0.95 + targetVx * 0.05;
         p.vy = p.vy * 0.95 + targetVy * 0.05;
 
+        // Validate velocities after interpolation
+        if (isNaN(p.vx) || !isFinite(p.vx)) p.vx = targetVx;
+        if (isNaN(p.vy) || !isFinite(p.vy)) p.vy = targetVy;
+
         const newSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
-        if (newSpeed > 0) {
+        if (newSpeed > 0 && isFinite(newSpeed) && isFinite(currentSpeed)) {
           p.vx = (p.vx / newSpeed) * currentSpeed;
           p.vy = (p.vy / newSpeed) * currentSpeed;
+        }
+
+        // Final validation before continuing
+        if (isNaN(p.vx) || !isFinite(p.vx) || isNaN(p.vy) || !isFinite(p.vy)) {
+          resetParticle(p);
+          return false;
         }
 
         if (
@@ -423,6 +480,11 @@ export default function ParticleBackground() {
       
       if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
+
+      // Track post-explosion time for deceleration
+      if (postExplosionTimeRef.current >= 0 && postExplosionTimeRef.current < 60) {
+        postExplosionTimeRef.current += 1; // Increment frame counter
+      }
 
       // Update transition progress
       if (transitionPhaseRef.current === 'collapsing') {
@@ -485,15 +547,65 @@ export default function ParticleBackground() {
           transitionPhaseRef.current = 'none';
           transitionProgressRef.current = 0;
           transitionState.setIsTransitioning(false);
-          // Reset particles for new page mode (3D starfield)
+          postExplosionTimeRef.current = 0; // Start tracking post-explosion time
+          
+          // Keep the exploded particles, just adjust their properties for the new page
+          // Don't reset them completely - let them continue their outward motion
           particles.forEach(p => {
-            resetParticle(p);
+            // Ensure they have depth properties for 3D starfield
+            if (typeof p.z !== 'number' || isNaN(p.z) || !isFinite(p.z)) {
+              p.z = randomBetween(0.5, 1.5);
+            }
+            if (typeof p.speed !== 'number' || isNaN(p.speed) || !isFinite(p.speed)) {
+              p.speed = randomBetween(0.0002, 0.0008);
+            }
+            // Keep existing velocities and positions - particles continue moving outward
+            p.collapsed = false;
           });
+          
           // Clear code bubbles for non-home pages
           codeBubbles.forEach(bubble => {
             bubble.x = 9999; // Move off screen
             bubble.y = 9999;
           });
+          
+          // Schedule direction change after 1 second
+          if (directionChangeTimeoutRef.current) {
+            clearTimeout(directionChangeTimeoutRef.current);
+          }
+          directionChangeTimeoutRef.current = window.setTimeout(() => {
+            // Change direction of all particles after 1 second
+            // Use particlesRef to ensure we have the current particles
+            const currentParticles = particlesRef.current;
+            if (currentParticles && currentParticles.length > 0) {
+              currentParticles.forEach(p => {
+                // Ensure velocities are valid
+                if (typeof p.vx !== 'number' || isNaN(p.vx) || !isFinite(p.vx)) {
+                  p.vx = 0;
+                }
+                if (typeof p.vy !== 'number' || isNaN(p.vy) || !isFinite(p.vy)) {
+                  p.vy = 0;
+                }
+                
+                // Reverse or randomize direction
+                const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy) || 0.5;
+                const newAngle = Math.random() * Math.PI * 2; // Random direction
+                
+                p.vx = Math.cos(newAngle) * currentSpeed;
+                p.vy = Math.sin(newAngle) * currentSpeed;
+                
+                // Validate new velocities
+                if (isNaN(p.vx) || !isFinite(p.vx) || isNaN(p.vy) || !isFinite(p.vy)) {
+                  // If validation fails, give safe default velocities
+                  p.vx = Math.cos(newAngle) * 0.5;
+                  p.vy = Math.sin(newAngle) * 0.5;
+                }
+              });
+            }
+            // Stop post-explosion deceleration
+            postExplosionTimeRef.current = -1; // Set to -1 to disable deceleration
+            directionChangeTimeoutRef.current = null;
+          }, 1000);
         }
       }
 
@@ -524,8 +636,29 @@ export default function ParticleBackground() {
           }
         }
 
-        p.x += p.vx || 0;
-        p.y += p.vy || 0;
+        // Ensure velocities are valid before updating position
+        if (typeof p.vx !== 'number' || isNaN(p.vx) || !isFinite(p.vx)) {
+          p.vx = 0;
+        }
+        if (typeof p.vy !== 'number' || isNaN(p.vy) || !isFinite(p.vy)) {
+          p.vy = 0;
+        }
+        
+        // Clamp velocities to prevent extreme values
+        const maxVelocity = 10;
+        p.vx = Math.max(-maxVelocity, Math.min(maxVelocity, p.vx));
+        p.vy = Math.max(-maxVelocity, Math.min(maxVelocity, p.vy));
+        
+        // Apply strong deceleration during first second after explosion to keep particles visible
+        if (postExplosionTimeRef.current > 0 && postExplosionTimeRef.current < 60) {
+          // Gradually slow particles down over the first second
+          const decelerationFactor = 0.96; // Stronger deceleration
+          p.vx *= decelerationFactor;
+          p.vy *= decelerationFactor;
+        }
+        
+        p.x += p.vx;
+        p.y += p.vy;
         p.twinkle += p.twinkleSpeed;
 
         const screenX = cx + p.x;
@@ -610,6 +743,14 @@ export default function ParticleBackground() {
               continue;
             }
 
+            // Ensure velocities are valid
+            if (typeof bubble.vx !== 'number' || isNaN(bubble.vx) || !isFinite(bubble.vx)) {
+              bubble.vx = 0;
+            }
+            if (typeof bubble.vy !== 'number' || isNaN(bubble.vy) || !isFinite(bubble.vy)) {
+              bubble.vy = 0;
+            }
+
             // Enhanced gravity well with spiral motion for bubbles (dialed back by 2)
             const collapseStrength = 1.0 + transitionProgressRef.current * 2; // Reduced from 4 to 2
             const currentSpeed = Math.sqrt(bubble.vx * bubble.vx + bubble.vy * bubble.vy) || 0.5;
@@ -629,6 +770,12 @@ export default function ParticleBackground() {
               Math.sin(angleToBlackHole) * enhancedSpeed * spiralInward +
               Math.sin(tangentialAngle) * enhancedSpeed * spiralTangential;
 
+            // Validate target velocities
+            if (isNaN(targetVx) || !isFinite(targetVx) || isNaN(targetVy) || !isFinite(targetVy)) {
+              resetCodeBubble(bubble, i);
+              continue;
+            }
+
             // Gentler interpolation toward target velocity
             bubble.vx = bubble.vx * 0.85 + targetVx * 0.15; // Changed from 0.7/0.3 to 0.85/0.15
             bubble.vy = bubble.vy * 0.85 + targetVy * 0.15;
@@ -637,8 +784,22 @@ export default function ParticleBackground() {
             const acceleration = collapseStrength * 0.1; // Reduced from 0.2 to 0.1
             bubble.vx += Math.cos(angleToBlackHole) * acceleration;
             bubble.vy += Math.sin(angleToBlackHole) * acceleration;
+
+            // Final validation
+            if (isNaN(bubble.vx) || !isFinite(bubble.vx) || isNaN(bubble.vy) || !isFinite(bubble.vy)) {
+              resetCodeBubble(bubble, i);
+              continue;
+            }
           } else if (transitionPhaseRef.current === 'none' && distance > 0 && distance < maxDistance) {
-            const currentSpeed = Math.sqrt(bubble.vx * bubble.vx + bubble.vy * bubble.vy);
+            // Ensure velocities are valid
+            if (typeof bubble.vx !== 'number' || isNaN(bubble.vx) || !isFinite(bubble.vx)) {
+              bubble.vx = 0;
+            }
+            if (typeof bubble.vy !== 'number' || isNaN(bubble.vy) || !isFinite(bubble.vy)) {
+              bubble.vy = 0;
+            }
+
+            const currentSpeed = Math.sqrt(bubble.vx * bubble.vx + bubble.vy * bubble.vy) || 0.5;
             const angleToBlackHole = Math.atan2(dy, dx);
             const tangentialAngle = angleToBlackHole + Math.PI / 2;
             const spiralInward = 0.35;
@@ -651,13 +812,29 @@ export default function ParticleBackground() {
               Math.sin(angleToBlackHole) * currentSpeed * spiralInward +
               Math.sin(tangentialAngle) * currentSpeed * spiralTangential;
 
+            // Validate target velocities
+            if (isNaN(targetVx) || !isFinite(targetVx) || isNaN(targetVy) || !isFinite(targetVy)) {
+              resetCodeBubble(bubble, i);
+              continue;
+            }
+
             bubble.vx = bubble.vx * 0.95 + targetVx * 0.05;
             bubble.vy = bubble.vy * 0.95 + targetVy * 0.05;
 
+            // Validate after interpolation
+            if (isNaN(bubble.vx) || !isFinite(bubble.vx)) bubble.vx = targetVx;
+            if (isNaN(bubble.vy) || !isFinite(bubble.vy)) bubble.vy = targetVy;
+
             const newSpeed = Math.sqrt(bubble.vx * bubble.vx + bubble.vy * bubble.vy);
-            if (newSpeed > 0) {
+            if (newSpeed > 0 && isFinite(newSpeed) && isFinite(currentSpeed)) {
               bubble.vx = (bubble.vx / newSpeed) * currentSpeed;
               bubble.vy = (bubble.vy / newSpeed) * currentSpeed;
+            }
+
+            // Final validation
+            if (isNaN(bubble.vx) || !isFinite(bubble.vx) || isNaN(bubble.vy) || !isFinite(bubble.vy)) {
+              resetCodeBubble(bubble, i);
+              continue;
             }
 
             if (
@@ -675,6 +852,19 @@ export default function ParticleBackground() {
             }
           }
 
+          // Ensure velocities are valid before updating position
+          if (typeof bubble.vx !== 'number' || isNaN(bubble.vx) || !isFinite(bubble.vx)) {
+            bubble.vx = 0;
+          }
+          if (typeof bubble.vy !== 'number' || isNaN(bubble.vy) || !isFinite(bubble.vy)) {
+            bubble.vy = 0;
+          }
+          
+          // Clamp velocities to prevent extreme values
+          const maxBubbleVelocity = 10;
+          bubble.vx = Math.max(-maxBubbleVelocity, Math.min(maxBubbleVelocity, bubble.vx));
+          bubble.vy = Math.max(-maxBubbleVelocity, Math.min(maxBubbleVelocity, bubble.vy));
+          
           bubble.x += bubble.vx;
           bubble.y += bubble.vy;
 
@@ -738,6 +928,10 @@ export default function ParticleBackground() {
       if (delayedExplosionFrameRef.current) {
         cancelAnimationFrame(delayedExplosionFrameRef.current);
         delayedExplosionFrameRef.current = null;
+      }
+      if (directionChangeTimeoutRef.current) {
+        clearTimeout(directionChangeTimeoutRef.current);
+        directionChangeTimeoutRef.current = null;
       }
       // Reset transition state on unmount
       transitionState.setIsTransitioning(false);
