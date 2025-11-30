@@ -33,7 +33,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: 
+  background:
     radial-gradient(ellipse at 30% 40%, rgba(79, 195, 247, 0.08) 0%, transparent 70%),
     radial-gradient(ellipse at 70% 60%, rgba(79, 195, 247, 0.05) 0%, transparent 60%);
   z-index: -1;
@@ -41,10 +41,13 @@ body::before {
 }
 
 @keyframes nebulaShift {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 0.6;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.8;
     transform: scale(1.02);
@@ -68,6 +71,7 @@ html {
     opacity: 0;
     transform: translateY(-30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -79,6 +83,7 @@ html {
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -89,6 +94,7 @@ html {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -99,6 +105,7 @@ html {
     transform: scale(0.9);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -110,13 +117,16 @@ html {
     opacity: 0;
     transform: scale(0.7) rotate(-360deg) translateY(80px);
   }
+
   60% {
     opacity: 1;
     transform: scale(1.05) rotate(10deg) translateY(-5px);
   }
+
   80% {
     transform: scale(0.98) rotate(-3deg) translateY(3px);
   }
+
   100% {
     opacity: 1;
     transform: scale(1) rotate(0deg) translateY(0);
@@ -154,47 +164,19 @@ html {
 }
 
 @keyframes bounce-slow {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(8px);
   }
 }
 
 /* Navigation styles */
-nav {
-  background: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(10px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
 
-nav a {
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-nav a::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: #4fc3f7;
-  transition: all 0.3s ease;
-  transform: translateX(-50%);
-}
-
-nav a:hover::after,
-nav a.active::after {
-  width: 100%;
-}
-
-nav a.active {
-  color: #4fc3f7 !important;
-}
 
 .section-bg {
   position: relative;
@@ -216,7 +198,7 @@ nav a.active {
   transition: none;
 }
 
-.section-bg > * {
+.section-bg>* {
   position: relative;
   z-index: 1;
 }
@@ -298,13 +280,13 @@ nav a.active {
   position: fixed;
   width: 12px;
   height: 12px;
-  background-color: rgba(79,195,247, 0.4); 
+  background-color: rgba(79, 195, 247, 0.4);
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%) scale(1);
   transition: transform 0.15s ease-out, background-color 0.2s ease-out;
   backdrop-filter: blur(3px);
-  box-shadow: 0 0 6px rgba(79,195,247, 0.3);
+  box-shadow: 0 0 6px rgba(79, 195, 247, 0.3);
   z-index: 100;
 }
 
@@ -318,7 +300,7 @@ nav a.active {
   font-weight: 800;
   color: #ffffff;
   cursor: default;
-  text-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
 }
 
 #name span {
@@ -346,15 +328,19 @@ nav a.active {
   0% {
     opacity: 0;
   }
+
   20% {
     opacity: 0.3;
   }
+
   40% {
     opacity: 0.7;
   }
+
   60% {
     opacity: 0.9;
   }
+
   100% {
     opacity: 1;
   }
@@ -364,12 +350,15 @@ nav a.active {
   0% {
     opacity: 1;
   }
+
   30% {
     opacity: 0.8;
   }
+
   60% {
     opacity: 0.4;
   }
+
   100% {
     opacity: 0;
   }
@@ -388,12 +377,24 @@ nav a.active {
   animation: float 4s ease-in-out infinite;
 }
 
-.floating:nth-child(2) { animation-delay: 1s; }
-.floating:nth-child(3) { animation-delay: 2s; }
+.floating:nth-child(2) {
+  animation-delay: 1s;
+}
+
+.floating:nth-child(3) {
+  animation-delay: 2s;
+}
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
 }
 
 /* Wave animation effects */
@@ -411,31 +412,76 @@ nav a.active {
 }
 
 @keyframes wave {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0);
   }
+
   7% {
     transform: translateY(-8px);
   }
+
   14% {
     transform: translateY(0);
   }
 }
 
-.wave-animate span:nth-child(1) { animation-delay: 0.15s; }
-.wave-animate span:nth-child(2) { animation-delay: 0.3s; }
-.wave-animate span:nth-child(3) { animation-delay: 0.45s; }
-.wave-animate span:nth-child(4) { animation-delay: 0.6s; }
-.wave-animate span:nth-child(5) { animation-delay: 0.75s; }
-.wave-animate span:nth-child(6) { animation-delay: 0.9s; }
-.wave-animate span:nth-child(7) { animation-delay: 1.05s; }
-.wave-animate span:nth-child(8) { animation-delay: 1.2s; }
-.wave-animate span:nth-child(9) { animation-delay: 1.35s; }
-.wave-animate span:nth-child(10) { animation-delay: 1.5s; }
-.wave-animate span:nth-child(11) { animation-delay: 1.65s; }
-.wave-animate span:nth-child(12) { animation-delay: 1.8s; }
-.wave-animate span:nth-child(13) { animation-delay: 1.95s; }
-.wave-animate span:nth-child(14) { animation-delay: 2.1s; }
+.wave-animate span:nth-child(1) {
+  animation-delay: 0.15s;
+}
+
+.wave-animate span:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.wave-animate span:nth-child(3) {
+  animation-delay: 0.45s;
+}
+
+.wave-animate span:nth-child(4) {
+  animation-delay: 0.6s;
+}
+
+.wave-animate span:nth-child(5) {
+  animation-delay: 0.75s;
+}
+
+.wave-animate span:nth-child(6) {
+  animation-delay: 0.9s;
+}
+
+.wave-animate span:nth-child(7) {
+  animation-delay: 1.05s;
+}
+
+.wave-animate span:nth-child(8) {
+  animation-delay: 1.2s;
+}
+
+.wave-animate span:nth-child(9) {
+  animation-delay: 1.35s;
+}
+
+.wave-animate span:nth-child(10) {
+  animation-delay: 1.5s;
+}
+
+.wave-animate span:nth-child(11) {
+  animation-delay: 1.65s;
+}
+
+.wave-animate span:nth-child(12) {
+  animation-delay: 1.8s;
+}
+
+.wave-animate span:nth-child(13) {
+  animation-delay: 1.95s;
+}
+
+.wave-animate span:nth-child(14) {
+  animation-delay: 2.1s;
+}
 
 /* Enhanced Go to Projects hover effects */
 .go-to-projects-link {
@@ -563,7 +609,7 @@ nav a.active {
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(79, 195, 247, 0.2);
   border-radius: 24px;
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
@@ -591,7 +637,7 @@ nav a.active {
   transform: translateY(-12px) scale(1.03);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
   border-color: rgba(79, 195, 247, 0.5);
-  box-shadow: 
+  box-shadow:
     0 25px 50px rgba(79, 195, 247, 0.2),
     0 0 0 1px rgba(79, 195, 247, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
@@ -634,7 +680,7 @@ nav a.active {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
@@ -644,7 +690,7 @@ nav a.active {
   border-color: rgba(79, 195, 247, 0.6);
   color: white;
   transform: translateY(-50%) scale(1.05);
-  box-shadow: 
+  box-shadow:
     0 12px 40px rgba(79, 195, 247, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
@@ -712,51 +758,54 @@ nav a.active {
     padding: 8px 12px !important;
     gap: 4px !important;
   }
+
   nav .flex {
     gap: 12px !important;
   }
+
   nav a {
     font-size: 12px !important;
     padding: 4px 8px;
   }
-  
+
   #home {
     padding: 16px 8px !important;
     padding-top: 80px !important;
   }
-  
+
   #name span {
     font-size: 2rem !important;
   }
+
   .subtitle {
     font-size: 0.7rem !important;
     letter-spacing: 0.05em !important;
     margin-top: 1rem !important;
   }
-  
+
   .wave-text {
     font-size: 14px !important;
     margin-bottom: 8px !important;
   }
-  
+
   .carousel-track {
     gap: 1rem;
   }
-  
+
   .carousel-track .project-card {
     flex: 0 0 calc(50% - 1rem);
   }
-  
+
   .carousel-nav {
     width: 50px;
     height: 50px;
     font-size: 16px;
   }
-  
+
   .carousel-nav-left {
     left: -55px;
   }
-  
+
   .carousel-nav-right {
     right: -55px;
   }
@@ -766,38 +815,41 @@ nav a.active {
   nav a {
     font-size: 11px !important;
   }
+
   nav .flex {
     gap: 8px !important;
   }
-  
+
   #name span {
     font-size: 1.5rem !important;
   }
+
   .subtitle {
     font-size: 0.6rem !important;
   }
+
   .wave-text {
     font-size: 12px !important;
   }
-  
+
   .carousel-track {
     gap: 0.75rem;
   }
-  
+
   .carousel-track .project-card {
     flex: 0 0 calc(100% - 0.75rem);
   }
-  
+
   .carousel-nav {
     width: 45px;
     height: 45px;
     font-size: 14px;
   }
-  
+
   .carousel-nav-left {
     left: -50px;
   }
-  
+
   .carousel-nav-right {
     right: -50px;
   }
@@ -981,3 +1033,14 @@ nav a.active {
   overflow: hidden;
 }
 
+
+/* 3D Tilt Effect */
+.tilted-3d {
+  transform: perspective(1000px) rotateX(10deg) rotateY(-10deg) rotateZ(2deg);
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+
+.tilted-3d:hover {
+  transform: perspective(1000px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+}

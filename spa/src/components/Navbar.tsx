@@ -1,5 +1,68 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { transitionState } from "./ParticleBackground";
+
+interface MagneticLinkProps {
+  to: string;
+  text: string;
+  onClick: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  isActive: boolean;
+}
+
+const MagneticLink = ({ to, text, onClick, isActive }: MagneticLinkProps) => {
+  const lettersRef = useRef<(HTMLSpanElement | null)[]>([]);
+  const [letters, setLetters] = useState<string[]>([]);
+
+  useEffect(() => {
+    setLetters(text.split(""));
+  }, [text]);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      lettersRef.current.forEach((letter) => {
+        if (!letter) return;
+        const rect = letter.getBoundingClientRect();
+        const letterX = rect.left + rect.width / 2;
+        const letterY = rect.top + rect.height / 2;
+
+        const distX = e.clientX - letterX;
+        const distY = e.clientY - letterY;
+        const distance = Math.sqrt(distX ** 2 + distY ** 2);
+
+        if (distance < 40) {
+          const angle = Math.atan2(distY, distX);
+          const offset = (40 - distance) / 5;
+          letter.style.transform = `translate(${-Math.cos(angle) * offset}px, ${-Math.sin(angle) * offset}px)`;
+        } else {
+          letter.style.transform = "translate(0, 0)";
+        }
+      });
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    return () => document.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  return (
+    <Link
+      to={to}
+      onClick={onClick}
+      className={`relative inline-flex px-2 py-1 transition-colors duration-300 ${isActive ? "text-blue-300" : "text-white/90 hover:text-blue-300"
+        }`}
+    >
+      {letters.map((char, index) => (
+        <span
+          key={index}
+          ref={(el) => (lettersRef.current[index] = el)}
+          className="inline-block transition-transform duration-75 ease-out"
+          style={{ willChange: "transform" }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </span>
+      ))}
+    </Link>
+  );
+};
 
 export default function Navbar() {
   const location = useLocation();
@@ -10,97 +73,61 @@ export default function Navbar() {
   };
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
-    // Only intercept if we're on home page and navigating away
     if (location.pathname === "/" && path !== "/") {
       e.preventDefault();
-      
-      // Trigger collapse animation
       transitionState.setIsTransitioning(true);
-      
-      // Dispatch event to start collapse
       window.dispatchEvent(new CustomEvent('startCollapse', { detail: { targetPath: path } }));
-      
-      // Wait for collapse to complete, then navigate
+
       let checkCount = 0;
-      const maxChecks = 300; // ~5 seconds max at 60fps
+      const maxChecks = 300;
       const checkCollapse = () => {
         checkCount++;
         if (!transitionState.isTransitioning || checkCount >= maxChecks) {
-          // Collapse complete or timeout, now navigate
-          if (checkCount >= maxChecks) {
-            // Force reset on timeout
-            transitionState.setIsTransitioning(false);
-          }
+          if (checkCount >= maxChecks) transitionState.setIsTransitioning(false);
           navigate(path);
         } else {
-          // Still collapsing, check again
           requestAnimationFrame(checkCollapse);
         }
       };
-      
-      // Start checking after a brief delay to let collapse start
-      setTimeout(() => {
-        requestAnimationFrame(checkCollapse);
-      }, 50);
+
+      setTimeout(() => requestAnimationFrame(checkCollapse), 50);
     }
-    // Otherwise let normal navigation happen
   };
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 px-6 py-4 flex items-center justify-center">
-      <nav className="flex items-center justify-center gap-8 text-md font-bold text-white/90 bg-white/10 backdrop-filter blur-20px border border-white/20 rounded-full px-8 py-3 shadow-xl min-w-[340px] w-auto max-w-2xl">
-        <div className="flex gap-8">
-          <Link
-            to="/"
-            onClick={(e) => handleNavClick(e, "/")}
-            className={`transition-all duration-300 hover:scale-105 ${
-              isActive("/") ? "text-blue-300 scale-105" : "hover:text-blue-300"
-            }`}
-            aria-current={isActive("/") ? "page" : undefined}
-          >
-            Home
-          </Link>
-          <Link
-            to="/blog"
-            onClick={(e) => handleNavClick(e, "/blog")}
-            className={`transition-all duration-300 hover:scale-105 ${
-              isActive("/blog") || location.pathname.startsWith("/blog/") ? "text-blue-300 scale-105" : "hover:text-blue-300"
-            }`}
-            aria-current={isActive("/blog") || location.pathname.startsWith("/blog/") ? "page" : undefined}
-          >
-            Blog
-          </Link>
-          <Link
-            to="/projects"
-            onClick={(e) => handleNavClick(e, "/projects")}
-            className={`transition-all duration-300 hover:scale-105 ${
-              isActive("/projects") ? "text-blue-300 scale-105" : "hover:text-blue-300"
-            }`}
-            aria-current={isActive("/projects") ? "page" : undefined}
-          >
-            Projects
-          </Link>
-          <Link
-            to="/about"
-            onClick={(e) => handleNavClick(e, "/about")}
-            className={`transition-all duration-300 hover:scale-105 ${
-              isActive("/about") ? "text-blue-300 scale-105" : "hover:text-blue-300"
-            }`}
-            aria-current={isActive("/about") ? "page" : undefined}
-          >
-            About
-          </Link>
-          <Link
-            to="/contact"
-            onClick={(e) => handleNavClick(e, "/contact")}
-            className={`transition-all duration-300 hover:scale-105 ${
-              isActive("/contact") ? "text-blue-300 scale-105" : "hover:text-blue-300"
-            }`}
-            aria-current={isActive("/contact") ? "page" : undefined}
-          >
-            Contact
-          </Link>
-        </div>
+    <header className="fixed bottom-8 left-0 w-full z-50 px-6 py-4 flex items-center justify-center pointer-events-none">
+      <nav className="flex items-center justify-center gap-4 text-xl font-bold pointer-events-auto">
+        {location.pathname !== "/" && (
+          <>
+            <MagneticLink
+              to="/"
+              text="Home"
+              onClick={(e) => handleNavClick(e, "/")}
+              isActive={isActive("/")}
+            />
+            <span className="text-white/40 select-none">*</span>
+          </>
+        )}
+        <MagneticLink
+          to="/projects"
+          text="Projects"
+          onClick={(e) => handleNavClick(e, "/projects")}
+          isActive={isActive("/projects")}
+        />
+        <span className="text-white/40 select-none">*</span>
+        <MagneticLink
+          to="/about"
+          text="About"
+          onClick={(e) => handleNavClick(e, "/about")}
+          isActive={isActive("/about")}
+        />
+        <span className="text-white/40 select-none">*</span>
+        <MagneticLink
+          to="/contact"
+          text="Contact"
+          onClick={(e) => handleNavClick(e, "/contact")}
+          isActive={isActive("/contact")}
+        />
       </nav>
     </header>
   );
