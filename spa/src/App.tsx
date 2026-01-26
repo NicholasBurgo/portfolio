@@ -16,6 +16,7 @@ const Home = lazy(() => import("./routes/Home"));
 const About = lazy(() => import("./routes/About"));
 const Projects = lazy(() => import("./routes/Projects"));
 const Contact = lazy(() => import("./routes/Contact"));
+const ProjectTest = lazy(() => import("./routes/ProjectTest"));
 
 
 // Prefetch routes on idle
@@ -64,6 +65,7 @@ function App() {
             <Route path="/projects" element={<Projects />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/project-test" element={<ProjectTest />} />
           </Routes>
         </Suspense>
       </RouteTransition>

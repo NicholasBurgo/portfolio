@@ -23,6 +23,9 @@ export default function ParticleBackground() {
   const delayedExplosionFrameRef = useRef<number | null>(null);
   const directionChangeTimeoutRef = useRef<number | null>(null);
   const postExplosionTimeRef = useRef<number>(-1); // -1 means disabled, 0-59 means active
+  const sphereRotationRef = useRef({ x: 0.2, y: 0 }); // Initial tilt of 0.2
+  const isDraggingRef = useRef(false);
+  const lastMousePosRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -48,11 +51,44 @@ export default function ParticleBackground() {
     };
 
     resize();
+    resize();
     window.addEventListener("resize", resize);
+
+    // Mouse interaction handlers for 3D sphere
+    const handleMouseDown = (e: MouseEvent) => {
+      if (location.pathname === "/project-test") {
+        isDraggingRef.current = true;
+        lastMousePosRef.current = { x: e.clientX, y: e.clientY };
+      }
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDraggingRef.current && location.pathname === "/project-test") {
+        const deltaX = e.clientX - lastMousePosRef.current.x;
+        const deltaY = e.clientY - lastMousePosRef.current.y;
+
+        sphereRotationRef.current.y += deltaX * 0.005;
+        sphereRotationRef.current.x += deltaY * 0.005;
+
+        lastMousePosRef.current = { x: e.clientX, y: e.clientY };
+      }
+    };
+
+    const handleMouseUp = () => {
+      isDraggingRef.current = false;
+    };
+
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("mouseleave", handleMouseUp);
 
     // Listen for collapse start event (from Navbar)
     const handleStartCollapse = (_event: CustomEvent) => {
-      if (location.pathname === "/" && transitionPhaseRef.current === 'none') {
+      const isGravityWellPage = location.pathname === "/";
+      const is3DSpherePage = location.pathname === "/project-test";
+
+      if ((isGravityWellPage || is3DSpherePage) && transitionPhaseRef.current === 'none') {
         transitionState.setIsTransitioning(true);
         transitionPhaseRef.current = 'collapsing';
         transitionProgressRef.current = 0;
@@ -64,12 +100,13 @@ export default function ParticleBackground() {
 
     window.addEventListener('startCollapse', handleStartCollapse as EventListener);
 
-    const isHomePage = location.pathname === "/";
-    const wasHomePage = prevLocationRef.current === "/";
-    const transitioningFromHome = wasHomePage && !isHomePage;
+    const isGravityWellPage = location.pathname === "/";
+    const is3DSpherePage = location.pathname === "/project-test";
+    const wasSpecialPage = prevLocationRef.current === "/" || prevLocationRef.current === "/project-test";
+    const transitioningFromSpecial = wasSpecialPage && !isGravityWellPage && !is3DSpherePage;
 
     // Start transition if coming from home page (fallback for direct navigation)
-    if (transitioningFromHome && transitionPhaseRef.current === 'none') {
+    if (transitioningFromSpecial && transitionPhaseRef.current === 'none') {
       transitionState.setIsTransitioning(true);
       transitionPhaseRef.current = 'collapsing';
       transitionProgressRef.current = 0;
@@ -92,8 +129,8 @@ export default function ParticleBackground() {
       eventHorizonY: 70,
     };
 
-    const PARTICLE_COUNT = isHomePage ? 60 : 43;
-    const CODE_BUBBLE_COUNT = isHomePage ? 8 : 0;
+    const PARTICLE_COUNT = isGravityWellPage ? 150 : (is3DSpherePage ? 600 : 43);
+    const CODE_BUBBLE_COUNT = isGravityWellPage ? 8 : 0;
     const codeSymbols = ["()", "{}", "[]", "<>"];
     const codeTechs = [
       "React",
@@ -114,7 +151,7 @@ export default function ParticleBackground() {
     }
 
     function resetCodeBubble(bubble: any, index: number) {
-      if (!isHomePage) return;
+      if (!isGravityWellPage) return;
 
       const totalBubbles = CODE_BUBBLE_COUNT;
       const angleStep = (2 * Math.PI) / totalBubbles;
@@ -147,7 +184,7 @@ export default function ParticleBackground() {
     }
 
     function resetParticle(p: any) {
-      if (isHomePage) {
+      if (isGravityWellPage) {
         // Spawn particles from all four sides for constant stream
         const spawnSide = Math.floor(Math.random() * 4);
 
@@ -169,6 +206,24 @@ export default function ParticleBackground() {
 
         p.x = spawnX;
         p.y = spawnY;
+      } else if (is3DSpherePage) {
+        // 3D Sphere initialization
+        // Uniform distribution on sphere surface
+        const radius = Math.min(width, height) * 0.25;
+        const theta = Math.random() * 2 * Math.PI;
+        const phi = Math.acos(2 * Math.random() - 1);
+
+        p.originalX = radius * Math.sin(phi) * Math.cos(theta);
+        p.originalY = radius * Math.sin(phi) * Math.sin(theta);
+        p.originalZ = radius * Math.cos(phi);
+
+        p.x = p.originalX;
+        p.y = p.originalY;
+        p.z = p.originalZ; // Actual Z coordinate for 3D
+
+        // No velocity needed for fixed sphere shape, movement handled by rotation
+        p.vx = 0;
+        p.vy = 0;
       } else {
         // Simple particle system for other pages
         const angle = randomBetween(0, 2 * Math.PI);
@@ -177,9 +232,14 @@ export default function ParticleBackground() {
         p.y = Math.sin(angle) * radius;
       }
 
-      p.z = randomBetween(0.5, 1.5);
-      p.size = randomBetween(0.5, 1.5);
-      p.opacity = randomBetween(0.3, 0.8);
+      // Shared properties
+      if (!is3DSpherePage) {
+        p.z = randomBetween(0.5, 1.5); // Depth scale for non-3D pages
+        p.size = randomBetween(1, 2);
+      } else {
+        p.size = randomBetween(0.5, 1.5); // Smaller particles for sphere
+      }
+      p.opacity = randomBetween(0.4, 0.9);
       p.speed = randomBetween(0.0002, 0.0008);
       p.twinkle = randomBetween(0, 1);
       p.twinkleSpeed = randomBetween(0.01, 0.04);
@@ -195,7 +255,7 @@ export default function ParticleBackground() {
         p.color = "#b3e5fc";
       }
 
-      if (isHomePage) {
+      if (isGravityWellPage) {
         const speed = randomBetween(0.3, 0.6);
         const angleToCenter = Math.atan2(-p.y, -p.x);
         const tangentialAngle = angleToCenter + Math.PI / 2;
@@ -212,13 +272,13 @@ export default function ParticleBackground() {
     // Initialize particles
     let particles: any[] = [];
     // Only reinitialize if not in transition (to preserve particles during animation)
-    if (transitionPhaseRef.current === 'none' && !transitioningFromHome) {
+    if (transitionPhaseRef.current === 'none' && !transitioningFromSpecial) {
       particles = [];
       for (let i = 0; i < PARTICLE_COUNT; i++) {
         const p: any = {};
         resetParticle(p);
 
-        if (isHomePage && i < PARTICLE_COUNT * 0.6) {
+        if (isGravityWellPage && i < PARTICLE_COUNT * 0.6) {
           const progress = 0.2 + Math.random() * 0.6;
           p.x *= 1 - progress * 0.7;
           p.y *= 1 - progress * 0.7;
@@ -263,9 +323,9 @@ export default function ParticleBackground() {
     // Initialize code bubbles (home page only)
     let codeBubbles: any[] = [];
     // Only reinitialize if not in transition
-    if (transitionPhaseRef.current === 'none' && !transitioningFromHome) {
+    if (transitionPhaseRef.current === 'none' && !transitioningFromSpecial) {
       codeBubbles = [];
-      if (isHomePage) {
+      if (isGravityWellPage) {
         for (let i = 0; i < CODE_BUBBLE_COUNT; i++) {
           const bubble: any = {};
           resetCodeBubble(bubble, i);
@@ -303,7 +363,7 @@ export default function ParticleBackground() {
     }
 
     function applyGravityWell(p: any): boolean {
-      if (!isHomePage && transitionPhaseRef.current === 'none') return true;
+      if (!isGravityWellPage && transitionPhaseRef.current === 'none') return true;
 
       gravityWell.x = cx;
       gravityWell.y = cy;
@@ -321,7 +381,7 @@ export default function ParticleBackground() {
       if (transitionPhaseRef.current === 'collapsing') {
         // Calculate distance from center (particle coordinates, not screen)
         const particleDistance = Math.sqrt(p.x * p.x + p.y * p.y);
-        
+
         // If already very close to center, mark as collapsed and stop movement
         if (particleDistance < 30) {
           p.x = 0;
@@ -345,12 +405,12 @@ export default function ParticleBackground() {
         const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy) || 0.5; // Fallback speed
         const angleToBlackHole = Math.atan2(dy, dx);
         const tangentialAngle = angleToBlackHole + Math.PI / 2;
-        
+
         // Spiral motion: balance between inward pull and tangential motion
         // More gradual change - gentler spiral collapse
         const spiralInward = 0.5 + transitionProgressRef.current * 0.15; // Reduced from 0.3 to 0.15 (0.5 -> 0.65)
         const spiralTangential = 1.0 - spiralInward; // 0.5 -> 0.35 (more tangential preserved)
-        
+
         // Calculate target velocity with spiral (less speed enhancement)
         const enhancedSpeed = currentSpeed * (1.0 + collapseStrength * 0.15); // Reduced from 0.3 to 0.15
         const targetVx =
@@ -412,7 +472,7 @@ export default function ParticleBackground() {
         if (typeof p.vy !== 'number' || isNaN(p.vy) || !isFinite(p.vy)) {
           p.vy = 0;
         }
-        
+
         const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy) || 0.5;
         const angleToBlackHole = Math.atan2(dy, dx);
         const tangentialAngle = angleToBlackHole + Math.PI / 2;
@@ -477,7 +537,7 @@ export default function ParticleBackground() {
         }
         ctx = newCtx; // Recover context
       }
-      
+
       if (!ctx) return;
       ctx.clearRect(0, 0, width, height);
 
@@ -490,7 +550,7 @@ export default function ParticleBackground() {
       if (transitionPhaseRef.current === 'collapsing') {
         // Slower progress increment to give more time for collapse
         transitionProgressRef.current += 0.01;
-        
+
         // Check if all particles are collapsed (using particle coordinates, not screen)
         const allCollapsed = particles.every(p => {
           const particleDistance = Math.sqrt(p.x * p.x + p.y * p.y);
@@ -503,10 +563,10 @@ export default function ParticleBackground() {
           // Delete all code bubbles (tags) - they don't explode
           codeBubbles.length = 0;
           codeBubblesRef.current = [];
-          
+
           // Signal that collapse is complete (for Navbar to navigate)
           transitionState.setIsTransitioning(false);
-          
+
           // Use requestAnimationFrame instead of setTimeout for better sync with animation
           // This ensures the timeout is tied to the animation loop
           const startExplosion = () => {
@@ -524,7 +584,7 @@ export default function ParticleBackground() {
             // Signal that explosion can start
             transitionState.setIsTransitioning(true);
           };
-          
+
           // Small delay before starting explosion to allow navigation
           // Use a counter to delay by a few frames instead of setTimeout
           let frameDelay = 0;
@@ -548,7 +608,7 @@ export default function ParticleBackground() {
           transitionProgressRef.current = 0;
           transitionState.setIsTransitioning(false);
           postExplosionTimeRef.current = 0; // Start tracking post-explosion time
-          
+
           // Keep the exploded particles, just adjust their properties for the new page
           // Don't reset them completely - let them continue their outward motion
           particles.forEach(p => {
@@ -562,13 +622,13 @@ export default function ParticleBackground() {
             // Keep existing velocities and positions - particles continue moving outward
             p.collapsed = false;
           });
-          
+
           // Clear code bubbles for non-home pages
           codeBubbles.forEach(bubble => {
             bubble.x = 9999; // Move off screen
             bubble.y = 9999;
           });
-          
+
           // Schedule direction change after 1 second
           if (directionChangeTimeoutRef.current) {
             clearTimeout(directionChangeTimeoutRef.current);
@@ -586,14 +646,14 @@ export default function ParticleBackground() {
                 if (typeof p.vy !== 'number' || isNaN(p.vy) || !isFinite(p.vy)) {
                   p.vy = 0;
                 }
-                
+
                 // Reverse or randomize direction
                 const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy) || 0.5;
                 const newAngle = Math.random() * Math.PI * 2; // Random direction
-                
+
                 p.vx = Math.cos(newAngle) * currentSpeed;
                 p.vy = Math.sin(newAngle) * currentSpeed;
-                
+
                 // Validate new velocities
                 if (isNaN(p.vx) || !isFinite(p.vx) || isNaN(p.vy) || !isFinite(p.vy)) {
                   // If validation fails, give safe default velocities
@@ -614,15 +674,38 @@ export default function ParticleBackground() {
         const p = particles[i];
 
         if (transitionPhaseRef.current === 'none') {
-          if (isHomePage && !applyGravityWell(p)) {
-            continue;
+          if (isGravityWellPage) {
+            if (!applyGravityWell(p)) continue;
+          } else if (is3DSpherePage) {
+            // 3D Rotation Logic
+            // Very very slow auto-rotation (10x slower than 0.000002 -> 0.0000002)
+            if (!isDraggingRef.current) {
+              sphereRotationRef.current.y -= 0.0000002;
+            }
+
+            // Rotate around Y axis
+            const cosY = Math.cos(sphereRotationRef.current.y);
+            const sinY = Math.sin(sphereRotationRef.current.y);
+            const x1 = p.originalX * cosY - p.originalZ * sinY;
+            const z1 = p.originalX * sinY + p.originalZ * cosY;
+
+            // Rotate around X axis
+            const cosX = Math.cos(sphereRotationRef.current.x);
+            const sinX = Math.sin(sphereRotationRef.current.x);
+            const y2 = p.originalY * cosX - z1 * sinX;
+            const z2 = p.originalY * sinX + z1 * cosX;
+
+            p.x = x1;
+            p.y = y2;
+            // Store Z for scaling/opacity
+            p.zActual = z2;
           }
         } else {
           applyGravityWell(p);
         }
 
-        // Handle z-depth for non-home pages (after explosion)
-        if (!isHomePage && transitionPhaseRef.current === 'none') {
+        // Handle z-depth for non-special pages
+        if (!isGravityWellPage && !is3DSpherePage && transitionPhaseRef.current === 'none') {
           p.z -= p.speed;
           if (p.z < 0.05) {
             resetParticle(p);
@@ -643,12 +726,12 @@ export default function ParticleBackground() {
         if (typeof p.vy !== 'number' || isNaN(p.vy) || !isFinite(p.vy)) {
           p.vy = 0;
         }
-        
+
         // Clamp velocities to prevent extreme values
         const maxVelocity = 10;
         p.vx = Math.max(-maxVelocity, Math.min(maxVelocity, p.vx));
         p.vy = Math.max(-maxVelocity, Math.min(maxVelocity, p.vy));
-        
+
         // Apply strong deceleration during first second after explosion to keep particles visible
         if (postExplosionTimeRef.current > 0 && postExplosionTimeRef.current < 60) {
           // Gradually slow particles down over the first second
@@ -656,7 +739,7 @@ export default function ParticleBackground() {
           p.vx *= decelerationFactor;
           p.vy *= decelerationFactor;
         }
-        
+
         p.x += p.vx;
         p.y += p.vy;
         p.twinkle += p.twinkleSpeed;
@@ -673,15 +756,23 @@ export default function ParticleBackground() {
           continue;
         }
 
-        const perspective = 1 / p.z;
-        const px = cx + p.x * perspective;
-        const py = cy + p.y * perspective;
-        const scale = (0.4 + 2 / p.z) * p.size;
+        const perspective = is3DSpherePage ? 300 / (300 - p.zActual) : 1 / p.z;
+        const px = cx + p.x * (is3DSpherePage ? perspective : perspective);
+        const py = cy + p.y * (is3DSpherePage ? perspective : perspective);
+        const scale = is3DSpherePage ? (0.5 + 1.5 * perspective) * p.size : (0.4 + 2 / p.z) * p.size;
 
         const twinkleAlpha = 0.3 + 0.7 * Math.sin(p.twinkle);
-        const finalAlpha = p.opacity * (1.6 - p.z) * twinkleAlpha;
+        let finalAlpha = 1;
 
-        if (isHomePage) {
+        if (is3DSpherePage) {
+          // Fade out particles at the back
+          const zNorm = (p.zActual + 150) / 300;
+          finalAlpha = Math.max(0.1, Math.min(1, zNorm + 0.2)) * p.opacity;
+        } else {
+          finalAlpha = p.opacity * (1.6 - p.z) * twinkleAlpha;
+        }
+
+        if (isGravityWellPage) {
           const speed = Math.sqrt((p.vx || 0) ** 2 + (p.vy || 0) ** 2);
           if (speed > 0.1) {
             ctx.globalAlpha = finalAlpha * 0.2;
@@ -713,14 +804,14 @@ export default function ParticleBackground() {
       }
 
       // Draw code bubbles (home page only, not during explosion)
-      if ((isHomePage || transitionPhaseRef.current === 'collapsing') && transitionPhaseRef.current !== 'exploding') {
+      if ((isGravityWellPage || transitionPhaseRef.current === 'collapsing') && transitionPhaseRef.current !== 'exploding') {
         // Remove bubbles marked for deletion
         for (let i = codeBubbles.length - 1; i >= 0; i--) {
           if (codeBubbles[i].deleteMe) {
             codeBubbles.splice(i, 1);
           }
         }
-        
+
         for (let i = codeBubbles.length - 1; i >= 0; i--) {
           const bubble = codeBubbles[i];
 
@@ -735,7 +826,7 @@ export default function ParticleBackground() {
           if (transitionPhaseRef.current === 'collapsing') {
             // Use particle coordinates for distance calculation
             const bubbleDistance = Math.sqrt(bubble.x * bubble.x + bubble.y * bubble.y);
-            
+
             // If bubble reaches center, delete it (don't explode)
             if (bubbleDistance < 30) {
               // Mark for deletion - will be removed in next iteration
@@ -756,11 +847,11 @@ export default function ParticleBackground() {
             const currentSpeed = Math.sqrt(bubble.vx * bubble.vx + bubble.vy * bubble.vy) || 0.5;
             const angleToBlackHole = Math.atan2(dy, dx);
             const tangentialAngle = angleToBlackHole + Math.PI / 2;
-            
+
             // Spiral motion: balance between inward pull and tangential motion (gentler)
             const spiralInward = 0.5 + transitionProgressRef.current * 0.15; // Reduced from 0.3 to 0.15
             const spiralTangential = 1.0 - spiralInward;
-            
+
             // Calculate target velocity with spiral (less speed enhancement)
             const enhancedSpeed = currentSpeed * (1.0 + collapseStrength * 0.15); // Reduced from 0.3 to 0.15
             const targetVx =
@@ -859,12 +950,12 @@ export default function ParticleBackground() {
           if (typeof bubble.vy !== 'number' || isNaN(bubble.vy) || !isFinite(bubble.vy)) {
             bubble.vy = 0;
           }
-          
+
           // Clamp velocities to prevent extreme values
           const maxBubbleVelocity = 10;
           bubble.vx = Math.max(-maxBubbleVelocity, Math.min(maxBubbleVelocity, bubble.vx));
           bubble.vy = Math.max(-maxBubbleVelocity, Math.min(maxBubbleVelocity, bubble.vy));
-          
+
           bubble.x += bubble.vx;
           bubble.y += bubble.vy;
 
@@ -887,8 +978,8 @@ export default function ParticleBackground() {
           const bubbleRadius = bubble.size * perspective;
 
           // Fade out bubbles during transition
-          const transitionAlpha = transitionPhaseRef.current !== 'none' 
-            ? 1 - transitionProgressRef.current * 0.5 
+          const transitionAlpha = transitionPhaseRef.current !== 'none'
+            ? 1 - transitionProgressRef.current * 0.5
             : 1;
 
           ctx.globalAlpha = bubble.opacity * 0.2 * transitionAlpha;
@@ -921,6 +1012,10 @@ export default function ParticleBackground() {
 
     return () => {
       window.removeEventListener("resize", resize);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("mouseleave", handleMouseUp);
       window.removeEventListener('startCollapse', handleStartCollapse as EventListener);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);

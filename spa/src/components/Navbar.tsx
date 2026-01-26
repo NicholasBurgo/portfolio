@@ -73,7 +73,10 @@ export default function Navbar() {
   };
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
-    if (location.pathname === "/" && path !== "/") {
+    const isSpherePage = location.pathname === "/" || location.pathname === "/project-test";
+    const isTargetSpherePage = path === "/" || path === "/project-test";
+
+    if (isSpherePage && !isTargetSpherePage) {
       e.preventDefault();
       transitionState.setIsTransitioning(true);
       window.dispatchEvent(new CustomEvent('startCollapse', { detail: { targetPath: path } }));
@@ -127,6 +130,13 @@ export default function Navbar() {
           text="Contact"
           onClick={(e) => handleNavClick(e, "/contact")}
           isActive={isActive("/contact")}
+        />
+        <span className="text-white/40 select-none">*</span>
+        <MagneticLink
+          to="/project-test"
+          text="Test"
+          onClick={(e) => handleNavClick(e, "/project-test")}
+          isActive={isActive("/project-test")}
         />
       </nav>
     </header>
