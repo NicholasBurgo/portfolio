@@ -5,6 +5,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import RouteTransition from "./components/RouteTransition";
 import MouseFollower from "./components/MouseFollower";
 import ParticleBackground from "./components/ParticleBackground";
+import GlobalBackground from "./components/GlobalBackground";
 
 // Lazy load routes for code splitting
 // Vite's build wraps these with le() which uses Dt() to prepend base path
@@ -46,6 +47,7 @@ function App() {
 
   return (
     <>
+      <GlobalBackground />
       <ParticleBackground />
       <MouseFollower />
       <ScrollToTop />

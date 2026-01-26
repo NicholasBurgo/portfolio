@@ -183,72 +183,9 @@ html {
   overflow: hidden;
 }
 
-.section-bg::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: 0.8 !important;
-  z-index: 0;
-  transition: none;
-}
-
 .section-bg>* {
   position: relative;
   z-index: 1;
-}
-
-.home-bg::before {
-  background-image: url('/images/Galaxy.jpg');
-}
-
-.projects-bg::before {
-  background-image: url('/images/Galaxy.jpg');
-}
-
-.about-bg::before {
-  background-image: url('/images/Galaxy.jpg');
-}
-
-.contact-bg::before {
-  background-image: url('/images/Galaxy.jpg');
-}
-
-.blog-bg::before {
-  background-image: url('/images/Galaxy.jpg');
-}
-
-.blog-post-bg::before {
-  background-image: url('/images/Galaxy.jpg');
-}
-
-.section-bg.active::before {
-  opacity: 0.8;
-}
-
-.projects-bg.active::before {
-  opacity: 0.8;
-}
-
-.about-bg.active::before {
-  opacity: 0.8;
-}
-
-.contact-bg.active::before {
-  opacity: 0.8;
-}
-
-.blog-bg.active::before {
-  opacity: 0.8;
-}
-
-.blog-post-bg.active::before {
-  opacity: 0.8;
 }
 
 .project-card {
