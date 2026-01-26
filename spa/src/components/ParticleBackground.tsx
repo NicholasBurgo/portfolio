@@ -46,7 +46,13 @@ export default function ParticleBackground() {
       canvas.height = height;
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
-      cx = width / 2;
+
+      // Shift center to left for Project Test page
+      if (location.pathname === "/project-test") {
+        cx = width * 0.25;
+      } else {
+        cx = width / 2;
+      }
       cy = height / 2;
     };
 
