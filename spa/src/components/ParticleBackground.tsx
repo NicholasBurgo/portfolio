@@ -92,7 +92,7 @@ export default function ParticleBackground() {
       eventHorizonY: 70,
     };
 
-    const PARTICLE_COUNT = isHomePage ? 60 : 43;
+    const PARTICLE_COUNT = isHomePage ? 120 : 43;
     const CODE_BUBBLE_COUNT = isHomePage ? 8 : 0;
     const codeSymbols = ["()", "{}", "[]", "<>"];
     const codeTechs = [

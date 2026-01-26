@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 export default function GlobalBackground() {
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/" || location.pathname === "";
 
   useEffect(() => {
     const handleTransition = (event: CustomEvent) => {
@@ -14,6 +17,13 @@ export default function GlobalBackground() {
       window.removeEventListener('particleTransition', handleTransition as EventListener);
     };
   }, []);
+
+  // Home page: full opacity (0.8), fades during transition (0.4)
+  // Other pages: always faded (0.4)
+  const getOpacity = () => {
+    if (!isHomePage) return 0.4;
+    return isTransitioning ? 0.4 : 0.8;
+  };
 
   return (
     <div
@@ -29,7 +39,7 @@ export default function GlobalBackground() {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         zIndex: -10,
-        opacity: isTransitioning ? 0.4 : 0.8,
+        opacity: getOpacity(),
         transition: 'opacity 0.5s ease-in-out',
         pointerEvents: 'none',
       }}
