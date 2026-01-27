@@ -252,6 +252,8 @@ export default function Projects() {
                         alt={project.title}
                         className="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20"
                         loading="lazy"
+                        decoding="async"
+                        fetchPriority={index < 4 ? "high" : "low"}
                       />
                     ) : (
                       <div className="w-full h-48 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-2xl mb-6 border border-white/20 flex items-center justify-center">

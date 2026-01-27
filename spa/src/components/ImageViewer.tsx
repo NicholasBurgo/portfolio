@@ -82,7 +82,14 @@ export default function ImageViewer({
           <i className="fa-solid fa-chevron-left"></i>
         </button>
       )}
-      <img id="viewer-image" src={imageSrc} alt="Full size image" />
+      <img
+        id="viewer-image"
+        src={imageSrc}
+        alt="Full size image"
+        loading="eager"
+        decoding="async"
+        fetchPriority="high"
+      />
       {imageList.length > 1 && currentIndex < imageList.length - 1 && (
         <button
           id="viewer-next"

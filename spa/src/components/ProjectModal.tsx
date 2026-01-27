@@ -124,6 +124,9 @@ export default function ProjectModal({ project, isOpen, onClose, onImageClick }:
                     alt={`${project.title} screenshot ${i + 1}`}
                     data-img-idx={i}
                     className="cursor-pointer"
+                    loading={i === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                    fetchPriority={i === 0 ? "high" : "low"}
                     onClick={() => {
                       if (onImageClick) {
                         onImageClick(img, i, project.images);

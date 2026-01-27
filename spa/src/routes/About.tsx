@@ -95,6 +95,7 @@ export default function About() {
                         alt="Nicholas Burgo portrait"
                         className="w-32 h-32 object-cover rounded-full border-2 border-white/20"
                         loading="lazy"
+                        decoding="async"
                       />
                     </div>
                     <div className="flex-1 text-center md:text-left">

@@ -976,8 +976,6 @@ html {
   transform: perspective(1000px) rotateX(10deg) rotateY(-10deg) rotateZ(2deg);
   transform-style: preserve-3d;
   transition: transform 0.5s ease;
-}
-
-.tilted-3d:hover {
+}.tilted-3d:hover {
   transform: perspective(1000px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
 }
