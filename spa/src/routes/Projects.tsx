@@ -14,7 +14,15 @@ export default function Projects() {
   const [imageViewerIndex, setImageViewerIndex] = useState(0);
   const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
   const [imageViewerList, setImageViewerList] = useState<string[]>([]);
+  const [cardImageIndices, setCardImageIndices] = useState<Record<string, number>>({});
   const titleRef = useRef<HTMLHeadingElement>(null);
+
+  const setCardImageIndex = (key: string, index: number, max: number) => {
+    setCardImageIndices((prev) => ({
+      ...prev,
+      [key]: ((index % max) + max) % max,
+    }));
+  };
 
   const filteredProjects =
     currentFilter === "all"
@@ -239,35 +247,101 @@ export default function Projects() {
                   transform: `translateX(-${currentIndex * (100 / visibleProjects)}%)`,
                 }}
               >
-                {filteredProjects.map((project, index) => (
-                  <div
-                    key={index}
-                    onClick={() => openProjectModal(project)}
-                    className="project-card p-6 rounded-3xl opacity-0 animate-scale-in"
-                    style={{ animationDelay: `${index * 0.1}s` }}
-                  >
-                    {project.thumbnail ? (
-                      <img
-                        src={project.thumbnail}
-                        alt={project.title}
-                        className="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20"
-                        loading="lazy"
-                        decoding="async"
-                        fetchPriority={index < 4 ? "high" : "low"}
-                      />
-                    ) : (
-                      <div className="w-full h-48 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-2xl mb-6 border border-white/20 flex items-center justify-center">
-                        <i className="fas fa-code text-6xl text-blue-400"></i>
+                {filteredProjects.map((project, index) => {
+                  const allImages = project.thumbnail
+                    ? [project.thumbnail, ...(project.images || [])]
+                    : project.images || [];
+                  const hasCarousel = allImages.length > 1;
+                  const carouselKey = `${project.title}-${index}`;
+                  const imgIndex = cardImageIndices[carouselKey] ?? 0;
+                  const currentImg = allImages[imgIndex];
+
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => openProjectModal(project)}
+                      className="project-card p-6 rounded-3xl opacity-0 animate-scale-in"
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    >
+                      <div className="relative w-full h-48 mb-6 rounded-2xl overflow-hidden border border-white/20">
+                        {allImages.length > 0 ? (
+                          <>
+                            <img
+                              src={currentImg}
+                              alt={project.title}
+                              className="w-full h-48 object-cover"
+                              loading="lazy"
+                              decoding="async"
+                              fetchPriority={index < 4 ? "high" : "low"}
+                            />
+                            {hasCarousel && (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setCardImageIndex(
+                                      carouselKey,
+                                      imgIndex - 1,
+                                      allImages.length
+                                    );
+                                  }}
+                                  className="absolute left-1 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center text-sm transition-colors z-10"
+                                  aria-label="Previous image"
+                                >
+                                  <i className="fas fa-chevron-left"></i>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setCardImageIndex(
+                                      carouselKey,
+                                      imgIndex + 1,
+                                      allImages.length
+                                    );
+                                  }}
+                                  className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center text-sm transition-colors z-10"
+                                  aria-label="Next image"
+                                >
+                                  <i className="fas fa-chevron-right"></i>
+                                </button>
+                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                                  {allImages.map((_, i) => (
+                                    <button
+                                      key={i}
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCardImageIndex(carouselKey, i, allImages.length);
+                                      }}
+                                      className={`w-2 h-2 rounded-full transition-colors ${
+                                        i === imgIndex
+                                          ? "bg-white"
+                                          : "bg-white/40 hover:bg-white/60"
+                                      }`}
+                                      aria-label={`Go to image ${i + 1}`}
+                                    />
+                                  ))}
+                                </div>
+                              </>
+                            )}
+                          </>
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-600/20 flex items-center justify-center">
+                            <i className="fas fa-code text-6xl text-blue-400"></i>
+                          </div>
+                        )}
                       </div>
-                    )}
-                    <h3 className="text-2xl font-bold text-white mb-4 h-16 flex items-center">
-                      {project.title}
-                    </h3>
-                    <p className="text-white/90 text-sm leading-relaxed font-light">
-                      {project.desc}
-                    </p>
-                  </div>
-                ))}
+                      <h3 className="text-2xl font-bold text-white mb-4 h-16 flex items-center">
+                        {project.title}
+                      </h3>
+                      <p className="text-white/90 text-sm leading-relaxed font-light">
+                        {project.desc}
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
