@@ -18,8 +18,10 @@
       (function() {
         var redirect = sessionStorage.redirect;
         delete sessionStorage.redirect;
-        if (redirect && redirect !== location.pathname) {
-          history.replaceState(null, null, redirect);
+        if (redirect && redirect !== '/') {
+          // Prepend base path if the redirect is just the route path
+          var fullPath = '/portfolio' + redirect;
+          history.replaceState(null, null, fullPath);
         }
       })();
     </script>

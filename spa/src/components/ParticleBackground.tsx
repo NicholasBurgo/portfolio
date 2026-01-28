@@ -340,19 +340,18 @@ export default function ParticleBackground() {
           p.vy = 0;
         }
 
-        // Enhanced gravity well with spiral motion - gentler pull (dialed back by 2)
-        const collapseStrength = 1.0 + transitionProgressRef.current * 2; // Reduced from 4 to 2
+        // Enhanced gravity well with spiral motion (1.5x faster)
+        const collapseStrength = 1.0 + transitionProgressRef.current * 3; // Increased for 1.5x speed
         const currentSpeed = Math.sqrt(p.vx * p.vx + p.vy * p.vy) || 0.5; // Fallback speed
         const angleToBlackHole = Math.atan2(dy, dx);
         const tangentialAngle = angleToBlackHole + Math.PI / 2;
         
-        // Spiral motion: balance between inward pull and tangential motion
-        // More gradual change - gentler spiral collapse
-        const spiralInward = 0.5 + transitionProgressRef.current * 0.15; // Reduced from 0.3 to 0.15 (0.5 -> 0.65)
-        const spiralTangential = 1.0 - spiralInward; // 0.5 -> 0.35 (more tangential preserved)
+        // Spiral motion: balance between inward pull and tangential motion (1.5x faster)
+        const spiralInward = 0.5 + transitionProgressRef.current * 0.225; // Increased for 1.5x speed
+        const spiralTangential = 1.0 - spiralInward;
         
-        // Calculate target velocity with spiral (less speed enhancement)
-        const enhancedSpeed = currentSpeed * (1.0 + collapseStrength * 0.15); // Reduced from 0.3 to 0.15
+        // Calculate target velocity with spiral (1.5x speed enhancement)
+        const enhancedSpeed = currentSpeed * (1.0 + collapseStrength * 0.225); // Increased for 1.5x speed
         const targetVx =
           Math.cos(angleToBlackHole) * enhancedSpeed * spiralInward +
           Math.cos(tangentialAngle) * enhancedSpeed * spiralTangential;
@@ -488,8 +487,8 @@ export default function ParticleBackground() {
 
       // Update transition progress
       if (transitionPhaseRef.current === 'collapsing') {
-        // Slower progress increment to give more time for collapse
-        transitionProgressRef.current += 0.01;
+        // Progress increment (1.5x faster)
+        transitionProgressRef.current += 0.015;
         
         // Check if all particles are collapsed (using particle coordinates, not screen)
         const allCollapsed = particles.every(p => {
@@ -751,18 +750,18 @@ export default function ParticleBackground() {
               bubble.vy = 0;
             }
 
-            // Enhanced gravity well with spiral motion for bubbles (dialed back by 2)
-            const collapseStrength = 1.0 + transitionProgressRef.current * 2; // Reduced from 4 to 2
+            // Enhanced gravity well with spiral motion for bubbles (1.5x faster)
+            const collapseStrength = 1.0 + transitionProgressRef.current * 3; // Increased for 1.5x speed
             const currentSpeed = Math.sqrt(bubble.vx * bubble.vx + bubble.vy * bubble.vy) || 0.5;
             const angleToBlackHole = Math.atan2(dy, dx);
             const tangentialAngle = angleToBlackHole + Math.PI / 2;
             
-            // Spiral motion: balance between inward pull and tangential motion (gentler)
-            const spiralInward = 0.5 + transitionProgressRef.current * 0.15; // Reduced from 0.3 to 0.15
+            // Spiral motion: balance between inward pull and tangential motion (1.5x faster)
+            const spiralInward = 0.5 + transitionProgressRef.current * 0.225; // Increased for 1.5x speed
             const spiralTangential = 1.0 - spiralInward;
             
-            // Calculate target velocity with spiral (less speed enhancement)
-            const enhancedSpeed = currentSpeed * (1.0 + collapseStrength * 0.15); // Reduced from 0.3 to 0.15
+            // Calculate target velocity with spiral (1.5x speed enhancement)
+            const enhancedSpeed = currentSpeed * (1.0 + collapseStrength * 0.225); // Increased for 1.5x speed
             const targetVx =
               Math.cos(angleToBlackHole) * enhancedSpeed * spiralInward +
               Math.cos(tangentialAngle) * enhancedSpeed * spiralTangential;

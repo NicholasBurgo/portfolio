@@ -40,18 +40,23 @@ export default function Home() {
         nameWrapper.style.display = "inline-flex";
         nameWrapper.style.gap = "0";
 
+        // Check if mobile (under 640px) - 2x bigger on mobile
+        const isMobile = window.innerWidth < 640;
+        const fontSize = isMobile ? "4.5rem" : (window.innerWidth < 768 ? "3.75rem" : "5rem");
+
         fullName.split("").forEach((char) => {
             const span = document.createElement("span");
-            span.className = "text-4xl sm:text-5xl md:text-[5rem]";
 
             const letterSpan = document.createElement("span");
             if (char === " ") {
                 letterSpan.innerHTML = "&nbsp;";
-                letterSpan.classList.add("mx-2");
+                letterSpan.style.marginLeft = "0.5rem";
+                letterSpan.style.marginRight = "0.5rem";
             } else {
                 letterSpan.textContent = char;
             }
 
+            letterSpan.style.fontSize = fontSize;
             letterSpan.style.display = "inline-block";
             letterSpan.style.transition = "transform 0.2s ease-out";
 
@@ -76,14 +81,16 @@ export default function Home() {
         // Mouse-over effect for name
         if (nameLetters.length === 0) return;
 
-        const handleMouseMove = (e: MouseEvent) => {
+        let resetTimeout: number | null = null;
+
+        const updateLetters = (clientX: number, clientY: number) => {
             nameLetters.forEach((letter) => {
                 const rect = letter.getBoundingClientRect();
                 const letterX = rect.left + rect.width / 2;
                 const letterY = rect.top + rect.height / 2;
 
-                const distX = e.clientX - letterX;
-                const distY = e.clientY - letterY;
+                const distX = clientX - letterX;
+                const distY = clientY - letterY;
                 const distance = Math.sqrt(distX ** 2 + distY ** 2);
 
                 if (distance < 80) {
@@ -96,8 +103,55 @@ export default function Home() {
             });
         };
 
+        const resetLetters = () => {
+            nameLetters.forEach((letter) => {
+                letter.style.transform = "";
+            });
+        };
+
+        const clearResetTimeout = () => {
+            if (resetTimeout) {
+                clearTimeout(resetTimeout);
+                resetTimeout = null;
+            }
+        };
+
+        const handleMouseMove = (e: MouseEvent) => {
+            updateLetters(e.clientX, e.clientY);
+            clearResetTimeout();
+        };
+
+        const handleTouch = (e: TouchEvent) => {
+            const touch = e.touches[0];
+            if (touch) {
+                updateLetters(touch.clientX, touch.clientY);
+            }
+            clearResetTimeout();
+        };
+
+        const handleTouchEnd = () => {
+            clearResetTimeout();
+            resetTimeout = window.setTimeout(() => {
+                resetLetters();
+            }, 500);
+        };
+
         document.addEventListener("mousemove", handleMouseMove);
-        return () => document.removeEventListener("mousemove", handleMouseMove);
+        document.addEventListener("touchstart", handleTouch, { passive: true });
+        document.addEventListener("touchmove", handleTouch, { passive: true });
+        document.addEventListener("touchend", handleTouchEnd);
+        document.addEventListener("touchcancel", handleTouchEnd);
+
+        return () => {
+            document.removeEventListener("mousemove", handleMouseMove);
+            document.removeEventListener("touchstart", handleTouch);
+            document.removeEventListener("touchmove", handleTouch);
+            document.removeEventListener("touchend", handleTouchEnd);
+            document.removeEventListener("touchcancel", handleTouchEnd);
+            if (resetTimeout) {
+                clearTimeout(resetTimeout);
+            }
+        };
     }, [nameLetters]);
 
     useEffect(() => {
@@ -124,7 +178,8 @@ export default function Home() {
 
                 if (char === " ") {
                     span.innerHTML = "&nbsp;";
-                    span.classList.add("mx-1");
+                    span.style.marginLeft = "0.25rem";
+                    span.style.marginRight = "0.25rem";
                 } else {
                     span.textContent = char;
                 }
@@ -143,7 +198,14 @@ export default function Home() {
             createLetterSpans(currentPhrase);
 
             if (lineWrapper) {
-                lineWrapper.classList.add("glitch-in");
+                // Start hidden, then fade in
+                lineWrapper.style.opacity = "0";
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        lineWrapper!.style.opacity = "";
+                        lineWrapper!.classList.add("glitch-in");
+                    });
+                });
 
                 setTimeout(() => {
                     glitchOutPhrase();
@@ -160,18 +222,20 @@ export default function Home() {
             setTimeout(() => {
                 currentPhraseIndex = (currentPhraseIndex + 1) % phrases.length;
                 glitchInPhrase();
-            }, 300);
+            }, 350);
         };
 
         // Mouse-over effect for subtitle
-        const handleSubtitleMouseMove = (e: MouseEvent) => {
+        let subtitleResetTimeout: number | null = null;
+
+        const updateSubtitleLetters = (clientX: number, clientY: number) => {
             letterElements.forEach((letter) => {
                 const rect = letter.getBoundingClientRect();
                 const letterX = rect.left + rect.width / 2;
                 const letterY = rect.top + rect.height / 2;
 
-                const distX = e.clientX - letterX;
-                const distY = e.clientY - letterY;
+                const distX = clientX - letterX;
+                const distY = clientY - letterY;
                 const distance = Math.sqrt(distX ** 2 + distY ** 2);
 
                 if (distance < 80) {
@@ -184,12 +248,56 @@ export default function Home() {
             });
         };
 
+        const resetSubtitleLetters = () => {
+            letterElements.forEach((letter) => {
+                letter.style.transform = "";
+            });
+        };
+
+        const clearSubtitleResetTimeout = () => {
+            if (subtitleResetTimeout) {
+                clearTimeout(subtitleResetTimeout);
+                subtitleResetTimeout = null;
+            }
+        };
+
+        const handleSubtitleMouseMove = (e: MouseEvent) => {
+            updateSubtitleLetters(e.clientX, e.clientY);
+            clearSubtitleResetTimeout();
+        };
+
+        const handleSubtitleTouch = (e: TouchEvent) => {
+            const touch = e.touches[0];
+            if (touch) {
+                updateSubtitleLetters(touch.clientX, touch.clientY);
+            }
+            clearSubtitleResetTimeout();
+        };
+
+        const handleSubtitleTouchEnd = () => {
+            clearSubtitleResetTimeout();
+            subtitleResetTimeout = window.setTimeout(() => {
+                resetSubtitleLetters();
+            }, 500);
+        };
+
         document.addEventListener("mousemove", handleSubtitleMouseMove);
+        document.addEventListener("touchstart", handleSubtitleTouch, { passive: true });
+        document.addEventListener("touchmove", handleSubtitleTouch, { passive: true });
+        document.addEventListener("touchend", handleSubtitleTouchEnd);
+        document.addEventListener("touchcancel", handleSubtitleTouchEnd);
 
         setTimeout(glitchInPhrase, 500);
 
         return () => {
             document.removeEventListener("mousemove", handleSubtitleMouseMove);
+            document.removeEventListener("touchstart", handleSubtitleTouch);
+            document.removeEventListener("touchmove", handleSubtitleTouch);
+            document.removeEventListener("touchend", handleSubtitleTouchEnd);
+            document.removeEventListener("touchcancel", handleSubtitleTouchEnd);
+            if (subtitleResetTimeout) {
+                clearTimeout(subtitleResetTimeout);
+            }
         };
     }, [subtitleReady]);
 
@@ -232,13 +340,13 @@ export default function Home() {
                 id="home"
                 className="section-bg home-bg min-h-screen flex flex-col items-center justify-between px-4 text-center pt-26 pb-8 relative"
             >
-                <div className="flex-1 flex flex-col items-center justify-center relative z-10">
+                <div className="flex-1 flex flex-col items-center justify-center relative z-10 -mt-20 sm:mt-0">
                     <div className="animate-scale-in" style={{ transform: 'rotate(2deg)' }}>
-                        <h2 className="text-4xl sm:text-6xl md:text-8xl lg:text-9xl font-extrabold tracking-tight text-white mb-14 whitespace-nowrap">
+                        <h2 className="font-extrabold tracking-tight text-white mb-14 whitespace-nowrap">
                             <div id="name" ref={nameRef} className="flex justify-center gap-0"></div>
                         </h2>
                         <span className="mx-4"></span>
-                        <p className="mt-8 text-base sm:text-lg text-white/80 tracking-widest uppercase">
+                        <p className="mt-4 sm:mt-16 text-base sm:text-lg text-white/80 tracking-widest uppercase">
                             <span
                                 id="typing-subtitle"
                                 ref={subtitleRef}

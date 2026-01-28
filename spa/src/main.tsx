@@ -50,11 +50,16 @@ class ErrorBoundary extends React.Component<
   }
 }
 
+// Ensure trailing slash on base path for consistency
+if (window.location.pathname === '/portfolio') {
+  window.history.replaceState(null, '', '/portfolio/' + window.location.search + window.location.hash);
+}
+
 // Handle GitHub Pages 404 redirect
 if (sessionStorage.redirect) {
   const redirect = sessionStorage.redirect;
   sessionStorage.removeItem('redirect');
-  window.history.replaceState(null, '', redirect);
+  window.history.replaceState(null, '', '/portfolio' + redirect);
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

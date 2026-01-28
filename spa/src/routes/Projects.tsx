@@ -1,11 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import ProjectModal from "../components/ProjectModal";
 import ImageViewer from "../components/ImageViewer";
 import { projectData, Project } from "../lib/projectData";
 
+type SortOrder = "newest" | "oldest";
+
 export default function Projects() {
   const [currentFilter, setCurrentFilter] = useState<string>("all");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("newest");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleProjects, setVisibleProjects] = useState(4);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -14,20 +17,61 @@ export default function Projects() {
   const [imageViewerIndex, setImageViewerIndex] = useState(0);
   const [isImageViewerOpen, setIsImageViewerOpen] = useState(false);
   const [imageViewerList, setImageViewerList] = useState<string[]>([]);
-  const [cardImageIndices, setCardImageIndices] = useState<Record<string, number>>({});
+  const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const filterDropdownRef = useRef<HTMLDivElement>(null);
+  const sortDropdownRef = useRef<HTMLDivElement>(null);
 
-  const setCardImageIndex = (key: string, index: number, max: number) => {
-    setCardImageIndices((prev) => ({
-      ...prev,
-      [key]: ((index % max) + max) % max,
-    }));
-  };
+  // Filter options for dropdown
+  const filterOptions = [
+    { value: "all", label: "All Projects" },
+    { value: "fullstack", label: "Full Stack" },
+    { value: "gamedev", label: "Game Dev" },
+    { value: "database", label: "Database" },
+    { value: "frontend", label: "Frontend" },
+    { value: "AI", label: "AI" },
+  ];
 
-  const filteredProjects =
-    currentFilter === "all"
-      ? projectData
-      : projectData.filter((p) => p.category === currentFilter);
+  const sortOptions = [
+    { value: "newest", label: "Newest First" },
+    { value: "oldest", label: "Oldest First" },
+  ];
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (filterDropdownRef.current && !filterDropdownRef.current.contains(event.target as Node)) {
+        setFilterDropdownOpen(false);
+      }
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target as Node)) {
+        setSortDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const filteredAndSortedProjects = useMemo(() => {
+    let filtered =
+      currentFilter === "all"
+        ? [...projectData]
+        : projectData.filter((p) => p.category === currentFilter);
+
+    // Sort by dateRange.end (null means ongoing, treat as most recent)
+    filtered.sort((a, b) => {
+      const dateA = a.dateRange.end || "9999-12"; // Ongoing projects sort as most recent
+      const dateB = b.dateRange.end || "9999-12";
+      if (sortOrder === "newest") {
+        return dateB.localeCompare(dateA); // Newest first (descending)
+      } else {
+        return dateA.localeCompare(dateB); // Oldest first (ascending)
+      }
+    });
+
+    return filtered;
+  }, [currentFilter, sortOrder]);
 
   useEffect(() => {
     const updateVisibleProjects = () => {
@@ -49,7 +93,7 @@ export default function Projects() {
 
   useEffect(() => {
     setCurrentIndex(0);
-  }, [currentFilter]);
+  }, [currentFilter, sortOrder]);
 
   useEffect(() => {
     // Title letter hover animation
@@ -57,15 +101,16 @@ export default function Projects() {
     if (!title) return;
 
     const letters = title.querySelectorAll("span");
+    let resetTimeout: number | null = null;
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const updateLetters = (clientX: number, clientY: number) => {
       letters.forEach((letter) => {
         const rect = letter.getBoundingClientRect();
         const letterX = rect.left + rect.width / 2;
         const letterY = rect.top + rect.height / 2;
 
-        const distX = e.clientX - letterX;
-        const distY = e.clientY - letterY;
+        const distX = clientX - letterX;
+        const distY = clientY - letterY;
         const distance = Math.sqrt(distX ** 2 + distY ** 2);
 
         if (distance < 80) {
@@ -78,8 +123,56 @@ export default function Projects() {
       });
     };
 
+    const resetLetters = () => {
+      letters.forEach((letter) => {
+        (letter as HTMLElement).style.transform = "";
+      });
+    };
+
+    const clearResetTimeout = () => {
+      if (resetTimeout) {
+        clearTimeout(resetTimeout);
+        resetTimeout = null;
+      }
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      updateLetters(e.clientX, e.clientY);
+      clearResetTimeout();
+    };
+
+    const handleTouch = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (touch) {
+        updateLetters(touch.clientX, touch.clientY);
+      }
+      clearResetTimeout();
+    };
+
+    const handleTouchEnd = () => {
+      // Reset letters after 500ms
+      clearResetTimeout();
+      resetTimeout = window.setTimeout(() => {
+        resetLetters();
+      }, 500);
+    };
+
     document.addEventListener("mousemove", handleMouseMove);
-    return () => document.removeEventListener("mousemove", handleMouseMove);
+    document.addEventListener("touchstart", handleTouch, { passive: true });
+    document.addEventListener("touchmove", handleTouch, { passive: true });
+    document.addEventListener("touchend", handleTouchEnd);
+    document.addEventListener("touchcancel", handleTouchEnd);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("touchstart", handleTouch);
+      document.removeEventListener("touchmove", handleTouch);
+      document.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener("touchcancel", handleTouchEnd);
+      if (resetTimeout) {
+        clearTimeout(resetTimeout);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -98,7 +191,7 @@ export default function Projects() {
 
 
   const nextSlide = () => {
-    const maxIndex = Math.max(0, filteredProjects.length - visibleProjects);
+    const maxIndex = Math.max(0, filteredAndSortedProjects.length - visibleProjects);
     if (currentIndex < maxIndex) {
       setCurrentIndex(currentIndex + 1);
     } else {
@@ -110,7 +203,7 @@ export default function Projects() {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
     } else {
-      const maxIndex = Math.max(0, filteredProjects.length - visibleProjects);
+      const maxIndex = Math.max(0, filteredAndSortedProjects.length - visibleProjects);
       setCurrentIndex(maxIndex);
     }
   };
@@ -148,8 +241,8 @@ export default function Projects() {
     }
   };
 
-  const maxIndex = Math.max(0, filteredProjects.length - visibleProjects);
-  const showArrows = filteredProjects.length > visibleProjects;
+  const maxIndex = Math.max(0, filteredAndSortedProjects.length - visibleProjects);
+  const showArrows = filteredAndSortedProjects.length > visibleProjects;
 
   return (
     <>
@@ -185,7 +278,79 @@ export default function Projects() {
             </h3>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-4 mb-8 animate-fade-in-up animation-delay-600">
+          {/* Filter dropdowns for small devices */}
+          <div className="lg:hidden flex flex-wrap justify-center gap-4 mb-6 animate-fade-in-up animation-delay-600 relative z-[100]">
+            {/* Category Filter Dropdown */}
+            <div className="relative" ref={filterDropdownRef}>
+              <button
+                onClick={() => {
+                  setFilterDropdownOpen(!filterDropdownOpen);
+                  setSortDropdownOpen(false);
+                }}
+                className="filter-btn flex items-center gap-2"
+              >
+                {filterOptions.find(o => o.value === currentFilter)?.label}
+                <i className={`fas fa-chevron-down text-xs transition-transform ${filterDropdownOpen ? 'rotate-180' : ''}`}></i>
+              </button>
+              {filterDropdownOpen && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 min-w-[160px] rounded-2xl overflow-hidden border border-blue-400/30 bg-[#0a0f1a]/95 backdrop-blur-lg shadow-xl z-[100]">
+                  {filterOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => {
+                        setCurrentFilter(option.value);
+                        setFilterDropdownOpen(false);
+                      }}
+                      className={`w-full px-4 py-3 text-left transition-all ${
+                        currentFilter === option.value
+                          ? 'bg-blue-500/20 text-blue-400'
+                          : 'text-white/90 hover:bg-blue-500/10 hover:text-blue-400'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Sort Dropdown */}
+            <div className="relative" ref={sortDropdownRef}>
+              <button
+                onClick={() => {
+                  setSortDropdownOpen(!sortDropdownOpen);
+                  setFilterDropdownOpen(false);
+                }}
+                className="filter-btn flex items-center gap-2"
+              >
+                {sortOptions.find(o => o.value === sortOrder)?.label}
+                <i className={`fas fa-chevron-down text-xs transition-transform ${sortDropdownOpen ? 'rotate-180' : ''}`}></i>
+              </button>
+              {sortDropdownOpen && (
+                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 min-w-[160px] rounded-2xl overflow-hidden border border-blue-400/30 bg-[#0a0f1a]/95 backdrop-blur-lg shadow-xl z-[100]">
+                  {sortOptions.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => {
+                        setSortOrder(option.value as SortOrder);
+                        setSortDropdownOpen(false);
+                      }}
+                      className={`w-full px-4 py-3 text-left transition-all ${
+                        sortOrder === option.value
+                          ? 'bg-blue-500/20 text-blue-400'
+                          : 'text-white/90 hover:bg-blue-500/10 hover:text-blue-400'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Filter buttons for large devices */}
+          <div className="hidden lg:flex flex-wrap justify-center gap-4 mb-6 animate-fade-in-up animation-delay-600">
             <button
               className={`filter-btn ${currentFilter === "all" ? "active" : ""}`}
               onClick={() => setCurrentFilter("all")}
@@ -216,11 +381,34 @@ export default function Projects() {
             >
               <i className="fas fa-palette mr-2"></i>Frontend
             </button>
+            <button
+              className={`filter-btn ${currentFilter === "AI" ? "active" : ""}`}
+              onClick={() => setCurrentFilter("AI")}
+            >
+              <i className="fas fa-brain mr-2"></i>AI
+            </button>
+          </div>
+
+          {/* Sort buttons for large devices */}
+          <div className="hidden lg:flex flex-wrap justify-center gap-4 mb-8 animate-fade-in-up animation-delay-800">
+            <button
+              className={`filter-btn ${sortOrder === "newest" ? "active" : ""}`}
+              onClick={() => setSortOrder("newest")}
+            >
+              <i className="fas fa-sort-amount-down mr-2"></i>Newest First
+            </button>
+            <button
+              className={`filter-btn ${sortOrder === "oldest" ? "active" : ""}`}
+              onClick={() => setSortOrder("oldest")}
+            >
+              <i className="fas fa-sort-amount-up mr-2"></i>Oldest First
+            </button>
           </div>
 
           <div className="relative mt-4">
+            {/* Side arrows for large devices */}
             {showArrows && (
-              <>
+              <div className="hidden lg:block">
                 <button
                   id="carousel-prev"
                   className={`carousel-nav carousel-nav-left ${currentIndex === 0 ? "hidden" : ""}`}
@@ -237,7 +425,7 @@ export default function Projects() {
                 >
                   <i className="fas fa-chevron-right"></i>
                 </button>
-              </>
+              </div>
             )}
 
             <div className="carousel-container">
@@ -247,103 +435,70 @@ export default function Projects() {
                   transform: `translateX(-${currentIndex * (100 / visibleProjects)}%)`,
                 }}
               >
-                {filteredProjects.map((project, index) => {
-                  const allImages = project.thumbnail
-                    ? [project.thumbnail, ...(project.images || [])]
-                    : project.images || [];
-                  const hasCarousel = allImages.length > 1;
-                  const carouselKey = `${project.title}-${index}`;
-                  const imgIndex = cardImageIndices[carouselKey] ?? 0;
-                  const currentImg = allImages[imgIndex];
-
-                  return (
-                    <div
-                      key={index}
-                      onClick={() => openProjectModal(project)}
-                      className="project-card p-6 rounded-3xl opacity-0 animate-scale-in"
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    >
-                      <div className="relative w-full h-48 mb-6 rounded-2xl overflow-hidden border border-white/20">
-                        {allImages.length > 0 ? (
-                          <>
-                            <img
-                              src={currentImg}
-                              alt={project.title}
-                              className="w-full h-48 object-cover"
-                              loading="lazy"
-                              decoding="async"
-                              fetchPriority={index < 4 ? "high" : "low"}
-                            />
-                            {hasCarousel && (
-                              <>
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setCardImageIndex(
-                                      carouselKey,
-                                      imgIndex - 1,
-                                      allImages.length
-                                    );
-                                  }}
-                                  className="absolute left-1 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center text-sm transition-colors z-10"
-                                  aria-label="Previous image"
-                                >
-                                  <i className="fas fa-chevron-left"></i>
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setCardImageIndex(
-                                      carouselKey,
-                                      imgIndex + 1,
-                                      allImages.length
-                                    );
-                                  }}
-                                  className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 hover:bg-black/70 text-white flex items-center justify-center text-sm transition-colors z-10"
-                                  aria-label="Next image"
-                                >
-                                  <i className="fas fa-chevron-right"></i>
-                                </button>
-                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                                  {allImages.map((_, i) => (
-                                    <button
-                                      key={i}
-                                      type="button"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setCardImageIndex(carouselKey, i, allImages.length);
-                                      }}
-                                      className={`w-2 h-2 rounded-full transition-colors ${
-                                        i === imgIndex
-                                          ? "bg-white"
-                                          : "bg-white/40 hover:bg-white/60"
-                                      }`}
-                                      aria-label={`Go to image ${i + 1}`}
-                                    />
-                                  ))}
-                                </div>
-                              </>
-                            )}
-                          </>
-                        ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-purple-600/20 flex items-center justify-center">
-                            <i className="fas fa-code text-6xl text-blue-400"></i>
-                          </div>
-                        )}
+                {filteredAndSortedProjects.map((project, index) => (
+                  <div
+                    key={project.id}
+                    onClick={() => openProjectModal(project)}
+                    className="project-card p-6 rounded-3xl opacity-0 animate-scale-in"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <h3 className="text-2xl font-bold text-white mb-4 h-16 flex items-center border-b border-transparent pb-4">
+                      {project.title}
+                    </h3>
+                    {project.thumbnail ? (
+                      <img
+                        src={project.thumbnail}
+                        alt={project.title}
+                        className="w-full h-48 object-cover rounded-2xl mb-6 border border-white/20"
+                        loading="lazy"
+                        decoding="async"
+                        fetchPriority={index < 4 ? "high" : "low"}
+                      />
+                    ) : (
+                      <div className="w-full h-48 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-2xl mb-6 border border-white/20 flex items-center justify-center">
+                        <i className="fas fa-code text-6xl text-blue-400"></i>
                       </div>
-                      <h3 className="text-2xl font-bold text-white mb-4 h-16 flex items-center">
-                        {project.title}
-                      </h3>
-                      <p className="text-white/90 text-sm leading-relaxed font-light">
-                        {project.desc}
-                      </p>
-                    </div>
-                  );
-                })}
+                    )}
+                    <p className="text-white/90 text-sm leading-relaxed font-light">
+                      {project.summary}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
+
+            {/* Bottom arrows for mobile */}
+            {filteredAndSortedProjects.length > 1 && (
+              <div className="lg:hidden flex justify-center items-center gap-6 mt-6">
+                <button
+                  onClick={prevSlide}
+                  disabled={currentIndex === 0}
+                  className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                    currentIndex === 0
+                      ? "bg-white/5 text-white/30 cursor-not-allowed"
+                      : "bg-white/10 text-blue-400 border border-blue-400/30 hover:bg-blue-500/20 hover:border-blue-400/50"
+                  }`}
+                  aria-label="Previous project"
+                >
+                  <i className="fas fa-chevron-left"></i>
+                </button>
+                <span className="text-white/70 text-sm">
+                  {currentIndex + 1} / {filteredAndSortedProjects.length}
+                </span>
+                <button
+                  onClick={nextSlide}
+                  disabled={currentIndex >= maxIndex}
+                  className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${
+                    currentIndex >= maxIndex
+                      ? "bg-white/5 text-white/30 cursor-not-allowed"
+                      : "bg-white/10 text-blue-400 border border-blue-400/30 hover:bg-blue-500/20 hover:border-blue-400/50"
+                  }`}
+                  aria-label="Next project"
+                >
+                  <i className="fas fa-chevron-right"></i>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </section>

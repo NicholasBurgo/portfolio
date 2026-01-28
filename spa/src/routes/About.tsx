@@ -1,6 +1,44 @@
 import { useEffect, useRef } from "react";
 import { Helmet } from "react-helmet-async";
 
+const skillGroups = [
+  {
+    title: "Core Engineering",
+    items: [
+      "Backend API Design and Application Architecture",
+      "Data Modeling and Relational Database Design",
+      "Asynchronous Systems and State Management",
+    ],
+  },
+  {
+    title: "Backend and Web",
+    items: [
+      "Python, Java, JavaScript",
+      "FastAPI, REST APIs, Authentication",
+      "PostgreSQL, SQL",
+      "HTML, CSS, Frontend Integration",
+    ],
+  },
+  {
+    title: "Data and Applied AI",
+    items: [
+      "Data Analysis and Feature Engineering",
+      "Machine Learning Fundamentals",
+      "Model Evaluation and Applied AI Integration",
+      "Statistics for Data Driven Systems",
+    ],
+  },
+  {
+    title: "Interactive and Simulation Systems",
+    items: [
+      "Unity and C#",
+      "Game and Simulation Architecture",
+      "Performance Aware System Design",
+      "Real Time Logic and Event Systems",
+    ],
+  },
+];
+
 export default function About() {
   const titleRef = useRef<HTMLHeadingElement>(null);
 
@@ -55,7 +93,7 @@ export default function About() {
         <title>About - Nicholas Burgo</title>
         <meta
           name="description"
-          content="Learn about Nicholas Burgo, a Computer Science student at Southeastern Louisiana University with expertise in full-stack development and game development."
+          content="Nicholas Burgo — senior Computer Science student at Southeastern Louisiana University. Backend and systems engineering, FastAPI, PostgreSQL, applied AI, and Unity. Building real systems end to end."
         />
       </Helmet>
       <section
@@ -87,32 +125,27 @@ export default function About() {
                   <i className="fas fa-user text-blue-400 mr-3"></i>
                   About Me
                 </h3>
-                <div className="bg-white/5 rounded-lg p-4">
-                  <div className="flex flex-col md:flex-row gap-6 items-start">
-                    <div className="flex-shrink-0 mx-auto md:mx-0">
-                      <img
-                        src={`${import.meta.env.BASE_URL}images/headshot-main.png`}
-                        alt="Nicholas Burgo portrait"
-                        className="w-32 h-32 object-cover rounded-full border-2 border-white/20"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </div>
-                    <div className="flex-1 text-center md:text-left">
-                      <p className="text-white/70 leading-relaxed">
-                        I'm Nicholas Burgo, a senior Computer Science major at Southeastern
-                        Louisiana University with a concentration in Data Science. I have
-                        hands-on experience in software and game development across multiple
-                        platforms, from building AI-powered web applications with FastAPI and
-                        PostgreSQL to creating immersive Unity projects and Raspberry Pi
-                        prototypes. My strengths lie in blending problem-solving with
-                        creativity, whether that's developing multiplayer games, designing
-                        intuitive user interfaces, or architecting scalable backend systems.
-                        Alongside my academic work, I actively explore entrepreneurial projects
-                        like mobile apps and social platforms, reflecting my passion for
-                        innovation and building solutions that make an impact.
-                      </p>
-                    </div>
+                <div className="bg-white/5 rounded-lg p-4 overflow-hidden">
+                  <img
+                    src={`${import.meta.env.BASE_URL}images/headshot-main.png`}
+                    alt="Nicholas Burgo portrait"
+                    className="float-left w-28 h-28 sm:w-32 sm:h-32 object-cover rounded-full border-2 border-white/20 mr-4 mb-3 sm:mr-5 sm:mb-4"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <div className="text-center md:text-left">
+                    <p className="text-white/70 leading-relaxed mb-4">
+                      I am Nicholas Burgo, a senior Computer Science student at Southeastern Louisiana University with a concentration in Data Science. I focus on building real systems end to end, not isolated features or class-only projects.
+                    </p>
+                    <p className="text-white/70 leading-relaxed mb-4">
+                      My core strength is backend and systems engineering. I design and implement APIs, data models, and application architecture using tools like FastAPI, PostgreSQL, and modern web stacks. I also work heavily with applied AI and data driven systems, where the goal is practical decision making rather than academic demos.
+                    </p>
+                    <p className="text-white/70 leading-relaxed mb-4">
+                      Alongside backend work, I build interactive and simulation based projects in Unity and other environments when the problem demands it. These projects have forced me to think carefully about performance, state management, and system boundaries, not just visuals or gameplay.
+                    </p>
+                    <p className="text-white/70 leading-relaxed">
+                      I am most effective when solving problems that require structure, ownership, and technical depth. Outside of coursework, I consistently build independent projects with the intent to ship usable software and iterate on it, not to pad a resume. I am actively developing my skills toward backend, AI, and systems focused roles where engineering rigor actually matters.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -136,30 +169,20 @@ export default function About() {
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-white mb-3 flex items-center">
                   <i className="fas fa-code text-blue-400 mr-3"></i>
-                  Skills & Interests
+                  Skills
                 </h3>
-                <div className="grid md:grid-cols-2 gap-4 bg-white/5 rounded-lg p-4">
-                  <div>
-                    <h4 className="text-sm font-medium text-white/90 mb-2">Programming</h4>
-                    <p className="text-sm text-white/70">
-                      Java, Python, JavaScript, HTML/CSS, SQL
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-white/90 mb-2">Development</h4>
-                    <p className="text-sm text-white/70">React, Unity, C#, Full-Stack Development</p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-white/90 mb-2">Data Science</h4>
-                    <p className="text-sm text-white/70">
-                      Data Analysis, Machine Learning, Statistics
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-white/90 mb-2">Other</h4>
-                    <p className="text-sm text-white/70">
-                      Game Development, VR Development, Database Design
-                    </p>
+                <div className="bg-white/5 rounded-xl p-4 md:p-5 border border-white/10">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+                    {skillGroups.map((group, index) => (
+                      <div key={index}>
+                        <h4 className="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-2">{group.title}</h4>
+                        <ul className="text-sm text-white/70 space-y-1 list-disc list-inside">
+                          {group.items.map((item, itemIndex) => (
+                            <li key={itemIndex}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>

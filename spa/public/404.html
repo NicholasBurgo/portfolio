@@ -6,7 +6,12 @@
   <title>Nicholas Burgo</title>
   <script>
     // Redirect to index.html for GitHub Pages SPA routing
-    sessionStorage.redirect = location.href.replace(location.origin + '/portfolio', '');
+    // Store the path after /portfolio/ for the SPA to restore
+    var path = location.pathname.replace(/^\/portfolio\/?/, '/');
+    var search = location.search;
+    var hash = location.hash;
+    sessionStorage.redirect = path + search + hash;
+    // Always redirect to /portfolio/ with trailing slash
     location.replace(location.origin + '/portfolio/');
   </script>
 </head>

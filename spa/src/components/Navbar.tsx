@@ -73,6 +73,13 @@ export default function Navbar() {
   };
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, path: string) => {
+    // For home link, ensure trailing slash
+    if (path === "/") {
+      e.preventDefault();
+      window.location.href = "/portfolio/";
+      return;
+    }
+    
     if (location.pathname === "/" && path !== "/") {
       e.preventDefault();
       transitionState.setIsTransitioning(true);
@@ -96,7 +103,7 @@ export default function Navbar() {
 
   return (
     <header className="fixed bottom-8 left-0 w-full z-50 px-6 py-4 flex items-center justify-center pointer-events-none">
-      <nav className="flex items-center justify-center gap-4 text-xl font-bold pointer-events-auto">
+      <nav className="flex items-center justify-center font-bold pointer-events-auto nav-responsive">
         {location.pathname !== "/" && (
           <>
             <MagneticLink

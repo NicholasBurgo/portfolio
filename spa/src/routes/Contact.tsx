@@ -11,20 +11,21 @@ export default function Contact() {
     if (!title) return;
 
     const letters = title.querySelectorAll("span");
+    let resetTimeout: number | null = null;
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const updateLetters = (clientX: number, clientY: number) => {
       letters.forEach((letter) => {
         const rect = letter.getBoundingClientRect();
         const letterX = rect.left + rect.width / 2;
         const letterY = rect.top + rect.height / 2;
 
-        const distX = e.clientX - letterX;
-        const distY = e.clientY - letterY;
+        const distX = clientX - letterX;
+        const distY = clientY - letterY;
         const distance = Math.sqrt(distX ** 2 + distY ** 2);
 
-        if (distance < 80) {
+        if (distance < 50) {
           const angle = Math.atan2(distY, distX);
-          const offset = (80 - distance) / 3;
+          const offset = (50 - distance) / 5;
           (letter as HTMLElement).style.transform = `translate(${-Math.cos(angle) * offset}px, ${-Math.sin(angle) * offset}px)`;
         } else {
           (letter as HTMLElement).style.transform = "translate(0, 0)";
@@ -32,8 +33,56 @@ export default function Contact() {
       });
     };
 
+    const resetLetters = () => {
+      letters.forEach((letter) => {
+        (letter as HTMLElement).style.transform = "";
+      });
+    };
+
+    const clearResetTimeout = () => {
+      if (resetTimeout) {
+        clearTimeout(resetTimeout);
+        resetTimeout = null;
+      }
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      updateLetters(e.clientX, e.clientY);
+      clearResetTimeout();
+    };
+
+    const handleTouch = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (touch) {
+        updateLetters(touch.clientX, touch.clientY);
+      }
+      clearResetTimeout();
+    };
+
+    const handleTouchEnd = () => {
+      // Reset letters after 500ms
+      clearResetTimeout();
+      resetTimeout = window.setTimeout(() => {
+        resetLetters();
+      }, 500);
+    };
+
     document.addEventListener("mousemove", handleMouseMove);
-    return () => document.removeEventListener("mousemove", handleMouseMove);
+    document.addEventListener("touchstart", handleTouch, { passive: true });
+    document.addEventListener("touchmove", handleTouch, { passive: true });
+    document.addEventListener("touchend", handleTouchEnd);
+    document.addEventListener("touchcancel", handleTouchEnd);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("touchstart", handleTouch);
+      document.removeEventListener("touchmove", handleTouch);
+      document.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener("touchcancel", handleTouchEnd);
+      if (resetTimeout) {
+        clearTimeout(resetTimeout);
+      }
+    };
   }, []);
 
   useEffect(() => {
