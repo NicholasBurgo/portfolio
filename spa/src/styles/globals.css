@@ -196,12 +196,12 @@ html {
   -webkit-backdrop-filter: blur(15px);
   border: 1px solid rgba(79, 195, 247, 0.2);
   border-radius: 24px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: none;
 }
 
 .project-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 12px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: none;
   background: rgba(35, 44, 60, 0.65);
   border-color: rgba(79, 195, 247, 0.4);
 }
@@ -643,6 +643,7 @@ html {
   display: flex;
   transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
   gap: 1.5rem;
+  padding: 1rem 0;
 }
 
 .carousel-track .project-card {
@@ -685,7 +686,7 @@ html {
 }
 
 .carousel-nav-right {
-  right: -70px;
+  right: -50px;
 }
 
 /* Filter button styles */
@@ -823,7 +824,7 @@ h3 span,
   }
 
   .carousel-nav-right {
-    right: -55px;
+    right: -40px;
   }
 }
 
@@ -867,7 +868,7 @@ h3 span,
   }
 
   .carousel-nav-right {
-    right: -50px;
+    right: -35px;
   }
 }
 
