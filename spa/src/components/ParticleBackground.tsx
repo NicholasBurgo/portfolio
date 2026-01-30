@@ -20,6 +20,7 @@ export default function ParticleBackground() {
   const codeBubblesRef = useRef<any[]>([]);
   const transitionPhaseRef = useRef<'none' | 'collapsing' | 'exploding'>('none');
   const transitionProgressRef = useRef<number>(0);
+  const lastFrameTimeRef = useRef<number>(0);
   const delayedExplosionFrameRef = useRef<number | null>(null);
   const directionChangeTimeoutRef = useRef<number | null>(null);
   const postExplosionTimeRef = useRef<number>(-1); // -1 means disabled, 0-59 means active
@@ -462,7 +463,12 @@ export default function ParticleBackground() {
       return true;
     }
 
-    function draw() {
+    function draw(timestamp: number = 0) {
+      // Delta time for frame-rate independent animation (match desktop 60fps speed on all devices)
+      const deltaTime = lastFrameTimeRef.current ? (timestamp - lastFrameTimeRef.current) / 1000 : 1 / 60;
+      lastFrameTimeRef.current = timestamp;
+      const dt = Math.min(deltaTime, 1 / 30); // Cap to prevent huge jumps if tab was backgrounded
+
       // Safety check: ensure ctx is still valid (could be lost in some browsers)
       if (!ctx || !canvas) {
         // Try to recover context
@@ -485,10 +491,9 @@ export default function ParticleBackground() {
         postExplosionTimeRef.current += 1; // Increment frame counter
       }
 
-      // Update transition progress
+      // Update transition progress (delta-time scaled for consistent speed on all devices)
       if (transitionPhaseRef.current === 'collapsing') {
-        // Progress increment (1.5x faster)
-        transitionProgressRef.current += 0.015;
+        transitionProgressRef.current += 0.9 * dt; // ~0.015/frame at 60fps
         
         // Check if all particles are collapsed (using particle coordinates, not screen)
         const allCollapsed = particles.every(p => {
@@ -524,12 +529,10 @@ export default function ParticleBackground() {
             transitionState.setIsTransitioning(true);
           };
           
-          // Small delay before starting explosion to allow navigation
-          // Use a counter to delay by a few frames instead of setTimeout
-          let frameDelay = 0;
-          const delayedExplosion = () => {
-            frameDelay++;
-            if (frameDelay >= 6) { // ~100ms at 60fps
+          // Small delay before starting explosion to allow navigation (time-based for consistent speed)
+          const explosionDelayStart = performance.now();
+          const delayedExplosion = (now: number) => {
+            if (now - explosionDelayStart >= 100) { // 100ms delay
               startExplosion();
               delayedExplosionFrameRef.current = null;
             } else {
@@ -539,8 +542,7 @@ export default function ParticleBackground() {
           delayedExplosionFrameRef.current = requestAnimationFrame(delayedExplosion);
         }
       } else if (transitionPhaseRef.current === 'exploding') {
-        // Slow down explosion to last ~2 seconds (at 60fps: 120 frames, so 1.0/120 = 0.0083 per frame)
-        transitionProgressRef.current += 0.0083;
+        transitionProgressRef.current += 0.5 * dt; // ~0.0083/frame at 60fps, ~2 sec total
         if (transitionProgressRef.current >= 1.0) {
           // Transition complete, switch to normal mode
           transitionPhaseRef.current = 'none';
@@ -656,9 +658,9 @@ export default function ParticleBackground() {
           p.vy *= decelerationFactor;
         }
         
-        p.x += p.vx;
-        p.y += p.vy;
-        p.twinkle += p.twinkleSpeed;
+        p.x += p.vx * dt * 60;
+        p.y += p.vy * dt * 60;
+        p.twinkle += p.twinkleSpeed * dt * 60;
 
         const screenX = cx + p.x;
         const screenY = cy + p.y;
@@ -864,8 +866,8 @@ export default function ParticleBackground() {
           bubble.vx = Math.max(-maxBubbleVelocity, Math.min(maxBubbleVelocity, bubble.vx));
           bubble.vy = Math.max(-maxBubbleVelocity, Math.min(maxBubbleVelocity, bubble.vy));
           
-          bubble.x += bubble.vx;
-          bubble.y += bubble.vy;
+          bubble.x += bubble.vx * dt * 60;
+          bubble.y += bubble.vy * dt * 60;
 
           // Don't reset bubbles during transition
           if (transitionPhaseRef.current === 'none') {
@@ -916,7 +918,7 @@ export default function ParticleBackground() {
       animationFrameRef.current = requestAnimationFrame(draw);
     }
 
-    draw();
+    draw(performance.now());
 
     return () => {
       window.removeEventListener("resize", resize);
